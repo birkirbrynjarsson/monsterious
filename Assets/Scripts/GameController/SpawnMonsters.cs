@@ -26,39 +26,29 @@ public class SpawnMonsters : MonoBehaviour {
             GameObject floor = GameObject.Find("Floors/Floor" + (randomIndex + 1));
             //float randomFloor = floors[6];
             GameObject green = (GameObject)Resources.Load("greenMonster");
-                //GameObject.Find("Floors/Floor7/greenMonster");
             
+            // Check if the floor is full 
+            if(floor.transform.childCount == 3)
+            {
+                if(randomIndex == 0)
+                {
+                    floor = GameObject.Find("Floors/Floor" + 7);
+                    randomFloor = floors[6];
+                }
+                floor = GameObject.Find("Floors/Floor" + (randomIndex));
+                randomFloor = floors[randomIndex-1];
+            }
 
-            // TODO: Check if there is a monster on the floor... if so then spawn next to the monster.
-            
             float x = 0.44f;
             float y = (randomFloor + 0.42f);
+
             for (int j = floor.transform.childCount; j > 0; j--)
             {
+                Debug.Log("Hey! There is a monster there!");
                 x = x + 1f;
             }
+            Debug.Log("Alot of space!!");
             Instantiate(green, new Vector2(x, y), Quaternion.identity).transform.parent = floor.transform;
-
-            //    Debug.Log("Hey! There is a monster there!");
-            //    Instantiate(green, new Vector2(1.20f, (randomFloor + 0.42f)), Quaternion.identity);
-            //}
-            //else
-            //{
-            //    Debug.Log("Alot of space!!");
-            //    Instantiate(green, new Vector2(0.44f, (randomFloor + 0.42f)), Quaternion.identity);
-
-            //}
-
-            //if (GameObject.FindWithTag("Monster").transform.position == new Vector3(0.44f, (randomFloor + 0.42f)))
-            //{
-            //    Debug.Log("Hey! There is a monster there!");
-            //    Instantiate(green, new Vector2(1.20f, (randomFloor + 0.42f)), Quaternion.identity);
-            //}
-            //else
-            //{
-            //    Debug.Log("Alot of space!!");
-            //    Instantiate(green, new Vector2(0.44f, (randomFloor + 0.42f)), Quaternion.identity);
-            //}
 
         }
     }
