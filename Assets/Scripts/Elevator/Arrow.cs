@@ -26,11 +26,12 @@ public class Arrow : MonoBehaviour {
                 }
                 if (hit.transform.gameObject.name == "ArrowDownRight")
                 {
-                    GameObject elevator = GameObject.Find("ElevatorRight");
+                    Elevator.MoveDown();
+                    /*GameObject elevator = GameObject.Find("ElevatorRight");
                     Vector3 pos = elevator.transform.position;
                     pos.y += -1.3f;
                     iTween.MoveTo(elevator, pos, 1);
-                    /* elevator.transform.position = Vector3.MoveTowards(
+                     elevator.transform.position = Vector3.MoveTowards(
                         elevator.transform.position, 
                         pos, 
                         0.1 * Time.deltaTime);*/
@@ -38,10 +39,11 @@ public class Arrow : MonoBehaviour {
                 }
                 else if (hit.transform.gameObject.name == "ArrowUpRight")
                 {
-                    GameObject elevator = GameObject.Find("ElevatorRight");
+                    Elevator.MoveUp();
+                    /*GameObject elevator = GameObject.Find("ElevatorRight");
                     Vector3 pos = elevator.transform.position;
                     pos.y += 1.3f;
-                    iTween.MoveTo(elevator, pos, 1);                    
+                    iTween.MoveTo(elevator, pos, 1);   */                 
                 }
             }
 
