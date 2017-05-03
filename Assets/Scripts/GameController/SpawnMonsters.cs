@@ -18,7 +18,7 @@ public class SpawnMonsters : MonoBehaviour {
         float[] floors = new float[7] {floor1, floor2, floor3, floor4, floor5, floor6, floor7};
 
         // TODO: Check if there is a monster on the floor... if so then spawn next to the monster.
-        for(int i = 0; i<2; i++)
+        for(int i = 0; i<1; i++)
         {
             System.Random rand = new System.Random();
             int randomIndex = rand.Next(0, floors.Length);
@@ -26,6 +26,7 @@ public class SpawnMonsters : MonoBehaviour {
 
             GameObject green = GameObject.Find("greenMonster");
 
+            // TODO: Check if there is a monster on the floor... if so then spawn next to the monster.
             Instantiate(green, new Vector2(2, (randomFloor+0.42f)), Quaternion.identity);
         }
     }
