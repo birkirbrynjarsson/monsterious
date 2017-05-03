@@ -28,13 +28,20 @@ public class Arrow : MonoBehaviour {
                 {
                     GameObject elevator = GameObject.Find("ElevatorRight");
                     Vector3 pos = elevator.transform.position;
-                    pos.y = 1;
+                    pos.y += -1.3f;
                     iTween.MoveTo(elevator, pos, 1);
                     /* elevator.transform.position = Vector3.MoveTowards(
                         elevator.transform.position, 
                         pos, 
                         0.1 * Time.deltaTime);*/
                     // elevator.transform.position = pos;
+                }
+                else if (hit.transform.gameObject.name == "ArrowUpRight")
+                {
+                    GameObject elevator = GameObject.Find("ElevatorRight");
+                    Vector3 pos = elevator.transform.position;
+                    pos.y += 1.3f;
+                    iTween.MoveTo(elevator, pos, 1);                    
                 }
             }
 
