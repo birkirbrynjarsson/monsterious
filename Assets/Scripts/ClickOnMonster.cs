@@ -25,9 +25,27 @@ public class ClickOnMonster : MonoBehaviour {
                 {
                     GameObject monster = hit.transform.gameObject;
                     GameObject elevator = GameObject.Find("Elevator1");
+                    GameObject bubble = GameObject.Find(monster.name + "/bubble");
+
                     Debug.Log("SUCCESS!! You clicked: " + monster.name);
                     monster.transform.parent = elevator.transform;
-                    monster.transform.position = elevator.transform.position + 3;
+                    Destroy(bubble);
+
+                    if(elevator.transform.childCount == 2)
+                    {
+                        monster.transform.position = new Vector2(elevator.transform.position.x, (elevator.transform.position.y + 0.3f));
+                        //elevator.transform.position;
+                    }
+                    else if (elevator.transform.childCount == 3)
+                    {
+                        monster.transform.position = new Vector2(elevator.transform.position.x, (elevator.transform.position.y - 0.3f));
+                        //elevator.transform.position;
+                    }
+                    else
+                    {
+                        Debug.Log("The elevator is full!! You clicked: " + monster.name);
+                    }
+
                 }
             }
 
