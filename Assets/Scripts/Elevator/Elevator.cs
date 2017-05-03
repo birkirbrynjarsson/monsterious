@@ -14,15 +14,15 @@ public class Elevator : MonoBehaviour {
 		
 	}
 
-    public static void MoveUp () {
-        GameObject elevator = GameObject.Find("ElevatorRight");
+    public static void MoveUp (string parent) {
+        GameObject elevator = GameObject.Find(parent);
         Vector3 pos = elevator.transform.position;
         pos.y += 1.3f;
         iTween.MoveTo(elevator, pos, 1);
     }
 
-    public static void MoveDown() {
-        GameObject elevator = GameObject.Find("ElevatorRight");
+    public static void MoveDown(string parent) {
+        GameObject elevator = GameObject.Find(parent);
         Vector3 pos = elevator.transform.position;
         pos.y += -1.3f;
         iTween.MoveTo(elevator, pos, 1);

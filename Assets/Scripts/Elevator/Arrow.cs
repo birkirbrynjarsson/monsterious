@@ -20,13 +20,10 @@ public class Arrow : MonoBehaviour {
             if (myTouch.phase == TouchPhase.Began)
             {
                 hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Vector2.zero);
-                if (hit.collider != null && hit.transform.gameObject.tag == "Arrow")
+                string parent = hit.transform.parent.name;
+                if (hit.transform.gameObject.name == "ArrowDown")
                 {
-                    Debug.Log("SUCCESS" + hit.transform.gameObject.name);
-                }
-                if (hit.transform.gameObject.name == "ArrowDownRight")
-                {
-                    Elevator.MoveDown();
+                    Elevator.MoveDown(parent);
                     /*GameObject elevator = GameObject.Find("ElevatorRight");
                     Vector3 pos = elevator.transform.position;
                     pos.y += -1.3f;
@@ -37,9 +34,9 @@ public class Arrow : MonoBehaviour {
                         0.1 * Time.deltaTime);*/
                     // elevator.transform.position = pos;
                 }
-                else if (hit.transform.gameObject.name == "ArrowUpRight")
+                else if (hit.transform.gameObject.name == "ArrowUp")
                 {
-                    Elevator.MoveUp();
+                    Elevator.MoveUp(parent);
                     /*GameObject elevator = GameObject.Find("ElevatorRight");
                     Vector3 pos = elevator.transform.position;
                     pos.y += 1.3f;
