@@ -23,8 +23,11 @@ public class ClickOnMonster : MonoBehaviour {
                 hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Vector2.zero);
                 if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
                 {
-                    Debug.Log("SUCCESS!! You clicked: " + hit.transform.gameObject.name);
-                    hit.transform.gameObject.transform.parent = GameObject.Find("Elevator1").transform;
+                    GameObject monster = hit.transform.gameObject;
+                    GameObject elevator = GameObject.Find("Elevator1");
+                    Debug.Log("SUCCESS!! You clicked: " + monster.name);
+                    monster.transform.parent = elevator.transform;
+                    monster.transform.position = elevator.transform.position + 3;
                 }
             }
 
