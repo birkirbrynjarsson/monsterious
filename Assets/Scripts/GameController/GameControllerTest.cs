@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameControllerTest : MonoBehaviour {
 
@@ -21,8 +22,30 @@ public class GameControllerTest : MonoBehaviour {
 	private static int totalMonsters = 0;
 	private static List<Transform> elevators;
 
-	// Use this for initialization
-	void Start () {
+    public Scrollbar StressBar;
+    public float Stress = 100;
+    public Text scoreText;
+    public int scoreValue;
+
+    void AddScore(int newScoreValue)
+    {
+        score += newScoreValue;
+        UpdateScore();
+    }
+
+    void UpdateScore()
+    {
+        scoreText.text = "Score " + score;
+    }
+
+    void Stesser(float value)
+    {
+        Stress -= value;
+        StressBar.size = Stress / 100f;
+    }
+
+    // Use this for initialization
+    void Start () {
 		// Initialize the list of floors and y and x Coordinates
 		GameObject floorList = GameObject.Find ("Floors");
 		floors = new List<Transform> ();
@@ -47,8 +70,9 @@ public class GameControllerTest : MonoBehaviour {
 		}
 		rand = new System.Random ((int)Time.time);
 		totalMonsters = 0;
-		score = 0;
-		spawnMonster ();
+        score = 0;
+        UpdateScore ();
+        spawnMonster ();
 	}
 	
 	// Update is called once per frame
@@ -76,12 +100,16 @@ public class GameControllerTest : MonoBehaviour {
 							monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
 							totalMonsters--;
 							repositionMonstersAtFloor(floor);
-						} else if (el.GetChild (1).childCount == 0) {
+                            Stesser(scoreValue);
+                            AddScore(scoreValue);
+                        } else if (el.GetChild (1).childCount == 0) {
 							monster.transform.parent = el.GetChild (1).transform;
 							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
 							totalMonsters--;
 							repositionMonstersAtFloor(floor);
-						} else {
+                            Stesser(scoreValue);
+                            AddScore(scoreValue);
+                        } else {
 							Debug.Log ("Elevator is full");
 						}
 					}
@@ -90,7 +118,7 @@ public class GameControllerTest : MonoBehaviour {
 		}
 	}
 
-	public void repositionMonstersAtFloor(Transform floor){
+    public void repositionMonstersAtFloor(Transform floor){
 		int i = 0;
 		foreach (Transform child in floor.transform) {
 			Vector3 pos = child.gameObject.transform.position;
