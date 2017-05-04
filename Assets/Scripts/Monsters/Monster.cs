@@ -34,9 +34,17 @@ public class Monster : MonoBehaviour {
 		if(patienceScript.currentAmount >= 100f)
         {
             Transform floor = transform.parent;
+            gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
             Destroy(patience);
-            Destroy(gameObject);         
+            Destroy(gameObject);
             gameScript.monsterLeft(floor);
         }
 	}
+
+    internal void updatePos(Vector2 pos)
+    {
+        Vector2 newPos = patience.transform.position;
+        newPos.x = pos.x - 0.05f;
+        patience.transform.position = newPos;
+    }
 }

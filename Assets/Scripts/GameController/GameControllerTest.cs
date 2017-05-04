@@ -124,7 +124,8 @@ public class GameControllerTest : MonoBehaviour {
 			Vector3 pos = child.gameObject.transform.position;
 			pos.x = floorPosX [i];
 			child.gameObject.transform.position = pos;
-			i++;
+            child.gameObject.GetComponent<Monster>().updatePos(pos);
+            i++;
 		}
 	}
 
