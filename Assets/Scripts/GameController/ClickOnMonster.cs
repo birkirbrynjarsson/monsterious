@@ -2,12 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ClickOnMonster : MonoBehaviour {
 
+    public Text scoreText;
+    private int score;
+    public int scoreValue;
+
 	// Use this for initialization
 	void Start () {
-		
+        //scoreText = GetComponent<Text>();
+        score = 0;
+        UpdateScore();
 	}
 
     // Update is called once per frame
@@ -36,6 +43,7 @@ public class ClickOnMonster : MonoBehaviour {
                         monster.transform.parent = elevator.transform;
                         monster.transform.position = new Vector2(elevator.transform.position.x, (elevator.transform.position.y + 0.3f));
                         Destroy(bubble);
+                        AddScore(scoreValue);
                         //elevator.transform.position;
                     }
                     else if (elevator.transform.childCount == 3)
@@ -43,6 +51,7 @@ public class ClickOnMonster : MonoBehaviour {
                         monster.transform.parent = elevator.transform;
                         monster.transform.position = new Vector2(elevator.transform.position.x, (elevator.transform.position.y - 0.3f));
                         Destroy(bubble);
+                        AddScore(scoreValue);
                         //elevator.transform.position;
                     }
                     else
@@ -53,5 +62,16 @@ public class ClickOnMonster : MonoBehaviour {
                 }
             }
         }
+    }
+
+    void AddScore(int newScoreValue)
+    {
+        score += newScoreValue;
+        UpdateScore();
+    }
+
+    void UpdateScore()
+    {
+        scoreText.text = "Score " + score;
     }
 }
