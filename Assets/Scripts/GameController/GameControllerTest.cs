@@ -112,19 +112,22 @@ public class GameControllerTest : MonoBehaviour {
 					}
 				}
 				if (isElevatorAtFloor (floorNr) && floorNr != -1) {
+                    Monster monsterScript = monster.GetComponent<Monster>();
 					Transform el = getOpenElevatorAtFloor (floorNr);
 					if (el != null) {
 						if (el.GetChild (0).childCount == 0) {
 							monster.transform.parent = el.GetChild (0).transform;
 							monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
-							totalMonsters--;
+                            monsterScript.patience.transform.position = new Vector2((el.GetChild(0).transform.position.x) - 0.05f, (el.GetChild(0).transform.position.y + 0.06f));
+                            totalMonsters--;
 							repositionMonstersAtFloor(floor);
                             //Stresser(scoreValue);
                             AddScore(scoreValue);
                         } else if (el.GetChild (1).childCount == 0) {
 							monster.transform.parent = el.GetChild (1).transform;
 							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
-							totalMonsters--;
+                            monsterScript.patience.transform.position = new Vector2((el.GetChild(1).transform.position.x) - 0.05f, (el.GetChild(1).transform.position.y + 0.06f));
+                            totalMonsters--;
 							repositionMonstersAtFloor(floor);
                             //Stresser(scoreValue);
                             AddScore(scoreValue);
