@@ -19,6 +19,7 @@ public class GameControllerTest : MonoBehaviour {
 	private static System.Random rand;
 	private static List<float> floorPosX;
 	private static int totalMonsters = 0;
+	private static List<Transform> elevators;
 
 	// Use this for initialization
 	void Start () {
@@ -39,6 +40,11 @@ public class GameControllerTest : MonoBehaviour {
 			}
 			else floorPosX.Add (floorPosX[i-1] + X_MONSTER_WIDTH);
 		}
+		GameObject el = GameObject.Find ("Elevators");
+		elevators = new List<Transform> ();
+		foreach (Transform child in el.transform) {
+			elevators.Add (child);
+		}
 		rand = new System.Random ((int)Time.time);
 		totalMonsters = 0;
 		score = 0;
@@ -50,6 +56,56 @@ public class GameControllerTest : MonoBehaviour {
 		if (Time.time - lastSpawn >= spawnSpeed) {
 			spawnMonster ();
 		}
+		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
+			RaycastHit2D hit;
+			hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position), Vector2.zero);
+			if (hit.collider != null && hit.transform.gameObject.tag == "Monster") {
+				GameObject monster = hit.transform.gameObject;
+				Transform floor = monster.transform.parent;
+				int floorNr = -1;
+				foreach (Transform f in floors) {
+					if (f == floor) {
+						floorNr = floors.IndexOf (f);
+					}
+				}
+				if (isElevatorAtFloor (floorNr) && floorNr != -1) {
+					Transform el = getOpenElevatorAtFloor (floorNr);
+					if (el != null) {
+						if (el.GetChild (0).childCount == 0) {
+							monster.transform.parent = el.GetChild (0).transform;
+							monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
+							totalMonsters--;
+						} else if (el.GetChild (1).childCount == 0) {
+							monster.transform.parent = el.GetChild (1).transform;
+							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
+							totalMonsters--;
+						} else {
+							Debug.Log ("Elevator is full");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public bool isElevatorAtFloor(int floorNr){
+		foreach (Transform el in elevators) {
+			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
+			if (elscript.currFloor == floorNr && !elscript.movingDown && !elscript.movingUp) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Transform getOpenElevatorAtFloor(int floorNr){
+		foreach (Transform el in elevators) {
+			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
+			if (elscript.currFloor == floorNr && !elscript.movingDown && !elscript.movingUp && elscript.doorOpen){
+				return el;
+			}
+		}
+		return null;
 	}
 
 	static void increaseScore(int s){
@@ -57,7 +113,7 @@ public class GameControllerTest : MonoBehaviour {
 //		scoreText.text = " " + score;
 	}
 
-	void spawnMonster(){
+	public void spawnMonster(){
 		if (totalMonsters >= MAX_MONSTERS) {
 			return;
 		}
@@ -77,5 +133,33 @@ public class GameControllerTest : MonoBehaviour {
 		int posX = floor.transform.childCount;
 		Instantiate (green, new Vector2 (floorPosX[posX], floorPosY[floorIndex]), Quaternion.identity).transform.parent = floor.transform;
 		totalMonsters++;
+	}
+
+	public void elevatorArrived (GameObject elevator){
+		int elFloor = elevator.GetComponent<ElevatorTest> ().currFloor;
+		if (elevators != null) {
+			foreach(Transform e in elevators){
+				if (e.gameObject != elevator && e.GetComponent<ElevatorTest> ().currFloor == elFloor) {
+					e.GetComponent<ElevatorTest> ().closeDoor ();
+				}
+			}
+		}
+		elevator.GetComponent<ElevatorTest> ().openDoor ();
+		if (elevator.transform.GetChild (0).childCount > 0) {
+			Destroy (elevator.transform.GetChild (0).GetChild (0).gameObject);
+		}
+		if (elevator.transform.GetChild (1).childCount > 0) {
+			Destroy (elevator.transform.GetChild (1).GetChild (0).gameObject);
+		}
+	}
+
+	public void elevatorDeparting(GameObject elevator){
+		int elFloor = elevator.GetComponent<ElevatorTest> ().currFloor;
+		foreach(Transform e in elevators){
+			if (e.gameObject != elevator && e.GetComponent<ElevatorTest> ().currFloor == elFloor) {
+				e.GetComponent<ElevatorTest> ().arrivedAtFloor ();
+				break;
+			}
+		}
 	}
 }
