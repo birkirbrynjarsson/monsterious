@@ -18,16 +18,38 @@ public class SpawnMonsters : MonoBehaviour {
         float[] floors = new float[7] {floor1, floor2, floor3, floor4, floor5, floor6, floor7};
 
         // TODO: Check if there is a monster on the floor... if so then spawn next to the monster.
-        for(int i = 0; i<1; i++)
+        for(int i = 0; i < 3; i++)
         {
             System.Random rand = new System.Random();
             int randomIndex = rand.Next(0, floors.Length);
             float randomFloor = floors[randomIndex];
+            GameObject floor = GameObject.Find("Floors/Floor" + (randomIndex + 1));
+            //float randomFloor = floors[6];
+            GameObject green = (GameObject)Resources.Load("greenMonster");
+            
+            // Check if the floor is full 
+            if(floor.transform.childCount == 3)
+            {
+                if(randomIndex == 0)
+                {
+                    floor = GameObject.Find("Floors/Floor" + 7);
+                    randomFloor = floors[6];
+                }
+                floor = GameObject.Find("Floors/Floor" + (randomIndex));
+                randomFloor = floors[randomIndex-1];
+            }
 
-            GameObject green = GameObject.Find("greenMonster");
+            float x = 0.44f;
+            float y = (randomFloor + 0.42f);
 
-            // TODO: Check if there is a monster on the floor... if so then spawn next to the monster.
-            Instantiate(green, new Vector2(2, (randomFloor+0.42f)), Quaternion.identity);
+            for (int j = floor.transform.childCount; j > 0; j--)
+            {
+                Debug.Log("Hey! There is a monster there!");
+                x = x + 1f;
+            }
+            Debug.Log("Alot of space!!");
+            Instantiate(green, new Vector2(x, y), Quaternion.identity).transform.parent = floor.transform;
+
         }
     }
 	
