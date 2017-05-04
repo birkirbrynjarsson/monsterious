@@ -14,8 +14,8 @@ public class Monster : MonoBehaviour {
         GameObject patienceBubble = (GameObject)Resources.Load("PatienceBubble");
         GameObject canvas = GameObject.Find("Canvas");
 
-        patience = Instantiate(patienceBubble, new Vector2(transform.position.x, transform.position.y+1f), Quaternion.identity);
-        patience.transform.parent = canvas.transform;
+        patience = Instantiate(patienceBubble, new Vector2(transform.position.x-0.05f, transform.position.y+0.68f), Quaternion.identity);
+        patience.transform.SetParent(canvas.transform, true);
         //TODO: Change size of the patience bubble
 
         //TODO: Get floor number from the patience bubble
