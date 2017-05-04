@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class Monster : MonoBehaviour {
@@ -9,6 +10,7 @@ public class Monster : MonoBehaviour {
     public int desiredFloor;
     public GameObject patience;
     private Patience patienceScript;
+    private GameControllerTest gameScript;
 
     // Use this for initialization
     void Start () {
@@ -22,6 +24,8 @@ public class Monster : MonoBehaviour {
         // Get desired floor number from the patience bubble
         patienceScript = patience.GetComponent<Patience>();
         desiredFloor = patienceScript.desiredFloor;
+
+        gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
     }
 	
 	// Update is called once per frame
@@ -29,8 +33,10 @@ public class Monster : MonoBehaviour {
         // Check if the patience bubble is 100% red! If it is then remove monster.
 		if(patienceScript.currentAmount >= 100f)
         {
-            Destroy(this.gameObject);
+            Transform floor = transform.parent;
             Destroy(patience);
+            Destroy(gameObject);         
+            gameScript.monsterLeft(floor);
         }
 	}
 }

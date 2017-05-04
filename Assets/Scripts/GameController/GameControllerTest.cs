@@ -13,7 +13,7 @@ public class GameControllerTest : MonoBehaviour {
 
 //	private static GUIText scoreText;
 	private static int score;
-	public static float spawnSpeed = 1.0f;
+	public static float spawnSpeed = 3.0f;
 	private static float lastSpawn;
 	private static List<float> floorPosY;
 	private static List<Transform> floors;
@@ -203,4 +203,11 @@ public class GameControllerTest : MonoBehaviour {
 			}
 		}
 	}
+
+    public void monsterLeft(Transform floor){
+        
+        Debug.Log("HEYYYYYYYY!!!!!!!!!!!!!! " + floor.name);
+        totalMonsters--;
+        repositionMonstersAtFloor(floor);
+    }
 }
