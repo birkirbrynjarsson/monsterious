@@ -75,16 +75,28 @@ public class GameControllerTest : MonoBehaviour {
 							monster.transform.parent = el.GetChild (0).transform;
 							monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
 							totalMonsters--;
+							repositionMonstersAtFloor(floor);
 						} else if (el.GetChild (1).childCount == 0) {
 							monster.transform.parent = el.GetChild (1).transform;
 							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
 							totalMonsters--;
+							repositionMonstersAtFloor(floor);
 						} else {
 							Debug.Log ("Elevator is full");
 						}
 					}
 				}
 			}
+		}
+	}
+
+	public void repositionMonstersAtFloor(Transform floor){
+		int i = 0;
+		foreach (Transform child in floor.transform) {
+			Vector3 pos = child.gameObject.transform.position;
+			pos.x = floorPosX [i];
+			child.gameObject.transform.position = pos;
+			i++;
 		}
 	}
 
@@ -156,7 +168,8 @@ public class GameControllerTest : MonoBehaviour {
 	public void elevatorDeparting(GameObject elevator){
 		int elFloor = elevator.GetComponent<ElevatorTest> ().currFloor;
 		foreach(Transform e in elevators){
-			if (e.gameObject != elevator && e.GetComponent<ElevatorTest> ().currFloor == elFloor) {
+			ElevatorTest elScript = e.GetComponent<ElevatorTest> ();
+			if (e.gameObject != elevator && elScript.currFloor == elFloor && !elScript.movingDown && !elScript.movingUp) {
 				e.GetComponent<ElevatorTest> ().arrivedAtFloor ();
 				break;
 			}

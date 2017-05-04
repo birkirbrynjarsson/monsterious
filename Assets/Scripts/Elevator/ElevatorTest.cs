@@ -28,7 +28,7 @@ public class ElevatorTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.Find("Game Controller").GetComponent<GameControllerTest> ();
+		gameController = GameObject.Find("GameController").GetComponent<GameControllerTest> ();
 		floorPosY = new List<float>();
 		GameObject floors = GameObject.Find ("Floors");
 		foreach(Transform child in floors.transform) {
@@ -118,6 +118,7 @@ public class ElevatorTest : MonoBehaviour {
 		} else {
 			closeDoor ();
 			arriveTime = Time.time + speed;
+			gameController.elevatorDeparting (gameObject);
 		}
 		movingDown = true;
 		downActive.gameObject.SetActive (true);
