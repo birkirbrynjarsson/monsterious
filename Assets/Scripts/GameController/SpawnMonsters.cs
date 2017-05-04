@@ -17,7 +17,7 @@ public class SpawnMonsters : MonoBehaviour {
 
         float[] floors = new float[7] {floor1, floor2, floor3, floor4, floor5, floor6, floor7};
 
-        // TODO: Check if there is a monster on the floor... if so then spawn next to the monster.
+        // Spawn monsters to floor (Hardcoded 3 green monsters)
         for(int i = 0; i < 3; i++)
         {
             System.Random rand = new System.Random();
@@ -27,7 +27,8 @@ public class SpawnMonsters : MonoBehaviour {
             //float randomFloor = floors[6];
             GameObject green = (GameObject)Resources.Load("greenMonster");
             
-            // Check if the floor is full 
+            // Check if the floor is full
+            // TODO: Change this to a recursive function
             if(floor.transform.childCount == 3)
             {
                 if(randomIndex == 0)
@@ -39,6 +40,7 @@ public class SpawnMonsters : MonoBehaviour {
                 randomFloor = floors[randomIndex-1];
             }
 
+            // Check if there is a monster on the floor... if so then spawn next to the monster.
             float x = 0.44f;
             float y = (randomFloor + 0.42f);
 
@@ -49,7 +51,6 @@ public class SpawnMonsters : MonoBehaviour {
             }
             Debug.Log("Alot of space!!");
             Instantiate(green, new Vector2(x, y), Quaternion.identity).transform.parent = floor.transform;
-
         }
     }
 	
