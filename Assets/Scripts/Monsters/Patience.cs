@@ -12,12 +12,15 @@ public class Patience : MonoBehaviour {
     [SerializeField] private float currentAmount;
     [SerializeField] private float speed;
 
+    private static System.Random rand;
+
     // Use this for initialization
     void Start () {
         //TODO: Find random number from 1-7 and put to floor
-        System.Random rand = new System.Random();
+        rand = new System.Random((int)Time.time);
         int desiredFloor = rand.Next(1, 7);
         Debug.Log(desiredFloor);
+
         TextIndicator.GetComponent<Text>().text = desiredFloor.ToString();
     }
 
