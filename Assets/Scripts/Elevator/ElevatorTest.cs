@@ -118,6 +118,7 @@ public class ElevatorTest : MonoBehaviour {
 		} else {
 			closeDoor ();
 			arriveTime = Time.time + speed;
+			gameController.elevatorDeparting (gameObject);
 		}
 		movingDown = true;
 		downActive.gameObject.SetActive (true);
