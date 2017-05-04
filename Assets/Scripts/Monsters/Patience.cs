@@ -8,20 +8,19 @@ public class Patience : MonoBehaviour {
 
     public Transform LoadingBar;
     public Transform TextIndicator;
+    private Monster monsterScript;
     public int desiredFloor;
+    public int currentFloor;
+
     //public Transform TextLoading;
     [SerializeField] public float currentAmount;
     [SerializeField] private float speed;
 
-    private static System.Random rand;
 
     // Use this for initialization
     void Start () {
         //TODO: Find random number from 1-7 and put to floor
-        rand = new System.Random((int)Time.time);
-        desiredFloor = rand.Next(1, 8);
-    
-        TextIndicator.GetComponent<Text>().text = desiredFloor.ToString();
+        
     }
 
     // Update is called once per frame
@@ -36,5 +35,11 @@ public class Patience : MonoBehaviour {
             //TODO: Let the monster know that it should leave.. and the Patience meter will drop 
         }
         LoadingBar.GetComponent<Image>().fillAmount = currentAmount / 100;
+    }
+
+    internal void setDesiredFloor(int des)
+    {
+        desiredFloor = des;
+        TextIndicator.GetComponent<Text>().text = desiredFloor.ToString();
     }
 }

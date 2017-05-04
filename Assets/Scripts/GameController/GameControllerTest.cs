@@ -171,9 +171,16 @@ public class GameControllerTest : MonoBehaviour {
 			floor = floors[floorIndex].gameObject;
 		}
 		Debug.Log ("Floor Index: " + floorIndex);
+        
 		int posX = floor.transform.childCount;
-		Instantiate (green, new Vector2 (floorPosX[posX], floorPosY[floorIndex]), Quaternion.identity).transform.parent = floor.transform;
-		totalMonsters++;
+        GameObject monster = Instantiate(green, new Vector2(floorPosX[posX], floorPosY[floorIndex]), Quaternion.identity);
+        monster.transform.parent = floor.transform;
+
+        // Set current floor in Monster to get desired random number
+        Monster monsterScript = monster.GetComponent<Monster>();
+        int currFloor = floorIndex + 1;
+        monsterScript.setCurrentFloor(currFloor);
+        totalMonsters++;
 	}
 
 	public void elevatorArrived (GameObject elevator){
