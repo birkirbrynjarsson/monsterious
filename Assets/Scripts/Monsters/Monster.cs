@@ -12,7 +12,7 @@ public class Monster : MonoBehaviour {
 	void Start () {
         //TODO: Create/Instantiate Patience Bubble above the monster with the floor number
         GameObject patienceBubble = (GameObject)Resources.Load("PatienceBubble");
-        GameObject canvas = GameObject.Find("Canvas");
+        GameObject canvas = GameObject.Find("PatienceSpawn");
 
         patience = Instantiate(patienceBubble, new Vector2(transform.position.x-0.05f, transform.position.y+0.68f), Quaternion.identity);
         patience.transform.SetParent(canvas.transform, true);
