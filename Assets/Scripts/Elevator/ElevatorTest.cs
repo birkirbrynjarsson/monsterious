@@ -133,9 +133,12 @@ public class ElevatorTest : MonoBehaviour {
 		downActive.gameObject.SetActive (false);
 		currFloor = destFloor;
 		// Notify the Game Controller
-		gameController.elevatorArrived (gameObject);
-		Debug.Log ("I just arrived at a floor bitch!");
-	}
+        if (gameController != null)
+        {
+            gameController.elevatorArrived(gameObject);
+        }
+        Debug.Log("I just arrived at a floor bitch!");
+    }
 
 	public void openDoor(){
 		doorOpen = true;
