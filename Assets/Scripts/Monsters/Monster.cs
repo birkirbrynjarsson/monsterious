@@ -11,6 +11,7 @@ public class Monster : MonoBehaviour {
     public GameObject patience;
     private Patience patienceScript;
     private GameControllerTest gameScript;
+    private static System.Random rand;
 
     // Use this for initialization
     void Start () {
@@ -23,8 +24,9 @@ public class Monster : MonoBehaviour {
 
         // Get desired floor number from the patience bubble
         patienceScript = patience.GetComponent<Patience>();
-        desiredFloor = patienceScript.desiredFloor;
+        patienceScript.setDesiredFloor(desiredFloor);
 
+        // Get access to gamecontroller
         gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
     }
 	
@@ -40,8 +42,28 @@ public class Monster : MonoBehaviour {
             gameScript.monsterLeft(floor);
         }
 	}
-
+		
 	public float getPatience(){
 		return patienceScript.currentAmount;
 	}
+
+    internal void updatePos(Vector2 pos)
+    {
+        Vector2 newPos = patience.transform.position;
+        newPos.x = pos.x - 0.05f;
+        patience.transform.position = newPos;
+    }
+    
+    internal void setCurrentFloor(int curr)
+    {
+        currentFloor = curr;
+        rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+        desiredFloor = rand.Next(1, 8);
+        while(desiredFloor == currentFloor)
+        {
+            desiredFloor = rand.Next(0, 8);
+        }      
+        
+      
+    }
 }
