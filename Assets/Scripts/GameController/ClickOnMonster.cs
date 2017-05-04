@@ -35,21 +35,22 @@ public class ClickOnMonster : MonoBehaviour {
                     GameObject bubble = GameObject.Find(monster.name + "/bubble");
 
                     Debug.Log("SUCCESS!! You clicked: " + monster.name);
-                    
+
                     // TODO: CHECK IF THERE IS ANY ELEVATOR ON THAT FLOOR 
                     //     : USE SOMETHING ELSE TO CHECK IF THE ELEVATOR IS FULL OR NOT (THIS IS JUST TEMPO)
-                    if(elevator.transform.childCount == 2)
+
+                    if (elevator.transform.childCount == 7)
                     {
                         monster.transform.parent = elevator.transform;
-                        monster.transform.position = new Vector2(elevator.transform.position.x, (elevator.transform.position.y + 0.3f));
+                        monster.transform.position = new Vector2((elevator.transform.position.x - 0.87f), (elevator.transform.position.y + 0.06f));
                         Destroy(bubble);
                         AddScore(scoreValue);
                         //elevator.transform.position;
                     }
-                    else if (elevator.transform.childCount == 3)
+                    else if (elevator.transform.childCount == 8)
                     {
                         monster.transform.parent = elevator.transform;
-                        monster.transform.position = new Vector2(elevator.transform.position.x, (elevator.transform.position.y - 0.3f));
+                        monster.transform.position = new Vector2(elevator.transform.position.x - 0.87f, (elevator.transform.position.y - 0.5f));
                         Destroy(bubble);
                         AddScore(scoreValue);
                         //elevator.transform.position;
