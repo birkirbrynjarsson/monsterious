@@ -17,16 +17,18 @@ public class ElevatorTest : MonoBehaviour {
 	public int destFloor = 0;
 	private float arriveTime = .0f;
 	private float destSpeed = .0f;
-	private bool movingUp = false;
-	private bool movingDown = false;
-	private bool doorOpen = false;
+	public bool movingUp = false;
+	public bool movingDown = false;
+	public bool doorOpen = false;
 
 	private GameObject door; 
 	private GameObject upActive;
 	private GameObject downActive;
+	private GameControllerTest gameController;
 
 	// Use this for initialization
 	void Start () {
+		gameController = GameObject.Find("Game Controller").GetComponent<GameControllerTest> ();
 		floorPosY = new List<float>();
 		GameObject floors = GameObject.Find ("Floors");
 		foreach(Transform child in floors.transform) {
@@ -42,7 +44,8 @@ public class ElevatorTest : MonoBehaviour {
 		downActive.SetActive (false);
 		destFloor = currFloor;
 		iTween.Init (gameObject);
-		openDoor ();
+		closeDoor ();
+		arrivedAtFloor ();
 	}
 		
 	// Update is called once per frame
@@ -96,6 +99,7 @@ public class ElevatorTest : MonoBehaviour {
 		} else {
 			closeDoor ();
 			arriveTime = Time.time + speed;
+			gameController.elevatorDeparting (gameObject);
 		}
 		movingUp = true;
 		upActive.gameObject.SetActive (true);
@@ -121,23 +125,23 @@ public class ElevatorTest : MonoBehaviour {
 		iTween.MoveTo(gameObject,iTween.Hash("position", destPos, "easetype", easing, "time", destSpeed, "oncomplete", "arrivedAtFloor"));
 	}
 
-	void arrivedAtFloor() {
-		openDoor ();
-		currFloor = destFloor;
+	public void arrivedAtFloor() {
 		movingUp = false;
 		movingDown = false;
 		upActive.gameObject.SetActive (false);
 		downActive.gameObject.SetActive (false);
+		currFloor = destFloor;
+		// Notify the Game Controller
+		gameController.elevatorArrived (gameObject);
 		Debug.Log ("I just arrived at a floor bitch!");
 	}
 
-	void openDoor(){
+	public void openDoor(){
 		doorOpen = true;
 		door.SetActive (false);
-
 	}
 
-	void closeDoor(){
+	public void closeDoor(){
 		doorOpen = false;
 		door.SetActive (true);
 	}
