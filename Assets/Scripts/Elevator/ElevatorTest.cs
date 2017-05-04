@@ -28,7 +28,7 @@ public class ElevatorTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.Find("Game Controller").GetComponent<GameControllerTest> ();
+		gameController = GameObject.Find("GameController").GetComponent<GameControllerTest> ();
 		floorPosY = new List<float>();
 		GameObject floors = GameObject.Find ("Floors");
 		foreach(Transform child in floors.transform) {
@@ -132,9 +132,12 @@ public class ElevatorTest : MonoBehaviour {
 		downActive.gameObject.SetActive (false);
 		currFloor = destFloor;
 		// Notify the Game Controller
-		gameController.elevatorArrived (gameObject);
-		Debug.Log ("I just arrived at a floor bitch!");
-	}
+        if (gameController != null)
+        {
+            gameController.elevatorArrived(gameObject);
+        }
+        Debug.Log("I just arrived at a floor bitch!");
+    }
 
 	public void openDoor(){
 		doorOpen = true;
