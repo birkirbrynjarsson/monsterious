@@ -13,12 +13,13 @@ public class ElevatorTest : MonoBehaviour {
 	private Vector3 destPos;
 	private List<float> floorPosY;
 
-	private int currFloor = 0;
-	private int destFloor = 0;
+	public int currFloor = 0;
+	public int destFloor = 0;
 	private float arriveTime = .0f;
 	private float destSpeed = .0f;
 	private bool movingUp = false;
 	private bool movingDown = false;
+	private bool doorOpen = false;
 
 	private GameObject door; 
 	private GameObject upActive;
@@ -122,6 +123,7 @@ public class ElevatorTest : MonoBehaviour {
 
 	void arrivedAtFloor() {
 		openDoor ();
+		currFloor = destFloor;
 		movingUp = false;
 		movingDown = false;
 		upActive.gameObject.SetActive (false);
@@ -130,10 +132,13 @@ public class ElevatorTest : MonoBehaviour {
 	}
 
 	void openDoor(){
+		doorOpen = true;
 		door.SetActive (false);
+
 	}
 
 	void closeDoor(){
+		doorOpen = false;
 		door.SetActive (true);
 	}
 }
