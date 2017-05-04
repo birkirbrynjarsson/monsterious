@@ -9,6 +9,14 @@ public class ClickOnMonster : MonoBehaviour {
     public Text scoreText;
     private int score;
     public int scoreValue;
+    public Scrollbar StressBar;
+    public float Stress = 100;
+
+    void Stesser(float value)
+    {
+        Stress -= value;
+        StressBar.size = Stress / 100f;
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +53,7 @@ public class ClickOnMonster : MonoBehaviour {
                         monster.transform.position = new Vector2((elevator.transform.position.x - 0.87f), (elevator.transform.position.y + 0.06f));
                         Destroy(bubble);
                         AddScore(scoreValue);
+                        Stesser(scoreValue);
                         //elevator.transform.position;
                     }
                     else if (elevator.transform.childCount == 8)
@@ -53,6 +62,7 @@ public class ClickOnMonster : MonoBehaviour {
                         monster.transform.position = new Vector2(elevator.transform.position.x - 0.87f, (elevator.transform.position.y - 0.5f));
                         Destroy(bubble);
                         AddScore(scoreValue);
+                        Stesser(scoreValue);
                         //elevator.transform.position;
                     }
                     else
