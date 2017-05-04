@@ -18,8 +18,9 @@ public class Patience : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //TODO: Find random number from 1-7 and put to floor
-        rand = new System.Random((int)Time.time);
+		rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
         desiredFloor = rand.Next(1, 8);
+		speed = 1.0f;
     
         TextIndicator.GetComponent<Text>().text = desiredFloor.ToString();
     }
