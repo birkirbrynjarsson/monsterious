@@ -146,7 +146,7 @@ public class GameControllerTest : MonoBehaviour {
                             totalMonsters--;
 							repositionMonstersAtFloor(floor);
                             //Stresser(scoreValue);
-                            AddScore(scoreValue);
+                            //AddScore(scoreValue);
                         } else if (el.GetChild (1).childCount == 0) {
 							monster.transform.parent = el.GetChild (1).transform;
 							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
@@ -155,7 +155,7 @@ public class GameControllerTest : MonoBehaviour {
                             totalMonsters--;
 							repositionMonstersAtFloor(floor);
                             //Stresser(scoreValue);
-                            AddScore(scoreValue);
+                            //AddScore(scoreValue);
                         } else {
 							Debug.Log ("Elevator is full");
 						}
@@ -248,7 +248,7 @@ public class GameControllerTest : MonoBehaviour {
             if (monster1Script.desiredFloor == (elFloor+1))
             {
                 Destroy(monster1);
-                increaseScore(10);
+                AddScore(scoreValue);
             }
         }
 		if (elevator.transform.GetChild (1).childCount > 0) {
@@ -257,7 +257,7 @@ public class GameControllerTest : MonoBehaviour {
             if(monster2Script.desiredFloor == (elFloor+1))
             {
                 Destroy(monster2);
-                increaseScore(10);
+                AddScore(scoreValue);
             }  
 		}
 	}
