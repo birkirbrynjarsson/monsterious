@@ -100,6 +100,7 @@ public class GameControllerTest : MonoBehaviour {
 							monster.transform.parent = el.GetChild (0).transform;
 							monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
                             monsterScript.patience.transform.position = new Vector2((el.GetChild(0).transform.position.x) - 0.05f, (el.GetChild(0).transform.position.y + 0.06f));
+                            monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
 							repositionMonstersAtFloor(floor);
                             Stesser(scoreValue);
@@ -108,6 +109,7 @@ public class GameControllerTest : MonoBehaviour {
 							monster.transform.parent = el.GetChild (1).transform;
 							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
                             monsterScript.patience.transform.position = new Vector2((el.GetChild(1).transform.position.x) - 0.05f, (el.GetChild(1).transform.position.y + 0.06f));
+                            monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
 							repositionMonstersAtFloor(floor);
                             Stesser(scoreValue);
@@ -195,12 +197,26 @@ public class GameControllerTest : MonoBehaviour {
 				}
 			}
 		}
+
 		elevator.GetComponent<ElevatorTest> ().openDoor ();
-		if (elevator.transform.GetChild (0).childCount > 0) {
-			Destroy (elevator.transform.GetChild (0).GetChild (0).gameObject);
-		}
+        
+        if (elevator.transform.GetChild (0).childCount > 0) {
+            GameObject monster1 = elevator.transform.GetChild(0).GetChild(0).gameObject;
+            Monster monster1Script = monster1.GetComponent<Monster>();
+            if (monster1Script.desiredFloor == (elFloor+1))
+            {
+                Destroy(monster1);
+                increaseScore(10);
+            }
+        }
 		if (elevator.transform.GetChild (1).childCount > 0) {
-			Destroy (elevator.transform.GetChild (1).GetChild (0).gameObject);
+            GameObject monster2 = elevator.transform.GetChild(1).GetChild(0).gameObject;
+            Monster monster2Script = monster2.GetComponent<Monster>();
+            if(monster2Script.desiredFloor == (elFloor+1))
+            {
+                Destroy(monster2);
+                increaseScore(10);
+            }  
 		}
 	}
 
@@ -216,9 +232,23 @@ public class GameControllerTest : MonoBehaviour {
 	}
 
     public void monsterLeft(Transform floor){
-        
-        Debug.Log("HEYYYYYYYY!!!!!!!!!!!!!! " + floor.name);
         totalMonsters--;
         repositionMonstersAtFloor(floor);
+    }
+
+    public void removeBubble(GameObject elev)
+    {
+        if (elev.transform.GetChild(0).childCount > 0)
+        {
+            GameObject monster1 = elev.transform.GetChild(0).GetChild(0).gameObject;
+            Monster monster1Script = monster1.GetComponent<Monster>();
+            Destroy(monster1Script.patience);
+        }
+        if (elev.transform.GetChild(1).childCount > 0)
+        {
+            GameObject monster2 = elev.transform.GetChild(1).GetChild(0).gameObject;
+            Monster monster2Script = monster2.GetComponent<Monster>();
+            Destroy(monster2Script.patience);
+        }
     }
 }

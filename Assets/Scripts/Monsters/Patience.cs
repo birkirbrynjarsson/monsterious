@@ -19,18 +19,20 @@ public class Patience : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //TODO: Find random number from 1-7 and put to floor
         
     }
 
     // Update is called once per frame
     void Update () {
-		
-        if(currentAmount < 100)
+		if(currentAmount == -1)
+        {
+
+        }
+        else if(currentAmount < 100)
         {
             currentAmount += speed * Time.deltaTime;
         }
-        else // 100%
+        else // 100
         {   
             //TODO: Let the monster know that it should leave.. and the Patience meter will drop 
         }
