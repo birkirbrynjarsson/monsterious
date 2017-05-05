@@ -10,10 +10,11 @@ public class GameControllerTest : MonoBehaviour {
 	private const int MAX_MONSTERS = 35; // floors * monsters/floor
 	private const float X_MONSTER_START = -0.18f;
 	private const float X_MONSTER_WIDTH = 0.64f;
+	private const float LEAVE_PENALTY = 0.05f;
 
 //	private static GUIText scoreText;
 	private static int score;
-	public static float spawnSpeed = 3.0f;
+	public static float spawnSpeed = 1.0f;
 	private static float lastSpawn;
 	private static List<float> floorPosY;
 	private static List<Transform> floors;
@@ -21,6 +22,8 @@ public class GameControllerTest : MonoBehaviour {
 	private static List<float> floorPosX;
 	private static int totalMonsters = 0;
 	private static List<Transform> elevators;
+	private static float floorStress;
+	private static float otherStress;
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -38,11 +41,24 @@ public class GameControllerTest : MonoBehaviour {
         scoreText.text = "Score " + score;
     }
 
-    void Stesser(float value)
-    {
-        Stress -= value;
-        StressBar.size = Stress / 100f;
+	void calculateFloorStress(){
+		floorStress = 0.0f;
+		foreach (Transform f in floors) {
+			foreach (Transform m in f) {
+				floorStress += m.GetComponent<Monster> ().getPatience();
+			}
+		}
+		floorStress = floorStress / ((MAX_MONSTERS - MAX_MONSTER_FLOOR) * 100.0f);
+	}
+
+    void Stresser(float value){
+        otherStress += value;
     }
+
+	void calculateDisplayStress (){
+		Stress = floorStress + otherStress;
+		StressBar.size = 1 - Stress;
+	}
 
     // Use this for initialization
     void Start () {
@@ -68,7 +84,7 @@ public class GameControllerTest : MonoBehaviour {
 		foreach (Transform child in el.transform) {
 			elevators.Add (child);
 		}
-		rand = new System.Random ((int)Time.time);
+		rand = new System.Random ((int)System.DateTime.Now.Ticks & 0x0000FFFF);
 		totalMonsters = 0;
         score = 0;
         UpdateScore ();
@@ -77,6 +93,9 @@ public class GameControllerTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		// TotalStress algorithm
+		calculateFloorStress();
+		calculateDisplayStress ();
 		if (Time.time - lastSpawn >= spawnSpeed) {
 			spawnMonster ();
 		}
@@ -103,7 +122,7 @@ public class GameControllerTest : MonoBehaviour {
                             monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
 							repositionMonstersAtFloor(floor);
-                            Stesser(scoreValue);
+                            //Stresser(scoreValue);
                             AddScore(scoreValue);
                         } else if (el.GetChild (1).childCount == 0) {
 							monster.transform.parent = el.GetChild (1).transform;
@@ -112,7 +131,7 @@ public class GameControllerTest : MonoBehaviour {
                             monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
 							repositionMonstersAtFloor(floor);
-                            Stesser(scoreValue);
+                            //Stresser(scoreValue);
                             AddScore(scoreValue);
                         } else {
 							Debug.Log ("Elevator is full");
