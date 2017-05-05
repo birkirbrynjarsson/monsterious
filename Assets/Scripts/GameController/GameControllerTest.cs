@@ -65,7 +65,7 @@ public class GameControllerTest : MonoBehaviour {
 
 	void calculateDisplayStress (){
 		if (otherStress > 0.0) {
-			otherStress -= Time.deltaTime / 20f;
+			otherStress -= Time.deltaTime / 120f;
 		}
 		Stress = floorStress + otherStress;
 		StressBar.size = 1 - Stress;
@@ -322,7 +322,7 @@ public class GameControllerTest : MonoBehaviour {
     }
 
 	public void increaseSpawnSpeed(){
-		if (spawnSpeed >= 2.0f) {
+		if (spawnSpeed >= 2.1f) {
 			spawnSpeed -= spawnIncrement;
 		}
 		lastIncrement = Time.time;
