@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameControllerTest : MonoBehaviour {
 
@@ -29,6 +31,8 @@ public class GameControllerTest : MonoBehaviour {
     public float Stress = 100;
     public Text scoreText;
     public int scoreValue;
+    Vector2 touchPos;
+    public GraphicRaycaster GR;
 
     void AddScore(int newScoreValue)
     {
@@ -93,7 +97,7 @@ public class GameControllerTest : MonoBehaviour {
         UpdateScore ();
         spawnMonster ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		// TotalStress algorithm
@@ -103,9 +107,22 @@ public class GameControllerTest : MonoBehaviour {
 			spawnMonster ();
 		}
 		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
-			RaycastHit2D hit;
+            RaycastHit2D hit;
 			hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position), Vector2.zero);
-			if (hit.collider != null && hit.transform.gameObject.tag == "Monster") {
+            if (hit.collider != null && hit.transform.gameObject.tag == "Reset")
+            {
+                Time.timeScale = 0;
+                GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
+                //Menu(GameObject.Find("Menu"));
+                /*if (false)
+                {
+                    Debug.Log("You clicked me!");
+                    // Application.LoadLevel(Application.loadedLevel);
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }*/
+                
+            }
+            else if (hit.collider != null && hit.transform.gameObject.tag == "Monster") {
 				GameObject monster = hit.transform.gameObject;
 				Transform floor = monster.transform.parent;
 				int floorNr = -1;
@@ -214,7 +231,7 @@ public class GameControllerTest : MonoBehaviour {
 		int elFloor = elevator.GetComponent<ElevatorTest> ().currFloor;
 		if (elevators != null) {
 			foreach(Transform e in elevators){
-				if (e.gameObject != elevator && e.GetComponent<ElevatorTest> ().currFloor == elFloor) {
+				if (e != null && e.gameObject != elevator && e.GetComponent<ElevatorTest> ().currFloor == elFloor) {
 					e.GetComponent<ElevatorTest> ().closeDoor ();
 				}
 			}
