@@ -61,7 +61,7 @@ public class Monster : MonoBehaviour {
         desiredFloor = rand.Next(1, 8);
         while(desiredFloor == currentFloor)
         {
-            desiredFloor = rand.Next(0, 8);
+            desiredFloor = rand.Next(1, 8);
         }      
         
       
