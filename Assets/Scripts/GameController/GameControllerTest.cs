@@ -265,8 +265,7 @@ public class GameControllerTest : MonoBehaviour {
         {
             GameObject monster1 = elev.transform.GetChild(0).GetChild(0).gameObject;
             Monster monster1Script = monster1.GetComponent<Monster>();
-            Destroy(monster1Script.patience);  
-            
+            Destroy(monster1Script.patience); 
             //if
             /*
             GameObject floorPic = (GameObject)Resources.Load(monster1Script.desiredFloor.ToString());

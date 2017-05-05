@@ -25,6 +25,8 @@ public class ElevatorTest : MonoBehaviour {
 	private GameObject upActive;
 	private GameObject downActive;
 	private GameControllerTest gameController;
+	private GameObject lvl1Indicators;
+	private GameObject lvl2Indicators;
 
 	// Use this for initialization
 	void Start () {
@@ -43,9 +45,18 @@ public class ElevatorTest : MonoBehaviour {
 		upActive.SetActive (false);
 		downActive.SetActive (false);
 		destFloor = currFloor;
+		lvl1Indicators = gameObject.transform.FindChild ("lvl1-Destinations").gameObject;
+		lvl2Indicators = gameObject.transform.FindChild ("lvl2-Destinations").gameObject;
+		foreach (Transform child in lvl1Indicators.transform) {
+			child.gameObject.SetActive (true);
+		}
+		foreach (Transform child in lvl2Indicators.transform) {
+			child.gameObject.SetActive (true);
+		}
 		iTween.Init (gameObject);
 		closeDoor ();
 		arrivedAtFloor ();
+		disableFloorIndicator ();
 	}
 		
 	// Update is called once per frame
@@ -119,6 +130,7 @@ public class ElevatorTest : MonoBehaviour {
 			easing = iTween.EaseType.easeOutSine;
 		} else {
             gameController.removeBubble(gameObject);
+			checkFloorIndicator ();
             //gameController.addNumber(gameObject);
             closeDoor ();
 			arriveTime = Time.time + speed;
@@ -146,11 +158,43 @@ public class ElevatorTest : MonoBehaviour {
 
 	public void openDoor(){
 		doorOpen = true;
+		disableFloorIndicator ();
 		door.SetActive (false);
 	}
 
 	public void closeDoor(){
 		doorOpen = false;
 		door.SetActive (true);
+		checkFloorIndicator ();
+	}
+
+	public void disableFloorIndicator(){
+		foreach (Transform child in lvl1Indicators.transform) {
+			child.gameObject.SetActive (false);
+		}
+		foreach (Transform child in lvl2Indicators.transform) {
+			child.gameObject.SetActive (false);
+		}
+	}
+
+	public void checkFloorIndicator(){
+		if (gameObject.transform.FindChild ("lvl1").childCount > 0) {
+			GameObject monster = gameObject.transform.FindChild ("lvl1").transform.GetChild (0).gameObject;
+			Monster mScript = monster.GetComponent<Monster> ();
+			activateFloorIndicator (1, mScript.desiredFloor - 1);
+		} 
+		if (gameObject.transform.FindChild ("lvl2").childCount > 0) {
+			GameObject monster = gameObject.transform.FindChild ("lvl2").transform.GetChild (0).gameObject;
+			Monster mScript = monster.GetComponent<Monster> ();
+			activateFloorIndicator (2, mScript.desiredFloor - 1);
+		}
+	}
+
+	public void activateFloorIndicator(int level, int floorNr){
+		if (level == 1) {
+			lvl1Indicators.transform.GetChild (floorNr).gameObject.SetActive (true);
+		} else if (level == 2) {
+			lvl2Indicators.transform.GetChild (floorNr).gameObject.SetActive (true);
+		}
 	}
 }
