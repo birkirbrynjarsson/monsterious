@@ -16,8 +16,11 @@ public class GameControllerTest : MonoBehaviour {
 
 //	private static GUIText scoreText;
 	private static int score;
-	public static float spawnSpeed = 1.0f;
+	public static float spawnSpeed = 7.0f;
 	private static float lastSpawn;
+	private static float incrementSpeed = 10f;
+	private static float spawnIncrement = 0.5f;
+	private static float lastIncrement;
 	private static List<float> floorPosY;
 	private static List<Transform> floors;
 	private static System.Random rand;
@@ -113,6 +116,9 @@ public class GameControllerTest : MonoBehaviour {
         // TotalStress algorithm
         calculateFloorStress();
 		calculateDisplayStress ();
+		if (Time.time - lastIncrement >= incrementSpeed) {
+			increaseSpawnSpeed ();
+		}
 		if (Time.time - lastSpawn >= spawnSpeed) {
 			spawnMonster ();
 		}
@@ -308,4 +314,9 @@ public class GameControllerTest : MonoBehaviour {
 
         }
     }
+
+	public void increaseSpawnSpeed(){
+		spawnSpeed -= spawnIncrement;
+		lastIncrement = Time.time;
+	}
 }

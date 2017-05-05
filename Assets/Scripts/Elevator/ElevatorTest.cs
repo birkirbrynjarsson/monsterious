@@ -54,8 +54,10 @@ public class ElevatorTest : MonoBehaviour {
 			child.gameObject.SetActive (true);
 		}
 		iTween.Init (gameObject);
-		closeDoor ();
-		arrivedAtFloor ();
+		if (gameObject.name == "Elevator1") {
+			openDoor ();
+		} else closeDoor ();
+
 		disableFloorIndicator ();
 	}
 		
