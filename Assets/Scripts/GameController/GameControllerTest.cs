@@ -10,7 +10,7 @@ public class GameControllerTest : MonoBehaviour {
 	private const int MAX_MONSTERS = 35; // floors * monsters/floor
 	private const float X_MONSTER_START = -0.18f;
 	private const float X_MONSTER_WIDTH = 0.64f;
-	private const float LEAVE_PENALTY = 0.05f;
+	private const float LEAVE_PENALTY = 0.2f;
 
 //	private static GUIText scoreText;
 	private static int score;
@@ -56,6 +56,9 @@ public class GameControllerTest : MonoBehaviour {
     }
 
 	void calculateDisplayStress (){
+		if (otherStress > 0.0) {
+			otherStress -= Time.deltaTime / 20f;
+		}
 		Stress = floorStress + otherStress;
 		StressBar.size = 1 - Stress;
 	}
@@ -252,6 +255,7 @@ public class GameControllerTest : MonoBehaviour {
 
     public void monsterLeft(Transform floor){
         totalMonsters--;
+		Stresser (LEAVE_PENALTY);
         repositionMonstersAtFloor(floor);
     }
 

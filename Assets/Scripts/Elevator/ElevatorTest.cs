@@ -6,7 +6,7 @@ public class ElevatorTest : MonoBehaviour {
 
 	const float FLOOR_NUDGE = 0.925f;
 
-	public float speed;
+	public float speed = 1.0f;
 	public BoxCollider2D colliderUp;
 	public BoxCollider2D colliderDown;
 
