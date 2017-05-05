@@ -96,12 +96,22 @@ public class GameControllerTest : MonoBehaviour {
         score = 0;
         UpdateScore ();
         spawnMonster ();
-	}
+        Stress = 0f;
+        floorStress = 0f;
+        otherStress = 0f;
+        Time.timeScale = 1;
+    }
 
 	// Update is called once per frame
 	void Update () {
-		// TotalStress algorithm
-		calculateFloorStress();
+        if (Stress >= 1f)
+        {
+            Time.timeScale = 0;
+            GameObject.Find("GameOver").transform.GetComponent<Canvas>().enabled = true;
+            return;
+        }
+        // TotalStress algorithm
+        calculateFloorStress();
 		calculateDisplayStress ();
 		if (Time.time - lastSpawn >= spawnSpeed) {
 			spawnMonster ();
@@ -113,14 +123,7 @@ public class GameControllerTest : MonoBehaviour {
             {
                 Time.timeScale = 0;
                 GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
-                //Menu(GameObject.Find("Menu"));
-                /*if (false)
-                {
-                    Debug.Log("You clicked me!");
-                    // Application.LoadLevel(Application.loadedLevel);
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                }*/
-                
+                return;
             }
             else if (hit.collider != null && hit.transform.gameObject.tag == "Monster") {
 				GameObject monster = hit.transform.gameObject;
