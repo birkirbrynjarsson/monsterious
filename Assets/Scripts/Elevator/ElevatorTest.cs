@@ -97,6 +97,7 @@ public class ElevatorTest : MonoBehaviour {
 			arriveTime += speed;
 			easing = iTween.EaseType.easeOutSine;
 		} else {
+            gameController.removeBubble(gameObject);
 			closeDoor ();
 			arriveTime = Time.time + speed;
 			gameController.elevatorDeparting (gameObject);
@@ -116,7 +117,8 @@ public class ElevatorTest : MonoBehaviour {
 			arriveTime += speed;
 			easing = iTween.EaseType.easeOutSine;
 		} else {
-			closeDoor ();
+            gameController.removeBubble(gameObject);
+            closeDoor ();
 			arriveTime = Time.time + speed;
 			gameController.elevatorDeparting (gameObject);
 		}

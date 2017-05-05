@@ -9,7 +9,7 @@ public class Monster : MonoBehaviour {
     public int currentFloor;
     public int desiredFloor;
     public GameObject patience;
-    private Patience patienceScript;
+    public Patience patienceScript;
     private GameControllerTest gameScript;
     private static System.Random rand;
 
