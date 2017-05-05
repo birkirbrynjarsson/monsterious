@@ -46,6 +46,7 @@ public class GameControllerTest : MonoBehaviour {
     void UpdateScore()
     {
         scoreText.text = "Score " + score;
+        GetComponent<AudioSource>().Play();
     }
 
 	void calculateFloorStress(){
