@@ -73,6 +73,16 @@ public class GameControllerTest : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+		score = 0;
+		totalMonsters = 0;
+		spawnSpeed = 7.0f;
+		lastSpawn = Time.time;
+		incrementSpeed = 10f;
+		spawnIncrement = 0.5f;
+		lastIncrement = Time.time;
+		Stress = 0f;
+		floorStress = 0f;
+		otherStress = 0f;
 		// Initialize the list of floors and y and x Coordinates
 		GameObject floorList = GameObject.Find ("Floors");
 		floors = new List<Transform> ();
@@ -96,13 +106,8 @@ public class GameControllerTest : MonoBehaviour {
 			elevators.Add (child);
 		}
 		rand = new System.Random ((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-		totalMonsters = 0;
-        score = 0;
         UpdateScore ();
         spawnMonster ();
-        Stress = 0f;
-        floorStress = 0f;
-        otherStress = 0f;
         Time.timeScale = 1;
     }
 
