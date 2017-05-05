@@ -12,10 +12,11 @@ public class GameControllerTest : MonoBehaviour {
 	private const int MAX_MONSTERS = 35; // floors * monsters/floor
 	private const float X_MONSTER_START = -0.18f;
 	private const float X_MONSTER_WIDTH = 0.64f;
+	private const float LEAVE_PENALTY = 0.2f;
 
 //	private static GUIText scoreText;
 	private static int score;
-	public static float spawnSpeed = 3.0f;
+	public static float spawnSpeed = 1.0f;
 	private static float lastSpawn;
 	private static List<float> floorPosY;
 	private static List<Transform> floors;
@@ -23,6 +24,8 @@ public class GameControllerTest : MonoBehaviour {
 	private static List<float> floorPosX;
 	private static int totalMonsters = 0;
 	private static List<Transform> elevators;
+	private static float floorStress;
+	private static float otherStress;
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -42,11 +45,27 @@ public class GameControllerTest : MonoBehaviour {
         scoreText.text = "Score " + score;
     }
 
-    void Stesser(float value)
-    {
-        Stress -= value;
-        StressBar.size = Stress / 100f;
+	void calculateFloorStress(){
+		floorStress = 0.0f;
+		foreach (Transform f in floors) {
+			foreach (Transform m in f) {
+				floorStress += m.GetComponent<Monster> ().getPatience();
+			}
+		}
+		floorStress = floorStress / ((MAX_MONSTERS - MAX_MONSTER_FLOOR) * 100.0f);
+	}
+
+    void Stresser(float value){
+        otherStress += value;
     }
+
+	void calculateDisplayStress (){
+		if (otherStress > 0.0) {
+			otherStress -= Time.deltaTime / 20f;
+		}
+		Stress = floorStress + otherStress;
+		StressBar.size = 1 - Stress;
+	}
 
     // Use this for initialization
     void Start () {
@@ -72,55 +91,18 @@ public class GameControllerTest : MonoBehaviour {
 		foreach (Transform child in el.transform) {
 			elevators.Add (child);
 		}
-		rand = new System.Random ((int)Time.time);
+		rand = new System.Random ((int)System.DateTime.Now.Ticks & 0x0000FFFF);
 		totalMonsters = 0;
         score = 0;
         UpdateScore ();
         spawnMonster ();
 	}
 
-    public void Menu(GameObject menu)
-    { 
-            Debug.Log("hello");
-            return;
-        /*bool disabled = true;
-        while (disabled)
-        {
-            if (Input.touchCount > 0)
-            {
-                if (Input.GetTouch(0).phase == TouchPhase.Began)
-                {
-                    RaycastHit2D hit;
-                    hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Vector2.zero);
-                    if (hit.transform.name == "Restart")
-                    {
-                        //Time.timeScale = 1;
-                        menu.transform.GetComponent<Canvas>().enabled = false;
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                        disabled = false;
-                    }
-                    //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-                }
-            }
-        }*/
-
-    }
-
-    /*private bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        if(results != null)
-        {
-            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-            return results.Count > 0;
-        }
-        return true;
-    }	*/
-    // Update is called once per frame
-    void Update () {
+	// Update is called once per frame
+	void Update () {
+		// TotalStress algorithm
+		calculateFloorStress();
+		calculateDisplayStress ();
 		if (Time.time - lastSpawn >= spawnSpeed) {
 			spawnMonster ();
 		}
@@ -150,21 +132,26 @@ public class GameControllerTest : MonoBehaviour {
 					}
 				}
 				if (isElevatorAtFloor (floorNr) && floorNr != -1) {
+                    Monster monsterScript = monster.GetComponent<Monster>();
 					Transform el = getOpenElevatorAtFloor (floorNr);
 					if (el != null) {
 						if (el.GetChild (0).childCount == 0) {
 							monster.transform.parent = el.GetChild (0).transform;
 							monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
-							totalMonsters--;
+                            monsterScript.patience.transform.position = new Vector2((el.GetChild(0).transform.position.x) - 0.05f, (el.GetChild(0).transform.position.y + 0.06f));
+                            monsterScript.patienceScript.currentAmount = -1;
+                            totalMonsters--;
 							repositionMonstersAtFloor(floor);
-                            Stesser(scoreValue);
+                            //Stresser(scoreValue);
                             AddScore(scoreValue);
                         } else if (el.GetChild (1).childCount == 0) {
 							monster.transform.parent = el.GetChild (1).transform;
 							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
-							totalMonsters--;
+                            monsterScript.patience.transform.position = new Vector2((el.GetChild(1).transform.position.x) - 0.05f, (el.GetChild(1).transform.position.y + 0.06f));
+                            monsterScript.patienceScript.currentAmount = -1;
+                            totalMonsters--;
 							repositionMonstersAtFloor(floor);
-                            Stesser(scoreValue);
+                            //Stresser(scoreValue);
                             AddScore(scoreValue);
                         } else {
 							Debug.Log ("Elevator is full");
@@ -181,7 +168,8 @@ public class GameControllerTest : MonoBehaviour {
 			Vector3 pos = child.gameObject.transform.position;
 			pos.x = floorPosX [i];
 			child.gameObject.transform.position = pos;
-			i++;
+            child.gameObject.GetComponent<Monster>().updatePos(pos);
+            i++;
 		}
 	}
 
@@ -227,9 +215,16 @@ public class GameControllerTest : MonoBehaviour {
 			floor = floors[floorIndex].gameObject;
 		}
 		Debug.Log ("Floor Index: " + floorIndex);
+        
 		int posX = floor.transform.childCount;
-		Instantiate (green, new Vector2 (floorPosX[posX], floorPosY[floorIndex]), Quaternion.identity).transform.parent = floor.transform;
-		totalMonsters++;
+        GameObject monster = Instantiate(green, new Vector2(floorPosX[posX], floorPosY[floorIndex]), Quaternion.identity);
+        monster.transform.parent = floor.transform;
+
+        // Set current floor in Monster to get desired random number
+        Monster monsterScript = monster.GetComponent<Monster>();
+        int currFloor = floorIndex + 1;
+        monsterScript.setCurrentFloor(currFloor);
+        totalMonsters++;
 	}
 
 	public void elevatorArrived (GameObject elevator){
@@ -241,12 +236,26 @@ public class GameControllerTest : MonoBehaviour {
 				}
 			}
 		}
+
 		elevator.GetComponent<ElevatorTest> ().openDoor ();
-		if (elevator.transform.GetChild (0).childCount > 0) {
-			Destroy (elevator.transform.GetChild (0).GetChild (0).gameObject);
-		}
+        
+        if (elevator.transform.GetChild (0).childCount > 0) {
+            GameObject monster1 = elevator.transform.GetChild(0).GetChild(0).gameObject;
+            Monster monster1Script = monster1.GetComponent<Monster>();
+            if (monster1Script.desiredFloor == (elFloor+1))
+            {
+                Destroy(monster1);
+                increaseScore(10);
+            }
+        }
 		if (elevator.transform.GetChild (1).childCount > 0) {
-			Destroy (elevator.transform.GetChild (1).GetChild (0).gameObject);
+            GameObject monster2 = elevator.transform.GetChild(1).GetChild(0).gameObject;
+            Monster monster2Script = monster2.GetComponent<Monster>();
+            if(monster2Script.desiredFloor == (elFloor+1))
+            {
+                Destroy(monster2);
+                increaseScore(10);
+            }  
 		}
 	}
 
@@ -262,9 +271,39 @@ public class GameControllerTest : MonoBehaviour {
 	}
 
     public void monsterLeft(Transform floor){
-        
-        Debug.Log("HEYYYYYYYY!!!!!!!!!!!!!! " + floor.name);
         totalMonsters--;
+		Stresser (LEAVE_PENALTY);
         repositionMonstersAtFloor(floor);
+    }
+
+    public void removeBubble(GameObject elev)
+    {
+        if (elev.transform.GetChild(0).childCount > 0)
+        {
+            GameObject monster1 = elev.transform.GetChild(0).GetChild(0).gameObject;
+            Monster monster1Script = monster1.GetComponent<Monster>();
+            Destroy(monster1Script.patience);  
+            
+            //if
+            /*
+            GameObject floorPic = (GameObject)Resources.Load(monster1Script.desiredFloor.ToString());
+            GameObject floorNumber = Instantiate(floorPic, new Vector2(elev.transform.position.x, elev.transform.position.y), Quaternion.identity);
+            floorNumber.transform.parent = elev.transform;
+            */
+        }
+        if (elev.transform.GetChild(1).childCount > 0)
+        {
+            GameObject monster2 = elev.transform.GetChild(1).GetChild(0).gameObject;
+            Monster monster2Script = monster2.GetComponent<Monster>();
+            Destroy(monster2Script.patience);
+
+            //if
+            /*
+            GameObject floorPic = (GameObject)Resources.Load(monster2Script.desiredFloor.ToString());
+            GameObject floorNumber = Instantiate(floorPic, new Vector2(elev.transform.position.x, elev.transform.position.y), Quaternion.identity);
+            floorNumber.transform.parent = elev.transform;
+            */
+
+        }
     }
 }

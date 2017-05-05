@@ -6,7 +6,7 @@ public class ElevatorTest : MonoBehaviour {
 
 	const float FLOOR_NUDGE = 0.925f;
 
-	public float speed;
+	public float speed = 1.0f;
 	public BoxCollider2D colliderUp;
 	public BoxCollider2D colliderDown;
 
@@ -97,10 +97,12 @@ public class ElevatorTest : MonoBehaviour {
 			arriveTime += speed;
 			easing = iTween.EaseType.easeOutSine;
 		} else {
-			closeDoor ();
+            gameController.removeBubble(gameObject);
+            //gameController.addNumber(gameObject);
+            closeDoor ();
 			arriveTime = Time.time + speed;
-			gameController.elevatorDeparting (gameObject);
-		}
+			gameController.elevatorDeparting (gameObject);        
+        }
 		movingUp = true;
 		upActive.gameObject.SetActive (true);
 		destSpeed = arriveTime - Time.time;
@@ -116,7 +118,9 @@ public class ElevatorTest : MonoBehaviour {
 			arriveTime += speed;
 			easing = iTween.EaseType.easeOutSine;
 		} else {
-			closeDoor ();
+            gameController.removeBubble(gameObject);
+            //gameController.addNumber(gameObject);
+            closeDoor ();
 			arriveTime = Time.time + speed;
 			gameController.elevatorDeparting (gameObject);
 		}
