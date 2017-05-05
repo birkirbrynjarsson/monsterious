@@ -316,7 +316,9 @@ public class GameControllerTest : MonoBehaviour {
     }
 
 	public void increaseSpawnSpeed(){
-		spawnSpeed -= spawnIncrement;
+		if (spawnSpeed >= 2.0f) {
+			spawnSpeed -= spawnIncrement;
+		}
 		lastIncrement = Time.time;
 	}
 }
