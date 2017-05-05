@@ -44,7 +44,11 @@ public class Monster : MonoBehaviour {
 	}
 		
 	public float getPatience(){
-		return patienceScript.currentAmount;
+        if(patienceScript != null)
+        {
+            return patienceScript.currentAmount;
+        }
+        return 0.0f;
 	}
 
     internal void updatePos(Vector2 pos)
