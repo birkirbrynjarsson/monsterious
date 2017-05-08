@@ -10,13 +10,13 @@ public class ElevatorTest : MonoBehaviour {
 	public BoxCollider2D colliderUp;
 	public BoxCollider2D colliderDown;
 
-	private Vector3 destPos;
-	private List<float> floorPosY;
+	public Vector3 destPos;
+	public List<float> floorPosY;
 
 	public int currFloor = 0;
 	public int destFloor = 0;
-	private float arriveTime = .0f;
-	private float destSpeed = .0f;
+	public float arriveTime = .0f;
+	public float destSpeed = .0f;
 	public bool movingUp = false;
 	public bool movingDown = false;
 	public bool doorOpen = false;
@@ -101,7 +101,7 @@ public class ElevatorTest : MonoBehaviour {
 
 	}
 
-	void elevatorUp(){
+	public void elevatorUp(){
 		destPos.y = floorPosY [destFloor];
 		iTween.EaseType easing = iTween.EaseType.easeInOutSine;
 		// Check if arriveTime is later, means that the elevator is moving

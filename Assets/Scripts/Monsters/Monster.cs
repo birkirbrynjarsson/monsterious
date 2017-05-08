@@ -62,10 +62,10 @@ public class Monster : MonoBehaviour {
     {
         currentFloor = curr;
         rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-        desiredFloor = rand.Next(1, 8);
+        desiredFloor = rand.Next(1, 7);
         while(desiredFloor == currentFloor)
         {
-            desiredFloor = rand.Next(1, 8);
+            desiredFloor = rand.Next(1, 7);
         }      
         
       

@@ -8,9 +8,9 @@ using UnityEngine.EventSystems;
 public class GameControllerTest : MonoBehaviour {
 
 	private const float FLOOR_NUDGE = 0.36f;
-	private const int MAX_MONSTER_FLOOR = 5;
-	private const int MAX_MONSTERS = 35; // floors * monsters/floor
-	private const float X_MONSTER_START = -0.18f;
+	private const int MAX_MONSTER_FLOOR = 4;
+	private const int MAX_MONSTERS = 24; // floors * monsters/floor
+	private const float X_MONSTER_START = 0.2f;
 	private const float X_MONSTER_WIDTH = 0.64f;
 	private const float LEAVE_PENALTY = 0.2f;
 
@@ -131,7 +131,7 @@ public class GameControllerTest : MonoBehaviour {
 		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
             RaycastHit2D hit;
 			hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position), Vector2.zero);
-            if (hit.collider != null && hit.transform.gameObject.tag == "Reset")
+            if (hit.collider != null && (hit.transform.gameObject.tag == "Reset" || hit.transform.gameObject.tag == "MainMenu"))
             {
                 Time.timeScale = 0;
                 GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
@@ -191,7 +191,10 @@ public class GameControllerTest : MonoBehaviour {
 	public bool isElevatorAtFloor(int floorNr){
 		foreach (Transform el in elevators) {
 			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
-			if (elscript.currFloor == floorNr && !elscript.movingDown && !elscript.movingUp) {
+            ClickOnFloor clscript = GameObject.Find("FloorClick").GetComponent<ClickOnFloor>();
+            Debug.Log(elscript);
+            Debug.Log(clscript);
+			if ((elscript.currFloor == floorNr || clscript.floorNr == floorNr) && !elscript.movingDown && !elscript.movingUp) {
 				return true;
 			}
 		}
@@ -201,7 +204,8 @@ public class GameControllerTest : MonoBehaviour {
 	public Transform getOpenElevatorAtFloor(int floorNr){
 		foreach (Transform el in elevators) {
 			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
-			if (elscript.currFloor == floorNr && !elscript.movingDown && !elscript.movingUp && elscript.doorOpen){
+            ClickOnFloor clscript = el.gameObject.GetComponent<ClickOnFloor>();
+            if ((elscript.currFloor == floorNr || clscript.floorNr == floorNr) && !elscript.movingDown && !elscript.movingUp && elscript.doorOpen){
 				return el;
 			}
 		}
@@ -274,7 +278,46 @@ public class GameControllerTest : MonoBehaviour {
 		}
 	}
 
-	public void elevatorDeparting(GameObject elevator){
+    public void Arrived(GameObject elevator)
+    {
+        int elFloor = elevator.GetComponent<ClickOnFloor> ().floorNr;
+
+        if (elevators != null)
+        {
+            foreach (Transform e in elevators)
+            {
+                if (e != null && e.gameObject != elevator && e.GetComponent<ClickOnFloor>().floorNr == elFloor)
+                {
+                    e.GetComponent<ClickOnFloor>().closeDoor();
+                }
+            }
+        }
+
+        elevator.GetComponent<ClickOnFloor>().openDoor();
+
+        if (elevator.transform.GetChild(0).childCount > 0)
+        {
+            GameObject monster1 = elevator.transform.GetChild(0).GetChild(0).gameObject;
+            Monster monster1Script = monster1.GetComponent<Monster>();
+            if (monster1Script.desiredFloor == (elFloor + 1))
+            {
+                Destroy(monster1);
+                AddScore(scoreValue);
+            }
+        }
+        if (elevator.transform.GetChild(1).childCount > 0)
+        {
+            GameObject monster2 = elevator.transform.GetChild(1).GetChild(0).gameObject;
+            Monster monster2Script = monster2.GetComponent<Monster>();
+            if (monster2Script.desiredFloor == (elFloor + 1))
+            {
+                Destroy(monster2);
+                AddScore(scoreValue);
+            }
+        }
+    }
+
+    public void elevatorDeparting(GameObject elevator){
 		int elFloor = elevator.GetComponent<ElevatorTest> ().currFloor;
 		foreach(Transform e in elevators){
 			ElevatorTest elScript = e.GetComponent<ElevatorTest> ();
@@ -284,6 +327,21 @@ public class GameControllerTest : MonoBehaviour {
 			}
 		}
 	}
+
+    public void Departing(GameObject elevator)
+    {
+        int elFloor = elevator.GetComponent<ClickOnFloor>().floorNr;
+        foreach (Transform e in elevators)
+        {
+            ClickOnFloor elScript = e.GetComponent<ClickOnFloor>();
+            if (e.gameObject != elevator && elScript.floorNr == elFloor)
+            {
+                e.GetComponent<ClickOnFloor>().arrivedAtFloor();
+                break;
+            }
+        }
+    }
+
 
     public void monsterLeft(Transform floor){
         totalMonsters--;
