@@ -1,0 +1,235 @@
+fileFormatVersion: 2
+guid: 132d2162332d2a945ba20a582b16370a
+timeCreated: 1494245300
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: princessMonsterverse0.3_0
+    21300002: princessMonsterverse0.3_1
+    21300004: princessMonsterverse0.3_2
+    21300006: princessMonsterverse0.3_3
+    21300008: princessMonsterverse0.3_4
+    21300010: princessMonsterverse0.3_5
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 2
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 200
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: princessMonsterverse0.3_0
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 279
+        width: 610
+        height: 984
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -304.86594, y: 114.824196}
+        - {x: -304.86594, y: 100.318695}
+        - {x: -283.76437, y: 76.582436}
+        - {x: -262.6628, y: 54.164852}
+        - {x: -234.96703, y: 35.703312}
+        - {x: -117.589584, y: -138.36263}
+        - {x: -180.89427, y: -442.978}
+        - {x: -184.85081, y: -491.76923}
+        - {x: 305, y: -491.76923}
+        - {x: 305, y: 452.40662}
+        - {x: 301.80396, y: 481.4176}
+        - {x: 249.05005, y: 492}
+        - {x: -33.18334, y: 492}
+        - {x: -203.31468, y: 344.27475}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: princessMonsterverse0.3_1
+      rect:
+        serializedVersion: 2
+        x: 1482
+        y: 1144
+        width: 261
+        height: 356
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -51.160404, y: 178}
+        - {x: -130.29126, y: 105.53845}
+        - {x: -130.29126, y: -65.89012}
+        - {x: -64.34888, y: -177.97803}
+        - {x: 91.27514, y: -177.97803}
+        - {x: 130.5, y: -152.9231}
+        - {x: 130.5, y: 163.56042}
+        - {x: 112.3767, y: 178}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: princessMonsterverse0.3_2
+      rect:
+        serializedVersion: 2
+        x: 2067
+        y: 1139
+        width: 232
+        height: 407
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 70.92412, y: 160.53842}
+        - {x: 64.32988, y: 134.1648}
+        - {x: 51.141407, y: 184.27469}
+        - {x: 36.634083, y: 203.5}
+        - {x: 31.358692, y: 203.5}
+        - {x: -92.61298, y: 203.5}
+        - {x: -116, y: 189.54941}
+        - {x: -116, y: -154.62642}
+        - {x: -53.047554, y: -203.41762}
+        - {x: 86.75029, y: -203.41762}
+        - {x: 116, y: -105.835205}
+        - {x: 116, y: 101.19777}
+        - {x: 81.4749, y: 177.68129}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: princessMonsterverse0.3_3
+      rect:
+        serializedVersion: 2
+        x: 1325
+        y: 834
+        width: 362
+        height: 191
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 178.92143, y: 15.098917}
+        - {x: 86.6021, y: 95.5}
+        - {x: -154.74701, y: 95.5}
+        - {x: -181, y: 0.5934227}
+        - {x: -181, y: -71.93405}
+        - {x: -170.57318, y: -85.120865}
+        - {x: -160.0224, y: -95.5}
+        - {x: 111.6602, y: -95.5}
+        - {x: 181, y: -81.16482}
+        - {x: 181, y: -73.25273}
+        - {x: 181, y: 9.824192}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: princessMonsterverse0.3_4
+      rect:
+        serializedVersion: 2
+        x: 1785
+        y: 32
+        width: 761
+        height: 1058
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -280.31534, y: 529}
+        - {x: -380.5, y: 498.15384}
+        - {x: -380.5, y: -497.45056}
+        - {x: -234.15565, y: -529}
+        - {x: 207.65828, y: -529}
+        - {x: 380.5, y: -465.80222}
+        - {x: 380.5, y: 346.5055}
+        - {x: 235.35408, y: 529}
+      - - {x: -114.140526, y: 182.98901}
+        - {x: -70.61856, y: 270.02197}
+        - {x: 55.99081, y: 179.03296}
+        - {x: -37.64737, y: 27.384611}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: princessMonsterverse0.3_5
+      rect:
+        serializedVersion: 2
+        x: 1284
+        y: 291
+        width: 402
+        height: 376
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -11.108377, y: 188}
+        - {x: -201, y: -37.351646}
+        - {x: -201, y: -140.20879}
+        - {x: -131.1235, y: -187.68132}
+        - {x: -74.41306, y: -187.68132}
+        - {x: -53.3115, y: -181.0879}
+        - {x: -28.253395, y: -144.16483}
+        - {x: 201, y: 135.39561}
+        - {x: 201, y: 188}
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
