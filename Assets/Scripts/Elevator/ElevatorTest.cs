@@ -14,6 +14,7 @@ public class ElevatorTest : MonoBehaviour {
 	public List<float> floorPosY;
 
 	public int currFloor = 0;
+    public int thisFloor = 0;
 	public int destFloor = 0;
 	public float arriveTime = .0f;
 	public float destSpeed = .0f;

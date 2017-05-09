@@ -191,11 +191,12 @@ public class GameControllerTest : MonoBehaviour {
 	public bool isElevatorAtFloor(int floorNr){
 		foreach (Transform el in elevators) {
 			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
-            ClickOnFloor clscript = GameObject.Find("FloorClick").GetComponent<ClickOnFloor>();
             Debug.Log(elscript);
-            Debug.Log(clscript);
-			if ((elscript.currFloor == floorNr || clscript.floorNr == floorNr) && !elscript.movingDown && !elscript.movingUp) {
-				return true;
+            Debug.Log(floorNr);
+            Debug.Log(elscript.thisFloor);
+			if ((/*elscript.currFloor == floorNr || */elscript.thisFloor == floorNr + 1) && !elscript.movingDown && !elscript.movingUp) {
+                Debug.Log("I got this far");
+                return true;
 			}
 		}
 		return false;
@@ -204,8 +205,7 @@ public class GameControllerTest : MonoBehaviour {
 	public Transform getOpenElevatorAtFloor(int floorNr){
 		foreach (Transform el in elevators) {
 			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
-            ClickOnFloor clscript = el.gameObject.GetComponent<ClickOnFloor>();
-            if ((elscript.currFloor == floorNr || clscript.floorNr == floorNr) && !elscript.movingDown && !elscript.movingUp && elscript.doorOpen){
+            if ((/*elscript.currFloor == floorNr || */elscript.thisFloor == floorNr + 1) && !elscript.movingDown && !elscript.movingUp && elscript.doorOpen){
 				return el;
 			}
 		}
@@ -247,10 +247,10 @@ public class GameControllerTest : MonoBehaviour {
 	}
 
 	public void elevatorArrived (GameObject elevator){
-		int elFloor = elevator.GetComponent<ElevatorTest> ().currFloor;
+		int elFloor = elevator.GetComponent<ElevatorTest> ().thisFloor;
 		if (elevators != null) {
 			foreach(Transform e in elevators){
-				if (e != null && e.gameObject != elevator && e.GetComponent<ElevatorTest> ().currFloor == elFloor) {
+				if (e != null && e.gameObject != elevator && e.GetComponent<ElevatorTest> ().thisFloor == elFloor) {
 					e.GetComponent<ElevatorTest> ().closeDoor ();
 				}
 			}
@@ -261,7 +261,7 @@ public class GameControllerTest : MonoBehaviour {
         if (elevator.transform.GetChild (0).childCount > 0) {
             GameObject monster1 = elevator.transform.GetChild(0).GetChild(0).gameObject;
             Monster monster1Script = monster1.GetComponent<Monster>();
-            if (monster1Script.desiredFloor == (elFloor+1))
+            if (monster1Script.desiredFloor == (elFloor))
             {
                 Destroy(monster1);
                 AddScore(scoreValue);
@@ -270,7 +270,7 @@ public class GameControllerTest : MonoBehaviour {
 		if (elevator.transform.GetChild (1).childCount > 0) {
             GameObject monster2 = elevator.transform.GetChild(1).GetChild(0).gameObject;
             Monster monster2Script = monster2.GetComponent<Monster>();
-            if(monster2Script.desiredFloor == (elFloor+1))
+            if(monster2Script.desiredFloor == (elFloor))
             {
                 Destroy(monster2);
                 AddScore(scoreValue);
@@ -278,69 +278,16 @@ public class GameControllerTest : MonoBehaviour {
 		}
 	}
 
-    public void Arrived(GameObject elevator)
-    {
-        int elFloor = elevator.GetComponent<ClickOnFloor> ().floorNr;
-
-        if (elevators != null)
-        {
-            foreach (Transform e in elevators)
-            {
-                if (e != null && e.gameObject != elevator && e.GetComponent<ClickOnFloor>().floorNr == elFloor)
-                {
-                    e.GetComponent<ClickOnFloor>().closeDoor();
-                }
-            }
-        }
-
-        elevator.GetComponent<ClickOnFloor>().openDoor();
-
-        if (elevator.transform.GetChild(0).childCount > 0)
-        {
-            GameObject monster1 = elevator.transform.GetChild(0).GetChild(0).gameObject;
-            Monster monster1Script = monster1.GetComponent<Monster>();
-            if (monster1Script.desiredFloor == (elFloor + 1))
-            {
-                Destroy(monster1);
-                AddScore(scoreValue);
-            }
-        }
-        if (elevator.transform.GetChild(1).childCount > 0)
-        {
-            GameObject monster2 = elevator.transform.GetChild(1).GetChild(0).gameObject;
-            Monster monster2Script = monster2.GetComponent<Monster>();
-            if (monster2Script.desiredFloor == (elFloor + 1))
-            {
-                Destroy(monster2);
-                AddScore(scoreValue);
-            }
-        }
-    }
-
     public void elevatorDeparting(GameObject elevator){
-		int elFloor = elevator.GetComponent<ElevatorTest> ().currFloor;
-		foreach(Transform e in elevators){
+		int elFloor = elevator.GetComponent<ElevatorTest> ().thisFloor;
+		foreach(Transform e in elevators){ 
 			ElevatorTest elScript = e.GetComponent<ElevatorTest> ();
-			if (e.gameObject != elevator && elScript.currFloor == elFloor && !elScript.movingDown && !elScript.movingUp) {
+			if (e.gameObject != elevator && (/*elScript.currFloor == elFloor || */elScript.thisFloor == elFloor) && !elScript.movingDown && !elScript.movingUp) {
 				e.GetComponent<ElevatorTest> ().arrivedAtFloor ();
 				break;
 			}
 		}
 	}
-
-    public void Departing(GameObject elevator)
-    {
-        int elFloor = elevator.GetComponent<ClickOnFloor>().floorNr;
-        foreach (Transform e in elevators)
-        {
-            ClickOnFloor elScript = e.GetComponent<ClickOnFloor>();
-            if (e.gameObject != elevator && elScript.floorNr == elFloor)
-            {
-                e.GetComponent<ClickOnFloor>().arrivedAtFloor();
-                break;
-            }
-        }
-    }
 
 
     public void monsterLeft(Transform floor){

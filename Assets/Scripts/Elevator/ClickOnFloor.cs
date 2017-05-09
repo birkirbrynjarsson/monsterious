@@ -4,28 +4,27 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 
-public class ClickOnFloor : MonoBehaviour {
+public class ClickOnFloor : MonoBehaviour
+{
 
     ElevatorTest elevatorScript;
-    GameControllerTest gameController;
-    public int floorNr;
+
+    const float FLOOR_NUDGE = 0.925f;
+    float speed = 1.0f;
+
     string parent;
-    public bool doorOpen = false;
-    public float speed = 1.0f;
+    public int destFloor = 0;
+    float arriveTime = .0f;
+    public float destSpeed = .0f;
 
-    private GameObject door;
-
-    // Use this for initialization
-    void Start () {
-        floorNr = 0;
-        parent = "";
-    }
+    GameControllerTest gameController;
+    GameObject ele;
+    ElevatorTest elScript;
 
     public void clickOnFloor()
     {
         parent = EventSystem.current.currentSelectedGameObject.transform.parent.name;
-        floorNr = Int32.Parse(EventSystem.current.currentSelectedGameObject.name);
-        door = GameObject.Find("door").gameObject;
+        destFloor = Int32.Parse(EventSystem.current.currentSelectedGameObject.name);
         gameController = GameObject.Find("GameController").GetComponent<GameControllerTest>();
 
         MoveElevator();
@@ -45,55 +44,36 @@ public class ClickOnFloor : MonoBehaviour {
         {
             Mover("Elevator1");
         }
-
     }
 
     void Mover(string elevator)
     {
-        GameObject ele = GameObject.Find(elevator);
+        ele = GameObject.Find(elevator);
+        elScript = ele.gameObject.GetComponent<ElevatorTest>();
         iTween.EaseType easing = iTween.EaseType.easeInOutSine;
-        gameController.removeBubble(ele);
-        closeDoor();
-        float arriveTime = speed + Time.time;
-        float destSpeed = arriveTime - Time.time;
+
+        if (this.arriveTime > Time.time)
+        {
+            this.arriveTime += speed;
+            easing = iTween.EaseType.easeOutSine;
+        }
+        else
+        {
+            gameController.removeBubble(ele);
+            elScript.checkFloorIndicator();
+            elScript.closeDoor();
+            this.arriveTime = speed + Time.time;
+            gameController.elevatorDeparting(ele);
+        }
+
+        destSpeed = arriveTime - Time.time;
         iTween.MoveTo(ele, iTween.Hash("position", TransformElevator(ele), "easetype", easing, "time", destSpeed, "oncomplete", "arrivedAtFloor"));
+        elScript.thisFloor = destFloor;
     }
 
     Vector3 TransformElevator(GameObject ele)
     {
         return new Vector3(ele.transform.position.x, EventSystem.current.currentSelectedGameObject.transform.position.y + 0.21f, 0);
     }
-
-    public void arrivedAtFloor()
-    {
-        //movingUp = false;
-        //movingDown = false;
-        //upActive.gameObject.SetActive(false);
-        //downActive.gameObject.SetActive(false);
-        //currFloor = destFloor;
-
-        // Notify the Game Controller
-        if (gameController != null)
-        {
-            Debug.Log("heeeyyyy");
-            gameController.Arrived(gameObject);
-        }
-        Debug.Log("I just arrived at a floor bitch!");
-    }
-
-    public void openDoor()
-    {
-        doorOpen = true;
-        //disableFloorIndicator();
-        door.SetActive(false);
-    }
-
-    public void closeDoor()
-    {
-        doorOpen = false;
-        door.SetActive(true);
-        //checkFloorIndicator();
-    }
-
-
 }
+
