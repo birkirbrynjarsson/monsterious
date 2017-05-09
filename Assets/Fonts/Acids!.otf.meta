@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: d6542210c552dc943b5d2eb8f184a0b1
+timeCreated: 1494340905
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Acids
+  fontNames:
+  - Acids
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

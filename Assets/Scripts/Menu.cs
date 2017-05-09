@@ -28,4 +28,10 @@ public class Menu : MonoBehaviour {
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void StartGame()
+    {
+        GameObject.Find("MainMenu2").transform.GetComponent<Canvas>().enabled = false;
+        Time.timeScale = 1;
+    }
 }

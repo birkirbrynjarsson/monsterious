@@ -108,7 +108,7 @@ public class GameControllerTest : MonoBehaviour {
 		rand = new System.Random ((int)System.DateTime.Now.Ticks & 0x0000FFFF);
         UpdateScore ();
         spawnMonster ();
-        Time.timeScale = 1;
+        Time.timeScale = 0;
     }
 
 	// Update is called once per frame
