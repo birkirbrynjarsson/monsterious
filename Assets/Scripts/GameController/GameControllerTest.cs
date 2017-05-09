@@ -37,6 +37,9 @@ public class GameControllerTest : MonoBehaviour {
     Vector2 touchPos;
     public GraphicRaycaster GR;
 
+
+    private float yVelocity = 0.0F;
+
     void AddScore(int newScoreValue)
     {
         score += newScoreValue;
