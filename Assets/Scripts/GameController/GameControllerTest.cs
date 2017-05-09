@@ -120,6 +120,8 @@ public class GameControllerTest : MonoBehaviour {
         {
             Time.timeScale = 0;
             GameObject.Find("GameOver").transform.GetComponent<Canvas>().enabled = true;
+            GameObject.Find("GameOverScore").GetComponent<Text>().text = score + " points";
+            GameObject.Find("GameOverPanel").transform.GetComponent<Animation>().enabled = true;
             return;
         }
         // TotalStress algorithm
