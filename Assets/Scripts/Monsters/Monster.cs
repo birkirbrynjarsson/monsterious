@@ -4,7 +4,8 @@ using System;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class Monster : MonoBehaviour {
+public class Monster : MonoBehaviour
+{
 
     public int currentFloor;
     public int desiredFloor;
@@ -14,41 +15,52 @@ public class Monster : MonoBehaviour {
     private static System.Random rand;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
+        rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+        desiredFloor = rand.Next(1, 7);
+        while (desiredFloor == currentFloor)
+        {
+            desiredFloor = rand.Next(1, 7);
+        }
         // Create/Instantiate Patience Bubble above the monster with the floor number
-        GameObject patienceBubble = (GameObject)Resources.Load("PatienceBubble");
+        GameObject patienceBubble = (GameObject)Resources.Load("PatienceBubble 1");
         GameObject canvas = GameObject.Find("PatienceSpawn");
 
-        patience = Instantiate(patienceBubble, new Vector2(transform.position.x-0.05f, transform.position.y+0.68f), Quaternion.identity);
+        patience = Instantiate(patienceBubble, new Vector2(transform.position.x - 0.05f, transform.position.y + 0.68f), Quaternion.identity);
         patience.transform.SetParent(canvas.transform, true);
 
         // Get desired floor number from the patience bubble
         patienceScript = patience.GetComponent<Patience>();
+        patienceScript.setDesiredFloor(desiredFloor);
 
         // Get access to gamecontroller
         gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
+        Debug.Log("EYYY " + patienceScript.currentAmount);
         // Check if the patience bubble is 100% red! If it is then remove monster.
-		if(patienceScript.currentAmount >= 100f)
+        if (patienceScript.currentAmount >= 100f)
         {
             Transform floor = transform.parent;
-			gameObject.transform.SetParent (gameObject.transform.parent.transform.parent); 
+            gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
             Destroy(patience);
             Destroy(gameObject);
             gameScript.monsterLeft(floor);
         }
-	}
-		
-	public float getPatience(){
-        if(patienceScript != null)
+    }
+
+    public float getPatience()
+    {
+        if (patienceScript != null)
         {
             return patienceScript.currentAmount;
         }
         return 0.0f;
-	}
+    }
 
     internal void updatePos(Vector2 pos)
     {
@@ -56,19 +68,16 @@ public class Monster : MonoBehaviour {
         newPos.x = pos.x - 0.05f;
         patience.transform.position = newPos;
     }
-    
+
     internal void setCurrentFloor(int curr)
     {
+        Debug.Log("CURRENT FLOOR: " + curr);
         currentFloor = curr;
         rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
         desiredFloor = rand.Next(1, 7);
-        while(desiredFloor == currentFloor)
+        while (desiredFloor == currentFloor)
         {
             desiredFloor = rand.Next(1, 7);
         }
-
-        patienceScript.setDesiredFloor(desiredFloor);
-
-
     }
 }
