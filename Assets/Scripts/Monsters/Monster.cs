@@ -24,7 +24,6 @@ public class Monster : MonoBehaviour {
 
         // Get desired floor number from the patience bubble
         patienceScript = patience.GetComponent<Patience>();
-        patienceScript.setDesiredFloor(desiredFloor);
 
         // Get access to gamecontroller
         gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
@@ -66,8 +65,10 @@ public class Monster : MonoBehaviour {
         while(desiredFloor == currentFloor)
         {
             desiredFloor = rand.Next(1, 7);
-        }      
-        
-      
+        }
+
+        patienceScript.setDesiredFloor(desiredFloor);
+
+
     }
 }
