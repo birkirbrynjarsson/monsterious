@@ -24,6 +24,7 @@ public class Patience : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        Debug.Log("YESSSSSS " + currentAmount);
 		if(currentAmount == -1)
         {
 
@@ -42,6 +43,7 @@ public class Patience : MonoBehaviour {
     internal void setDesiredFloor(int des)
     {
         desiredFloor = des;
+        Debug.Log("DESIRED FLOOR: " + desiredFloor);
         TextIndicator.GetComponent<Text>().text = desiredFloor.ToString();
     }
 }
