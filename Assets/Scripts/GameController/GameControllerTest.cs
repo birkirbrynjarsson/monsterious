@@ -245,7 +245,7 @@ public class GameControllerTest : MonoBehaviour {
 		Debug.Log ("We are spawning a monster BITCHES");
 		lastSpawn = Time.time;
 		// Monster to spawn
-		GameObject green = (GameObject)Resources.Load ("greenMonster");
+		GameObject green = (GameObject)Resources.Load ("MrMonster");
 		// Floor to spawn on
 		int floorIndex = rand.Next (0, floors.Count);
 		GameObject floor = floors[floorIndex].gameObject;
