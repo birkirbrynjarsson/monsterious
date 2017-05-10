@@ -146,6 +146,7 @@ public class GameControllerTest : MonoBehaviour {
             {
                 Time.timeScale = 0;
                 GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
+                GameObject.Find("MenuScore").GetComponent<Text>().text = "score " + score;
                 return;
             }
             else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
