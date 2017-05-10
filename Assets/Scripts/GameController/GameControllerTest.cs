@@ -29,6 +29,7 @@ public class GameControllerTest : MonoBehaviour {
 	private static List<Transform> elevators;
 	private static float floorStress;
 	private static float otherStress;
+    Animator gameOver;
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -112,74 +113,89 @@ public class GameControllerTest : MonoBehaviour {
         UpdateScore ();
         spawnMonster ();
         Time.timeScale = 1;
+        gameOver = GameObject.Find("GameOver").GetComponent<Animator>();
     }
 
 	// Update is called once per frame
 	void Update () {
         if (Stress >= 1f)
         {
+            //paused = !paused;
+            Debug.Log(gameOver.runtimeAnimatorController.name);
             Time.timeScale = 0;
             GameObject.Find("GameOver").transform.GetComponent<Canvas>().enabled = true;
             GameObject.Find("GameOverScore").GetComponent<Text>().text = score + " points";
-            GameObject.Find("GameOverPanel").transform.GetComponent<Animation>().enabled = true;
             return;
         }
         // TotalStress algorithm
         calculateFloorStress();
-		calculateDisplayStress ();
-		if (Time.time - lastIncrement >= incrementSpeed) {
-			increaseSpawnSpeed ();
-		}
-		if (Time.time - lastSpawn >= spawnSpeed) {
-			spawnMonster ();
-		}
-		if (Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) {
+        calculateDisplayStress();
+        if (Time.time - lastIncrement >= incrementSpeed)
+        {
+            increaseSpawnSpeed();
+        }
+        if (Time.time - lastSpawn >= spawnSpeed)
+        {
+            spawnMonster();
+        }
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
             RaycastHit2D hit;
-			hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position), Vector2.zero);
+            hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Vector2.zero);
             if (hit.collider != null && (hit.transform.gameObject.tag == "Reset" || hit.transform.gameObject.tag == "MainMenu"))
             {
                 Time.timeScale = 0;
                 GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
                 return;
             }
-            else if (hit.collider != null && hit.transform.gameObject.tag == "Monster") {
-				GameObject monster = hit.transform.gameObject;
-				Transform floor = monster.transform.parent;
-				int floorNr = -1;
-				foreach (Transform f in floors) {
-					if (f == floor) {
-						floorNr = floors.IndexOf (f);
-					}
-				}
-				if (isElevatorAtFloor (floorNr) && floorNr != -1) {
+            else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
+            {
+                GameObject monster = hit.transform.gameObject;
+                Transform floor = monster.transform.parent;
+                int floorNr = -1;
+                foreach (Transform f in floors)
+                {
+                    if (f == floor)
+                    {
+                        floorNr = floors.IndexOf(f);
+                    }
+                }
+                if (isElevatorAtFloor(floorNr) && floorNr != -1)
+                {
                     Monster monsterScript = monster.GetComponent<Monster>();
-					Transform el = getOpenElevatorAtFloor (floorNr);
-					if (el != null) {
-						if (el.GetChild (0).childCount == 0) {
-							monster.transform.parent = el.GetChild (0).transform;
-							monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
+                    Transform el = getOpenElevatorAtFloor(floorNr);
+                    if (el != null)
+                    {
+                        if (el.GetChild(0).childCount == 0)
+                        {
+                            monster.transform.parent = el.GetChild(0).transform;
+                            monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
                             monsterScript.patience.transform.position = new Vector2((el.GetChild(0).transform.position.x) - 0.05f, (el.GetChild(0).transform.position.y + 0.06f));
                             monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
-							repositionMonstersAtFloor(floor);
+                            repositionMonstersAtFloor(floor);
                             //Stresser(scoreValue);
                             //AddScore(scoreValue);
-                        } else if (el.GetChild (1).childCount == 0) {
-							monster.transform.parent = el.GetChild (1).transform;
-							monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
+                        }
+                        else if (el.GetChild(1).childCount == 0)
+                        {
+                            monster.transform.parent = el.GetChild(1).transform;
+                            monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
                             monsterScript.patience.transform.position = new Vector2((el.GetChild(1).transform.position.x) - 0.05f, (el.GetChild(1).transform.position.y + 0.06f));
                             monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
-							repositionMonstersAtFloor(floor);
+                            repositionMonstersAtFloor(floor);
                             //Stresser(scoreValue);
                             //AddScore(scoreValue);
-                        } else {
-							Debug.Log ("Elevator is full");
-						}
-					}
-				}
-			}
-		}
+                        }
+                        else
+                        {
+                            Debug.Log("Elevator is full");
+                        }
+                    }
+                }
+            }
+        }
 	}
 
     public void repositionMonstersAtFloor(Transform floor){
