@@ -17,11 +17,21 @@ public class GameControllerTest : MonoBehaviour {
     // -- Monster spawn variables --
     public List<string> monsterNames;                   // List of names of the monsters that have been introduced
     private static int totalMonsters = 0;               // The total number of monsters on the floors
-    public static float spawnSpeed = 7.0f;              // 
-	private static float lastSpawn;                     //
-	private static float incrementSpeed = 10f;          //
-	private static float spawnIncrement = 0.5f;         //
-	private static float lastIncrement;                 //
+
+    public static float spawnSpeed = 7.0f;              // How many seconds between monster spawn
+    private static float maximumSpawnSpeed = 2.1f;      // Minimum seconds between monster spawn
+    private static float lastSpawn;                     // Last time monster spawn
+	private static float incrementSpeed = 10f;          // How many seconds between next incrementation of speed
+	private static float spawnIncrement = 0.5f;         // How much the spawnSpeed increments when incrementing
+	private static float lastIncrement;                 // Last time we incremented spawnspeed
+
+    // -- The WAVE --
+    private static float regularStateTime;              // How long the regular state in the wave should last
+    private static float highStateTime;                 // How long the HIGH state in the wave should last
+    private static float sinceLastState;                // How long the state has last
+    private static float regularStateIncrement;         // How much the regular state should increment when incrementing
+    private static int waveState;                       // State status: 0 for regular and 1 for high
+
     private static System.Random rand;                  // Used for generating a random floor number
     private static  System.Random randomMons;
     Animator monsterAnim;
@@ -51,14 +61,26 @@ public class GameControllerTest : MonoBehaviour {
     //                                   START
     // ------------------------------------------------------------------------------
     void Start () {
-		score = 0;
+
+        // --- Spawn settings ---
+        score = 0;
 		totalMonsters = 0;
-		spawnSpeed = 7.0f;
+		spawnSpeed = 8.0f;
+        maximumSpawnSpeed = 2.1f;
 		lastSpawn = Time.time;
-		incrementSpeed = 10f;
+		incrementSpeed = 14f;
 		spawnIncrement = 0.5f;
 		lastIncrement = Time.time;
-		Stress = 0f;
+
+        // --- Wave settings ---
+        regularStateTime = 150f; // seconds              
+        highStateTime = 20f;     // seconds               
+        sinceLastState = Time.time;                
+        regularStateIncrement = 10f;
+        waveState = 0;
+
+        // --- Stress settings ---
+        Stress = 0f;
 		floorStress = 0f;
 		otherStress = 0f;
 
@@ -132,13 +154,30 @@ public class GameControllerTest : MonoBehaviour {
         calculateDisplayStress();
 
         // Spawning Monsters !!!! WAVE HERE !!!!
-        if (Time.time - lastIncrement >= incrementSpeed)
+        // Regular state
+        if(waveState == 0)
         {
-            increaseSpawnSpeed();
+            if (Time.time - lastIncrement >= incrementSpeed)
+            {
+                increaseSpawnSpeed();
+            }
+            if (Time.time - lastSpawn >= spawnSpeed)
+            {
+                spawnMonster();
+            }
+            if (Time.time - sinceLastState >= regularStateTime)
+            {
+                waveState = 1;
+            }
         }
-        if (Time.time - lastSpawn >= spawnSpeed)
+        // High state
+        else if(waveState == 1)
         {
-            spawnMonster();
+            if (Time.time - sinceLastState >= highStateTime)
+            {
+                waveState = 1;
+            }
+            Debug.Log("We are in HIGH state biches!");
         }
 
         // Check if the player has clicked the monster & put it on the elevator 
@@ -322,8 +361,8 @@ public class GameControllerTest : MonoBehaviour {
             }
             else
             {
-                rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-                randomIndex = rand.Next(1, (monsterNames.Count));
+                randomMons = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+                randomIndex = randomMons.Next(0, (monsterNames.Count-1));
                 Debug.Log("Random index: "+randomIndex);
                 return monsterNames[randomIndex];
             }
@@ -390,7 +429,7 @@ public class GameControllerTest : MonoBehaviour {
 
     public void increaseSpawnSpeed()
     {
-        if (spawnSpeed >= 2.1f)
+        if (spawnSpeed >= maximumSpawnSpeed)
         {
             spawnSpeed -= spawnIncrement;
         }
