@@ -13,6 +13,7 @@ public class Monster : MonoBehaviour
     public Patience patienceScript;
     private GameControllerTest gameScript;
     private static System.Random rand;
+    Animator anim;
 
     // Use this for initialization
     void Start()
@@ -36,6 +37,8 @@ public class Monster : MonoBehaviour
 
         // Get access to gamecontroller
         gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
+
+        anim = gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -50,6 +53,10 @@ public class Monster : MonoBehaviour
             Destroy(patience);
             Destroy(gameObject);
             gameScript.monsterLeft(floor);
+        }
+        else if (patienceScript.currentAmount > 90 && patienceScript.currentAmount < 100)
+        {
+            anim.SetInteger("State", 1);
         }
     }
 
