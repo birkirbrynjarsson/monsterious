@@ -31,6 +31,7 @@ public class GameControllerTest : MonoBehaviour {
 	private static float otherStress;
     Animator gameOver;
     public bool scoreOn = true;
+    Animator monsterAnim;
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -260,18 +261,41 @@ public class GameControllerTest : MonoBehaviour {
 		Debug.Log ("Floor Index: " + floorIndex);
         
 		int posX = floor.transform.childCount;
-        GameObject monster = Instantiate(green, new Vector2(floorPosX[posX], floorPosY[floorIndex]+0.1f), Quaternion.identity);
+
+        // Create monster!
+        monsterArrive(posX, floorIndex, green, floor);     
+	}
+
+    // Instantiates the monster and makes it walk to it's position..
+    void monsterArrive(int posX, int posY, GameObject mons, GameObject floor)
+    {
+        float endOfFloor = 3.4f;
+        GameObject monster = Instantiate(mons, new Vector2(floorPosX[posX], floorPosY[posY] + 0.1f), Quaternion.identity);
         monster.transform.parent = floor.transform;
+
+        monsterAnim = GetComponent<Animator>();
+
+        //GameObject monster = Instantiate(mons, new Vector2(endOfFloor, floorPosY[posY] + 0.1f), Quaternion.identity);
+        //monster.transform.parent = floor.transform;
+
+        //iTween.Init(monster);
+        //iTween.EaseType easing = iTween.EaseType.linear;
+        ////destSpeed = arriveTime - Time.time;
+        //Vector3 destPos = new Vector3(floorPosX[posX], floorPosY[posY] + 0.1f, 0);
+        //iTween.MoveTo(monster, iTween.Hash("position", destPos, "easetype", easing, "time", 2.0f));
 
         // Set current floor in Monster to get desired random number
         Monster monsterScript = monster.GetComponent<Monster>();
-        int currFloor = floorIndex + 1;
+        int currFloor = posY + 1;
         //monsterScript.setCurrentFloor(currFloor);
         monsterScript.currentFloor = currFloor;
         totalMonsters++;
-	}
 
-	public void elevatorArrived (GameObject elevator){
+    }
+
+    //createPatienceBubble
+
+    public void elevatorArrived (GameObject elevator){
 		int elFloor = elevator.GetComponent<ElevatorTest> ().thisFloor;
 		if (elevators != null) {
 			foreach(Transform e in elevators){
