@@ -14,14 +14,16 @@ public class GameControllerTest : MonoBehaviour {
 	private const float X_MONSTER_WIDTH = 0.64f;
 	private const float LEAVE_PENALTY = 0.2f;
 
-//	private static GUIText scoreText;
-	private static int score;
+    // -- Monster spawn variables --
+    public string[] monsters;
 	public static float spawnSpeed = 7.0f;
 	private static float lastSpawn;
 	private static float incrementSpeed = 10f;
 	private static float spawnIncrement = 0.5f;
 	private static float lastIncrement;
-	private static List<float> floorPosY;
+    Animator monsterAnim;
+
+    private static List<float> floorPosY;
 	private static List<Transform> floors;
 	private static System.Random rand;
 	private static List<float> floorPosX;
@@ -30,8 +32,10 @@ public class GameControllerTest : MonoBehaviour {
 	private static float floorStress;
 	private static float otherStress;
     Animator gameOver;
+    private static int score;
     public bool scoreOn = true;
-    Animator monsterAnim;
+    //	private static GUIText scoreText;
+
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -40,7 +44,9 @@ public class GameControllerTest : MonoBehaviour {
     Vector2 touchPos;
     public GraphicRaycaster GR;
 
-    // Use this for initialization
+    // ------------------------------------------------------------------------------
+    //                                   START
+    // ------------------------------------------------------------------------------
     void Start () {
 		score = 0;
 		totalMonsters = 0;
@@ -90,8 +96,10 @@ public class GameControllerTest : MonoBehaviour {
         gameOver = GameObject.Find("GameOver").GetComponent<Animator>();
     }
 
-	// Update is called once per frame
-	void Update () {
+    // ------------------------------------------------------------------------------
+    //                                   UPDATE
+    // ------------------------------------------------------------------------------
+    void Update () {
         if (Stress >= 1f)
         {
             //paused = !paused;
@@ -328,7 +336,6 @@ public class GameControllerTest : MonoBehaviour {
         }
         lastIncrement = Time.time;
     }
-
 
 
     // ------------------------------------------------------------------------------
