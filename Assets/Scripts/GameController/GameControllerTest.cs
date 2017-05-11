@@ -14,14 +14,16 @@ public class GameControllerTest : MonoBehaviour {
 	private const float X_MONSTER_WIDTH = 0.64f;
 	private const float LEAVE_PENALTY = 0.2f;
 
-//	private static GUIText scoreText;
-	private static int score;
+    // -- Monster spawn variables --
+    public string[] monsters;
 	public static float spawnSpeed = 7.0f;
 	private static float lastSpawn;
 	private static float incrementSpeed = 10f;
 	private static float spawnIncrement = 0.5f;
 	private static float lastIncrement;
-	private static List<float> floorPosY;
+    Animator monsterAnim;
+
+    private static List<float> floorPosY;
 	private static List<Transform> floors;
 	private static System.Random rand;
 	private static List<float> floorPosX;
@@ -30,8 +32,10 @@ public class GameControllerTest : MonoBehaviour {
 	private static float floorStress;
 	private static float otherStress;
     Animator gameOver;
+    private static int score;
     public bool scoreOn = true;
-    Animator monsterAnim;
+    //	private static GUIText scoreText;
+
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -40,45 +44,9 @@ public class GameControllerTest : MonoBehaviour {
     Vector2 touchPos;
     public GraphicRaycaster GR;
 
-
-    void AddScore(int newScoreValue)
-    {
-        score += newScoreValue;
-        UpdateScore();
-    }
-
-    void UpdateScore()
-    {
-        scoreText.text = "Score " + score;
-        if (scoreOn)
-        {
-            GetComponent<AudioSource>().Play();
-        }
-    }
-
-	void calculateFloorStress(){
-		floorStress = 0.0f;
-		foreach (Transform f in floors) {
-			foreach (Transform m in f) {
-				floorStress += m.GetComponent<Monster> ().getPatience();
-			}
-		}
-		floorStress = floorStress / ((MAX_MONSTERS - MAX_MONSTER_FLOOR) * 100.0f);
-	}
-
-    void Stresser(float value){
-        otherStress += value;
-    }
-
-	void calculateDisplayStress (){
-		if (otherStress > 0.0) {
-			otherStress -= Time.deltaTime / 120f;
-		}
-		Stress = floorStress + otherStress;
-		StressBar.size = 1 - Stress;
-	}
-
-    // Use this for initialization
+    // ------------------------------------------------------------------------------
+    //                                   START
+    // ------------------------------------------------------------------------------
     void Start () {
 		score = 0;
 		totalMonsters = 0;
@@ -90,37 +58,48 @@ public class GameControllerTest : MonoBehaviour {
 		Stress = 0f;
 		floorStress = 0f;
 		otherStress = 0f;
+
 		// Initialize the list of floors and y and x Coordinates
 		GameObject floorList = GameObject.Find ("Floors");
 		floors = new List<Transform> ();
-		foreach (Transform child in floorList.transform) {
+		foreach (Transform child in floorList.transform)
+        {
 			floors.Add (child);
 		}
 		floorPosY = new List<float> ();
-		foreach (Transform child in floorList.transform) {
+		foreach (Transform child in floorList.transform)
+        {
 			floorPosY.Add (child.transform.position.y + FLOOR_NUDGE);
 		}
 		floorPosX = new List<float> ();
-		for (int i = 0; i < MAX_MONSTER_FLOOR; i++) {
-			if (i == 0) {
+		for (int i = 0; i < MAX_MONSTER_FLOOR; i++)
+        {
+			if (i == 0)
+            {
 				floorPosX.Add (X_MONSTER_START);
 			}
 			else floorPosX.Add (floorPosX[i-1] + X_MONSTER_WIDTH);
 		}
 		GameObject el = GameObject.Find ("Elevators");
 		elevators = new List<Transform> ();
-		foreach (Transform child in el.transform) {
+		foreach (Transform child in el.transform)
+        {
 			elevators.Add (child);
 		}
+
 		rand = new System.Random ((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+
         UpdateScore ();
         spawnMonster ();
+
         Time.timeScale = 1;
         gameOver = GameObject.Find("GameOver").GetComponent<Animator>();
     }
 
-	// Update is called once per frame
-	void Update () {
+    // ------------------------------------------------------------------------------
+    //                                   UPDATE
+    // ------------------------------------------------------------------------------
+    void Update () {
         if (Stress >= 1f)
         {
             //paused = !paused;
@@ -130,9 +109,12 @@ public class GameControllerTest : MonoBehaviour {
             GameObject.Find("GameOverScore").GetComponent<Text>().text = score + " points";
             return;
         }
+
         // TotalStress algorithm
         calculateFloorStress();
         calculateDisplayStress();
+
+        // Spawning Monsters !!!! WAVE HERE !!!!
         if (Time.time - lastIncrement >= incrementSpeed)
         {
             increaseSpawnSpeed();
@@ -141,6 +123,18 @@ public class GameControllerTest : MonoBehaviour {
         {
             spawnMonster();
         }
+
+        // Check if the player has clicked the monster & put it on the elevator 
+        monsterClicked();
+	}
+
+
+    // ------------------------------------------------------------------------------
+    //                              Monster Clicking
+    // ------------------------------------------------------------------------------
+
+    void monsterClicked()
+    {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             RaycastHit2D hit;
@@ -178,8 +172,6 @@ public class GameControllerTest : MonoBehaviour {
                             monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
                             repositionMonstersAtFloor(floor);
-                            //Stresser(scoreValue);
-                            //AddScore(scoreValue);
                         }
                         else if (el.GetChild(1).childCount == 0)
                         {
@@ -189,8 +181,6 @@ public class GameControllerTest : MonoBehaviour {
                             monsterScript.patienceScript.currentAmount = -1;
                             totalMonsters--;
                             repositionMonstersAtFloor(floor);
-                            //Stresser(scoreValue);
-                            //AddScore(scoreValue);
                         }
                         else
                         {
@@ -200,71 +190,103 @@ public class GameControllerTest : MonoBehaviour {
                 }
             }
         }
-	}
+    }
 
-    public void repositionMonstersAtFloor(Transform floor){
-		int i = 0;
-		foreach (Transform child in floor.transform) {
-			Vector3 pos = child.gameObject.transform.position;
-			pos.x = floorPosX [i];
-			child.gameObject.transform.position = pos;
-            child.gameObject.GetComponent<Monster>().updatePos(pos);
-            i++;
-		}
-	}
+    // ------------------------------------------------------------------------------
+    //                                  Score
+    // ------------------------------------------------------------------------------
 
-	public bool isElevatorAtFloor(int floorNr){
-		foreach (Transform el in elevators) {
-			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
-            Debug.Log(elscript);
-            Debug.Log(floorNr);
-            Debug.Log(elscript.thisFloor);
-			if ((/*elscript.currFloor == floorNr || */elscript.thisFloor == floorNr + 1) && !elscript.movingDown && !elscript.movingUp) {
-                Debug.Log("I got this far");
-                return true;
-			}
-		}
-		return false;
-	}
+    void AddScore(int newScoreValue)
+    {
+        score += newScoreValue;
+        UpdateScore();
+    }
 
-	public Transform getOpenElevatorAtFloor(int floorNr){
-		foreach (Transform el in elevators) {
-			ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest> ();
-            if ((/*elscript.currFloor == floorNr || */elscript.thisFloor == floorNr + 1) && !elscript.movingDown && !elscript.movingUp && elscript.doorOpen){
-				return el;
-			}
-		}
-		return null;
-	}
+    void UpdateScore()
+    {
+        scoreText.text = "Score " + score;
+        if (scoreOn)
+        {
+            GetComponent<AudioSource>().Play();
+        }
+    }
 
-	static void increaseScore(int s){
-		score += s;
-//		scoreText.text = " " + score;
-	}
+    static void increaseScore(int s)
+    {
+        score += s;
+        //		scoreText.text = " " + score;
+    }
 
-	public void spawnMonster(){
-		if (totalMonsters >= MAX_MONSTERS) {
+    // ------------------------------------------------------------------------------
+    //                             Stress/Patience meter
+    // ------------------------------------------------------------------------------
+
+    void calculateFloorStress()
+    {
+        floorStress = 0.0f;
+        foreach (Transform f in floors)
+        {
+            foreach (Transform m in f)
+            {
+                floorStress += m.GetComponent<Monster>().getPatience();
+            }
+        }
+        floorStress = floorStress / ((MAX_MONSTERS - MAX_MONSTER_FLOOR) * 100.0f);
+    }
+
+    void Stresser(float value)
+    {
+        otherStress += value;
+    }
+
+    void calculateDisplayStress()
+    {
+        if (otherStress > 0.0)
+        {
+            otherStress -= Time.deltaTime / 120f;
+        }
+        Stress = floorStress + otherStress;
+        StressBar.size = 1 - Stress;
+    }
+
+
+    // ------------------------------------------------------------------------------
+    //                              Monster Spawning 
+    // ------------------------------------------------------------------------------
+
+    public void spawnMonster()
+    {
+		if (totalMonsters >= MAX_MONSTERS)
+        {
 			return;
 		}
-		Debug.Log ("We are spawning a monster BITCHES");
+
 		lastSpawn = Time.time;
-		// Monster to spawn
-		GameObject green = (GameObject)Resources.Load ("MrMonster");
-		// Floor to spawn on
+
+        // MONSTER to spawn
+        string name = getRandomMonster();
+		GameObject green = (GameObject)Resources.Load (name);
+
+		// FLOOR to spawn on
 		int floorIndex = rand.Next (0, floors.Count);
 		GameObject floor = floors[floorIndex].gameObject;
 		while (floor.transform.childCount >= MAX_MONSTER_FLOOR && totalMonsters < MAX_MONSTERS) {
-			Debug.Log ("Floor is full");
+			Debug.Log ("Floor is full, the monster needs to find another one");
 			floorIndex = rand.Next (0, floors.Count);
 			floor = floors[floorIndex].gameObject;
 		}
-		Debug.Log ("Floor Index: " + floorIndex);
+
         
 		int posX = floor.transform.childCount;
 
         // Create monster!
         monsterArrive(posX, floorIndex, green, floor);     
 	}
+
+    string getRandomMonster()
+    {
+        return "MrMonster";
+    }
 
     // Instantiates the monster and makes it walk to it's position..
     void monsterArrive(int posX, int posY, GameObject mons, GameObject floor)
@@ -293,9 +315,65 @@ public class GameControllerTest : MonoBehaviour {
 
     }
 
-    //createPatienceBubble
+    public void repositionMonstersAtFloor(Transform floor)
+    {
+        int i = 0;
+        foreach (Transform child in floor.transform)
+        {
+            Vector3 pos = child.gameObject.transform.position;
+            pos.x = floorPosX[i];
+            child.gameObject.transform.position = pos;
+            child.gameObject.GetComponent<Monster>().updatePos(pos);
+            i++;
+        }
+    }
 
-    public void elevatorArrived (GameObject elevator){
+    public void increaseSpawnSpeed()
+    {
+        if (spawnSpeed >= 2.1f)
+        {
+            spawnSpeed -= spawnIncrement;
+        }
+        lastIncrement = Time.time;
+    }
+
+
+    // ------------------------------------------------------------------------------
+    //                              Elevator functions
+    // ------------------------------------------------------------------------------
+
+    public bool isElevatorAtFloor(int floorNr)
+    {
+        foreach (Transform el in elevators)
+        {
+            ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest>();
+            Debug.Log(elscript);
+            Debug.Log(floorNr);
+            Debug.Log(elscript.thisFloor);
+            if ((/*elscript.currFloor == floorNr || */elscript.thisFloor == floorNr + 1) && !elscript.movingDown && !elscript.movingUp)
+            {
+                Debug.Log("I got this far");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Transform getOpenElevatorAtFloor(int floorNr)
+    {
+        foreach (Transform el in elevators)
+        {
+            ElevatorTest elscript = el.gameObject.GetComponent<ElevatorTest>();
+            if ((/*elscript.currFloor == floorNr || */elscript.thisFloor == floorNr + 1) && !elscript.movingDown && !elscript.movingUp && elscript.doorOpen)
+            {
+                return el;
+            }
+        }
+        return null;
+    }
+
+    public void elevatorArrived (GameObject elevator)
+    {
 		int elFloor = elevator.GetComponent<ElevatorTest> ().thisFloor;
 		if (elevators != null) {
 			foreach(Transform e in elevators){
@@ -338,13 +416,14 @@ public class GameControllerTest : MonoBehaviour {
 		}
 	}
 
-
     public void monsterLeft(Transform floor){
         totalMonsters--;
 		Stresser (LEAVE_PENALTY);
         repositionMonstersAtFloor(floor);
     }
 
+
+    // Removing bubble when the elevator goes up and down with the monster.
     public void removeBubble(GameObject elev)
     {
         if (elev.transform.GetChild(0).childCount > 0)
@@ -352,33 +431,13 @@ public class GameControllerTest : MonoBehaviour {
             GameObject monster1 = elev.transform.GetChild(0).GetChild(0).gameObject;
             Monster monster1Script = monster1.GetComponent<Monster>();
             Destroy(monster1Script.patience); 
-            //if
-            /*
-            GameObject floorPic = (GameObject)Resources.Load(monster1Script.desiredFloor.ToString());
-            GameObject floorNumber = Instantiate(floorPic, new Vector2(elev.transform.position.x, elev.transform.position.y), Quaternion.identity);
-            floorNumber.transform.parent = elev.transform;
-            */
         }
         if (elev.transform.GetChild(1).childCount > 0)
         {
             GameObject monster2 = elev.transform.GetChild(1).GetChild(0).gameObject;
             Monster monster2Script = monster2.GetComponent<Monster>();
             Destroy(monster2Script.patience);
-
-            //if
-            /*
-            GameObject floorPic = (GameObject)Resources.Load(monster2Script.desiredFloor.ToString());
-            GameObject floorNumber = Instantiate(floorPic, new Vector2(elev.transform.position.x, elev.transform.position.y), Quaternion.identity);
-            floorNumber.transform.parent = elev.transform;
-            */
-
         }
     }
 
-	public void increaseSpawnSpeed(){
-		if (spawnSpeed >= 2.1f) {
-			spawnSpeed -= spawnIncrement;
-		}
-		lastIncrement = Time.time;
-	}
 }
