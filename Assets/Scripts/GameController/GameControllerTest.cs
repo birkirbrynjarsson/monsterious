@@ -23,6 +23,7 @@ public class GameControllerTest : MonoBehaviour {
 	private static float spawnIncrement = 0.5f;         //
 	private static float lastIncrement;                 //
     private static System.Random rand;                  // Used for generating a random floor number
+    private static  System.Random randomMons;
     Animator monsterAnim;
     private bool monsterAdding;
     private int monsterTypeCount;
@@ -64,6 +65,7 @@ public class GameControllerTest : MonoBehaviour {
         Time.timeScale = 1;
         gameOver = GameObject.Find("GameOver").GetComponent<Animator>();
         rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+        randomMons = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
 
         monsterAdding = false;
         monsterTypeCount = 0;
@@ -306,8 +308,7 @@ public class GameControllerTest : MonoBehaviour {
     string getRandomMonster()
     {
         int randomIndex;
-        System.Random random;
-
+        
         if (monsterNames.Count == 1)
         {
             return "MrMonster";
