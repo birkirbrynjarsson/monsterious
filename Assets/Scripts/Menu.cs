@@ -38,4 +38,14 @@ public class Menu : MonoBehaviour {
     {
         GameObject.Find("SettingsMenu").transform.GetComponent<Canvas>().enabled = false;
     }
+
+    public void OpenMonsters()
+    {
+        GameObject.Find("MonsterMenu").transform.GetComponent<Canvas>().enabled = true;
+    }
+
+    public void CloseMonsters()
+    {
+        GameObject.Find("MonsterMenu").transform.GetComponent<Canvas>().enabled = false;
+    }
 }
