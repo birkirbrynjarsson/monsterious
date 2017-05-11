@@ -42,7 +42,6 @@ public class Patience : MonoBehaviour {
     internal void setDesiredFloor(int des)
     {
         desiredFloor = des;
-        Debug.Log("DESIRED FLOOR: " + desiredFloor);
         TextIndicator.GetComponent<Text>().text = desiredFloor.ToString();
     }
 }

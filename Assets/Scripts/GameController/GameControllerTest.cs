@@ -15,19 +15,22 @@ public class GameControllerTest : MonoBehaviour {
 	private const float LEAVE_PENALTY = 0.2f;
 
     // -- Monster spawn variables --
-    public string[] monsters;
-	public static float spawnSpeed = 7.0f;
-	private static float lastSpawn;
-	private static float incrementSpeed = 10f;
-	private static float spawnIncrement = 0.5f;
-	private static float lastIncrement;
+    public List<string> monsterNames;                   // List of names of the monsters that have been introduced
+    private static int totalMonsters = 0;               // The total number of monsters on the floors
+    public static float spawnSpeed = 7.0f;              // 
+	private static float lastSpawn;                     //
+	private static float incrementSpeed = 10f;          //
+	private static float spawnIncrement = 0.5f;         //
+	private static float lastIncrement;                 //
+    private static System.Random rand;                  // Used for generating a random floor number
     Animator monsterAnim;
+    private bool monsterAdding;
+    private int monsterTypeCount;
+
 
     private static List<float> floorPosY;
 	private static List<Transform> floors;
-	private static System.Random rand;
 	private static List<float> floorPosX;
-	private static int totalMonsters = 0;
 	private static List<Transform> elevators;
 	private static float floorStress;
 	private static float otherStress;
@@ -35,7 +38,6 @@ public class GameControllerTest : MonoBehaviour {
     private static int score;
     public bool scoreOn = true;
     //	private static GUIText scoreText;
-
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -59,8 +61,15 @@ public class GameControllerTest : MonoBehaviour {
 		floorStress = 0f;
 		otherStress = 0f;
 
-		// Initialize the list of floors and y and x Coordinates
-		GameObject floorList = GameObject.Find ("Floors");
+        Time.timeScale = 1;
+        gameOver = GameObject.Find("GameOver").GetComponent<Animator>();
+        rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+
+        monsterAdding = false;
+        monsterTypeCount = 0;
+
+        // Initialize the list of floors and y and x Coordinates
+        GameObject floorList = GameObject.Find ("Floors");
 		floors = new List<Transform> ();
 		foreach (Transform child in floorList.transform)
         {
@@ -80,6 +89,7 @@ public class GameControllerTest : MonoBehaviour {
 			}
 			else floorPosX.Add (floorPosX[i-1] + X_MONSTER_WIDTH);
 		}
+        // Initialize the list of elevators
 		GameObject el = GameObject.Find ("Elevators");
 		elevators = new List<Transform> ();
 		foreach (Transform child in el.transform)
@@ -87,13 +97,18 @@ public class GameControllerTest : MonoBehaviour {
 			elevators.Add (child);
 		}
 
-		rand = new System.Random ((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+        // Initialize the list of monster names
+        monsterNames = new List<string>();
+        monsterNames.Add("MrMonster");
+        monsterTypeCount = 1;
+        monsterNames.Add("MonsterMonroe");
+        monsterNames.Add("DrKhil");
+        
 
         UpdateScore ();
         spawnMonster ();
 
-        Time.timeScale = 1;
-        gameOver = GameObject.Find("GameOver").GetComponent<Animator>();
+        
     }
 
     // ------------------------------------------------------------------------------
@@ -126,6 +141,9 @@ public class GameControllerTest : MonoBehaviour {
 
         // Check if the player has clicked the monster & put it on the elevator 
         monsterClicked();
+
+        // Check if a new monster type should be added to the world
+        addMonster();
 	}
 
 
@@ -265,7 +283,7 @@ public class GameControllerTest : MonoBehaviour {
 
         // MONSTER to spawn
         string name = getRandomMonster();
-		GameObject green = (GameObject)Resources.Load (name);
+		GameObject monster = (GameObject)Resources.Load (name);
 
 		// FLOOR to spawn on
 		int floorIndex = rand.Next (0, floors.Count);
@@ -280,12 +298,52 @@ public class GameControllerTest : MonoBehaviour {
 		int posX = floor.transform.childCount;
 
         // Create monster!
-        monsterArrive(posX, floorIndex, green, floor);     
-	}
+        // monsterArrive(posX, floorIndex, green, floor);
+        instantiateMonster(posX, floorIndex, monster, floor);
+
+    }
 
     string getRandomMonster()
     {
+        int randomIndex;
+        System.Random random;
+
+        if (monsterNames.Count == 1)
+        {
+            return "MrMonster";
+        }
+        else if(monsterNames.Count >= 2)
+        {
+            rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+            if (rand.NextDouble() < 0.6)
+            {
+                return monsterNames[0];
+            }
+            else
+            {
+                rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+                randomIndex = rand.Next(1, (monsterNames.Count));
+                Debug.Log("Random index: "+randomIndex);
+                return monsterNames[randomIndex];
+            }
+        }
         return "MrMonster";
+    }
+
+    // Instantiate a monster on the floor given
+    void instantiateMonster(int posX, int posY, GameObject mons, GameObject floor)
+    {
+        GameObject monster = Instantiate(mons, new Vector2(floorPosX[posX], floorPosY[posY] + 0.1f), Quaternion.identity);
+        monster.transform.parent = floor.transform;
+
+        monsterAnim = GetComponent<Animator>();
+
+        // Set current floor in Monster to get desired random number
+        Monster monsterScript = monster.GetComponent<Monster>();
+        int currFloor = posY + 1;
+        //monsterScript.setCurrentFloor(currFloor);
+        monsterScript.currentFloor = currFloor;
+        totalMonsters++;
     }
 
     // Instantiates the monster and makes it walk to it's position..
@@ -315,6 +373,7 @@ public class GameControllerTest : MonoBehaviour {
 
     }
 
+    // When a monster leaves every monsters shift left
     public void repositionMonstersAtFloor(Transform floor)
     {
         int i = 0;
@@ -337,6 +396,22 @@ public class GameControllerTest : MonoBehaviour {
         lastIncrement = Time.time;
     }
 
+    // Adding a monster to the list of monster spawning
+    void addMonster()
+    {
+        if(monsterTypeCount == 1 && monsterAdding)
+        {
+            monsterNames.Add("MonsterMonroe");
+            monsterAdding = false;
+            monsterTypeCount = 2;
+        }
+        else if(monsterTypeCount == 2 && monsterAdding)
+        {
+            monsterNames.Add("DrKhil");
+            monsterAdding = false;
+            monsterTypeCount = 3;
+        }
+    }
 
     // ------------------------------------------------------------------------------
     //                              Elevator functions
