@@ -77,7 +77,6 @@ public class Monster : MonoBehaviour
 
     internal void setCurrentFloor(int curr)
     {
-        Debug.Log("CURRENT FLOOR: " + curr);
         currentFloor = curr;
         rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
         desiredFloor = rand.Next(1, 7);
