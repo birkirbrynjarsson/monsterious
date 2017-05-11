@@ -20,6 +20,7 @@ public class Settings : MonoBehaviour {
     public void Music()
     {
         music = !music;
+        Camera.main.GetComponent<AudioSource>().mute = !music;
         GameObject.Find("Music/Background/Checkmark").GetComponent<Image>().enabled = music;
     }
 }
