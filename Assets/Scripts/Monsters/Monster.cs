@@ -41,7 +41,6 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("EYYY " + patienceScript.currentAmount);
         // Check if the patience bubble is 100% red! If it is then remove monster.
         if (patienceScript.currentAmount >= 100f)
         {

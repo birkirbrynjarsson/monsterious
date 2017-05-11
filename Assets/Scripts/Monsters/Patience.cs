@@ -24,7 +24,6 @@ public class Patience : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        Debug.Log("YESSSSSS " + currentAmount);
 		if(currentAmount == -1)
         {
 

@@ -30,6 +30,7 @@ public class GameControllerTest : MonoBehaviour {
 	private static float floorStress;
 	private static float otherStress;
     Animator gameOver;
+    public bool scoreOn = true;
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -38,8 +39,6 @@ public class GameControllerTest : MonoBehaviour {
     Vector2 touchPos;
     public GraphicRaycaster GR;
 
-
-    private float yVelocity = 0.0F;
 
     void AddScore(int newScoreValue)
     {
@@ -50,7 +49,10 @@ public class GameControllerTest : MonoBehaviour {
     void UpdateScore()
     {
         scoreText.text = "Score " + score;
-        GetComponent<AudioSource>().Play();
+        if (scoreOn)
+        {
+            GetComponent<AudioSource>().Play();
+        }
     }
 
 	void calculateFloorStress(){
