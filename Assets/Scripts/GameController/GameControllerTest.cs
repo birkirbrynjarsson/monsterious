@@ -315,7 +315,7 @@ public class GameControllerTest : MonoBehaviour {
         else if(monsterNames.Count >= 2)
         {
             rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-            if(rand.NextDouble() < 0.8)
+            if (rand.NextDouble() < 0.6)
             {
                 return monsterNames[0];
             }
