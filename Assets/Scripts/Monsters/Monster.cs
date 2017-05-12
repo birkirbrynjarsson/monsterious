@@ -9,6 +9,7 @@ public class Monster : MonoBehaviour
 
     public int currentFloor;
     public int desiredFloor;
+    public string name;
     public GameObject patience;
     public Patience patienceScript;
     private GameControllerTest gameScript;
@@ -37,6 +38,8 @@ public class Monster : MonoBehaviour
 
         // Get access to gamecontroller
         gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
+
+        Debug.Log("NAME: " + name);
 
         anim = gameObject.GetComponent<Animator>();
     }
