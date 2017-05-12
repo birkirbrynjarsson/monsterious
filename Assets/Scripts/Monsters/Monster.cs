@@ -54,7 +54,7 @@ public class Monster : MonoBehaviour
             Destroy(gameObject);
             gameScript.monsterLeft(floor);
         }
-        else if (name == "HulkiestHunk" && patienceScript.currentAmount > 85)
+        else if (name == "HulkiestHunk" && patienceScript.currentAmount > 85 && patienceScript.currentAmount < 100)
         {
             anim.SetInteger("State", 1);
             gameScript.ShakeFloor(currentFloor);

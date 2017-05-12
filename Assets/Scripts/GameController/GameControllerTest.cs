@@ -66,11 +66,11 @@ public class GameControllerTest : MonoBehaviour {
         // --- Spawn settings ---
         score = 0;
 		totalMonsters = 0;
-		spawnSpeed = 8.0f;
+		spawnSpeed = 7.0f;
         maximumSpawnSpeed = 2.1f;
 		lastSpawn = Time.time;
 		incrementSpeed = 14f;
-		spawnIncrement = 0.5f;
+		spawnIncrement = 0.25f;
 		lastIncrement = Time.time;
 
         // --- Wave settings ---
@@ -129,7 +129,8 @@ public class GameControllerTest : MonoBehaviour {
         monsterTypeCount = 1;
         monsterNames.Add("MonsterMonroe");
         monsterNames.Add("DrKhil");
-        
+        monsterNames.Add("HulkiestHunk");
+
 
         UpdateScore ();
         spawnMonster ();
@@ -374,7 +375,7 @@ public class GameControllerTest : MonoBehaviour {
             else
             {
                 rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-                randomIndex = rand.Next(0, 3);
+                randomIndex = rand.Next(0, 4);
                 Debug.Log("Random index: "+randomIndex);
                 return monsterNames[randomIndex];
             }
@@ -385,7 +386,6 @@ public class GameControllerTest : MonoBehaviour {
     // Instantiate a monster on the floor given
     void instantiateMonster(int posY, GameObject floor)
     {
-
         int posX = floor.transform.childCount;
 
         // MONSTER to spawn
