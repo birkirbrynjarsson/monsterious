@@ -9,11 +9,18 @@ public class ElevatorScript : MonoBehaviour {
 	public float floorSpeed; 	// Travel time between floors
 	public int currFloor; 		// Current floor of the elevator, spawn floor
 	public int destFloor; 		// Destination floor of the elevator
-	public bool moving;			// Indicator, true if elevator is moving up
+	public bool movingUp;		// Indicator, true if elevator is moving up
+	public bool movingDown;		// Indicator, true if elevator is moving down
 	public bool doorOpen;		// Indicator, true if elevator door is open
+
+	// iTween parameters, global to use between functions
+	Vector3 destPos; 
+	float travelTime;
 
 	ElevatorControllerScript elevatorController;		// The elevator controller script, stored in the gamecontroller
 	public BoxCollider2D doorCollider;					// Elevator box collider to hit and request to open door
+
+	public Animator anim;
 
 
 	// Use this for initialization
@@ -30,11 +37,14 @@ public class ElevatorScript : MonoBehaviour {
 		floorSpeed = 1.2f;
 		currFloor = 1;
 		destFloor = currFloor;
-		moving = false;
+		movingUp = false;
+		movingDown = false;
 		doorOpen = false;
 
 		elevatorController = GameObject.Find ("GameController").GetComponent<ElevatorControllerScript> ();
 		doorCollider = gameObject.GetComponent<BoxCollider2D> ();
+
+		anim = GetComponent<Animator> ();
 	}
 
 	/* Check if door was clicked and requests to open if true */
@@ -53,54 +63,90 @@ public class ElevatorScript : MonoBehaviour {
 
 	/* The function that takes care of starting a move state and moving the elevator */
 	public void goToFloor(int floorNr){
-		Debug.Log ("I'm trying to move goddammit");
-		if (!moving) {
+		destFloor = floorNr;
+		if (!movingUp && !movingDown) {
 			leavingFloor ();
 		}
-		destFloor = floorNr;
 		/* floorNr is adjusted so calculations return correct y-coordinates,
 		 * 1st floor is at 0 * FLOOR_SIZE, 2nd at 1 * FLOOR_SIZE and etc. */
 		floorNr -= 1;
 		float travelDistance = Mathf.Abs((transform.position.y) - ((floorNr * FLOOR_SIZE) + transform.parent.transform.position.y));
-		float travelTime = travelDistance / FLOOR_SIZE * floorSpeed;
+		travelTime = travelDistance / FLOOR_SIZE * floorSpeed;
 		float destPosY = floorNr * FLOOR_SIZE;
-		Vector3 destPos = transform.position;
+		destPos = transform.position;
 		destPos.y = transform.parent.transform.position.y + destPosY;
 
 		// Check if floorNr position is higher then current elevator position
-		if (floorNr * FLOOR_SIZE > transform.position.y) {
-			// Useable for animation direction.
+		if (((floorNr * FLOOR_SIZE) + transform.parent.transform.position.y) > transform.position.y) {
+			if (movingDown) {
+				iTween.Stop (gameObject);
+				anim.SetTrigger ("goUp");
+			} else if (movingUp) {
+				startTween ();
+			} else {
+				anim.SetTrigger ("goUp");
+			}
+			movingUp = true;
+			movingDown = false;
+		} else {
+			if (movingUp) {
+				iTween.Stop (gameObject);
+				anim.SetTrigger ("goDown");
+			} else if (movingDown) {
+				startTween ();
+			} else {
+				anim.SetTrigger ("goDown");
+			}
+			movingUp = false;
+			movingDown = true;
 		}
-		moving = true;
+//		iTween.MoveTo(gameObject, iTween.Hash("position", destPos, "easetype", iTween.EaseType.linear, "time", travelTime, "oncomplete", "arrivedAtFloor"));
+	}
+
+	public void startTween(){
 		iTween.MoveTo(gameObject, iTween.Hash("position", destPos, "easetype", iTween.EaseType.linear, "time", travelTime, "oncomplete", "arrivedAtFloor"));
 	}
 
 	/* Takes care of notifying the elevatorController that an elevator has left its floor
 	* This is done in case there is another elevator at the floor that then opens. */
 	void leavingFloor(){
-		closeDoor ();
+		if (doorOpen) {
+			closeDoor ();
+		}
 		elevatorController.elevatorLeftFloor (currFloor);
 	}
 		
 	void arrivedAtFloor(){
-		moving = false;
+		if (movingDown) {
+			anim.SetTrigger ("arriveDown");
+		} else {
+			anim.SetTrigger ("arriveUp");
+		}
+		movingUp = false;
+		movingDown = false;
 		currFloor = destFloor;
 		// Notify the game controller that the elevator arrived at destination floor
 		elevatorController.elevatorArrived(gameObject);
 	}
 
 	public void requestOpenDoor(){
-		if (!moving) {
+		if (!movingUp && !movingDown && !doorOpen) {
 			elevatorController.closeOtherElevatorsAtFloor (gameObject, currFloor);
 			openDoor ();
 		}
 	}
 
 	public void openDoor(){
+		if (!doorOpen) {
+			anim.SetTrigger ("openDoor");
+		}
 		doorOpen = true;
 	}
 
 	public void closeDoor(){
+		if (doorOpen) {
+			anim.SetTrigger ("closeDoor");
+		}
 		doorOpen = false;
 	}
 }

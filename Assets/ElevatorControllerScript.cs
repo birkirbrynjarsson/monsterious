@@ -29,9 +29,11 @@ public class ElevatorControllerScript : MonoBehaviour {
 		foreach (Transform elevator in el.transform){
 			elevators.Add (elevator);
 		}
+		elevators [elevators.Count-1].GetComponent<ElevatorScript> ().openDoor ();
 	}
 
 	public void moveElevator(int elevNr, int floorNr){
+		elevators [elevNr - 1].GetComponent<ElevatorScript> ().closeDoor ();
 		elevators [elevNr - 1].GetComponent<ElevatorScript> ().goToFloor (floorNr);
 	}
 
@@ -48,6 +50,7 @@ public class ElevatorControllerScript : MonoBehaviour {
 	 * no other elevator at the floor */
 	public void elevatorArrived(GameObject elevator){
 		ElevatorScript e = elevator.GetComponent<ElevatorScript> ();
+		Debug.Log("Elevetor arrived at floor number: " + e.currFloor);
 		if (getOpenElevatorAtFloor (e.currFloor) == null) {
 			e.openDoor ();
 		}
@@ -56,11 +59,13 @@ public class ElevatorControllerScript : MonoBehaviour {
 	/* Takes care of opening another elevator if there is one at the floor
 	* that the elevator is leaving from. */
 	public void elevatorLeftFloor(int floorNr){
-		foreach (Transform elevator in elevators){
-			ElevatorScript e = elevator.gameObject.GetComponent<ElevatorScript>();
-			if (e.currFloor == floorNr && e.destFloor == floorNr && !e.moving && !e.doorOpen) {
-				e.openDoor ();
-				return;
+		if (getOpenElevatorAtFloor (floorNr) == null) {
+			foreach (Transform elevator in elevators){
+				ElevatorScript e = elevator.gameObject.GetComponent<ElevatorScript>();
+				if (e.currFloor == floorNr && e.destFloor == floorNr && !e.movingUp && !e.movingDown && !e.doorOpen) {
+					e.openDoor ();
+					return;
+				}
 			}
 		}
 	}
@@ -70,7 +75,7 @@ public class ElevatorControllerScript : MonoBehaviour {
 	{
 		foreach (Transform elevator in elevators){
 			ElevatorScript e = elevator.gameObject.GetComponent<ElevatorScript>();
-			if (e.currFloor == floorNr && e.destFloor == floorNr && !e.moving && e.doorOpen) {
+			if (e.currFloor == floorNr && e.destFloor == floorNr && !e.movingUp && !e.movingDown && e.doorOpen) {
 				return elevator;
 			}
 		}
