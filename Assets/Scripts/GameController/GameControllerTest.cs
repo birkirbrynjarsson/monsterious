@@ -31,6 +31,7 @@ public class GameControllerTest : MonoBehaviour {
     private static float sinceLastState;                // How long the state has last
     private static float regularStateIncrement;         // How much the regular state should increment when incrementing
     private static int waveState;                       // State status: 0 for regular and 1 for high
+    private static float highSpawnSpeed;                // How many seconds between monster spawn in high state
 
     private static System.Random rand;                  // Used for generating a random floor number
     private static  System.Random randomMons;
@@ -73,10 +74,11 @@ public class GameControllerTest : MonoBehaviour {
 		lastIncrement = Time.time;
 
         // --- Wave settings ---
-        regularStateTime = 150f; // seconds              
+        regularStateTime = 50f; // seconds              
         highStateTime = 20f;     // seconds               
         sinceLastState = Time.time;                
         regularStateIncrement = 10f;
+        highSpawnSpeed = 1.8f;
         waveState = 0;
 
         // --- Stress settings ---
@@ -153,7 +155,7 @@ public class GameControllerTest : MonoBehaviour {
         calculateFloorStress();
         calculateDisplayStress();
 
-        // Spawning Monsters !!!! WAVE HERE !!!!
+        // Spawning Monsters - wave
         // Regular state
         if(waveState == 0)
         {
@@ -167,17 +169,24 @@ public class GameControllerTest : MonoBehaviour {
             }
             if (Time.time - sinceLastState >= regularStateTime)
             {
+                sinceLastState = Time.time;
                 waveState = 1;
             }
         }
         // High state
         else if(waveState == 1)
         {
+            if (Time.time - lastSpawn >= highSpawnSpeed)
+            {
+                spawnMonster();
+            }
             if (Time.time - sinceLastState >= highStateTime)
             {
-                waveState = 1;
+                regularStateTime = regularStateTime + regularStateIncrement;
+                sinceLastState = Time.time;
+                waveState = 0;
             }
-            Debug.Log("We are in HIGH state biches!");
+            Debug.Log("We are in HIGH state bitches!");
         }
 
         // Check if the player has clicked the monster & put it on the elevator 
