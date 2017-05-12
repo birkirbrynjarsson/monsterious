@@ -35,7 +35,7 @@ public class GameControllerTest : MonoBehaviour {
 
     private static System.Random rand;                  // Used for generating a random floor number
     private static  System.Random randomMons;
-    Animator monsterAnim;
+    //Animator monsterAnim;
     private bool monsterAdding;
     private int monsterTypeCount;
 
@@ -155,9 +155,24 @@ public class GameControllerTest : MonoBehaviour {
         calculateFloorStress();
         calculateDisplayStress();
 
+        wave();
+
+        // Check if the player has clicked the monster & put it on the elevator 
+        monsterClicked();
+
+        // Check if a new monster type should be added to the world
+        addMonster();
+	}
+
+    // ------------------------------------------------------------------------------
+    //                              Spawning wave
+    // ------------------------------------------------------------------------------
+
+    void wave()
+    {
         // Spawning Monsters - wave
         // Regular state
-        if(waveState == 0)
+        if (waveState == 0)
         {
             if (Time.time - lastIncrement >= incrementSpeed)
             {
@@ -169,12 +184,13 @@ public class GameControllerTest : MonoBehaviour {
             }
             if (Time.time - sinceLastState >= regularStateTime)
             {
+                // HERE IS GOING TO BE A MONSTER WAVE TEXT @Sigrun
                 sinceLastState = Time.time;
                 waveState = 1;
             }
         }
         // High state
-        else if(waveState == 1)
+        else if (waveState == 1)
         {
             if (Time.time - lastSpawn >= highSpawnSpeed)
             {
@@ -188,13 +204,7 @@ public class GameControllerTest : MonoBehaviour {
             }
             Debug.Log("We are in HIGH state bitches!");
         }
-
-        // Check if the player has clicked the monster & put it on the elevator 
-        monsterClicked();
-
-        // Check if a new monster type should be added to the world
-        addMonster();
-	}
+    }
 
 
     // ------------------------------------------------------------------------------
@@ -331,10 +341,6 @@ public class GameControllerTest : MonoBehaviour {
 
 		lastSpawn = Time.time;
 
-        // MONSTER to spawn
-        string name = getRandomMonster();
-		GameObject monster = (GameObject)Resources.Load (name);
-
 		// FLOOR to spawn on
 		int floorIndex = rand.Next (0, floors.Count);
 		GameObject floor = floors[floorIndex].gameObject;
@@ -344,12 +350,9 @@ public class GameControllerTest : MonoBehaviour {
 			floor = floors[floorIndex].gameObject;
 		}
 
-        
-		int posX = floor.transform.childCount;
-
         // Create monster!
         // monsterArrive(posX, floorIndex, green, floor);
-        instantiateMonster(posX, floorIndex, monster, floor);
+        instantiateMonster(floorIndex, floor);
 
     }
 
@@ -370,8 +373,8 @@ public class GameControllerTest : MonoBehaviour {
             }
             else
             {
-                randomMons = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-                randomIndex = randomMons.Next(0, (monsterNames.Count-1));
+                rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+                randomIndex = rand.Next(0, 3);
                 Debug.Log("Random index: "+randomIndex);
                 return monsterNames[randomIndex];
             }
@@ -380,47 +383,55 @@ public class GameControllerTest : MonoBehaviour {
     }
 
     // Instantiate a monster on the floor given
-    void instantiateMonster(int posX, int posY, GameObject mons, GameObject floor)
+    void instantiateMonster(int posY, GameObject floor)
     {
-        GameObject monster = Instantiate(mons, new Vector2(floorPosX[posX], floorPosY[posY] + 0.1f), Quaternion.identity);
-        monster.transform.parent = floor.transform;
 
-        monsterAnim = GetComponent<Animator>();
+        int posX = floor.transform.childCount;
+
+        // MONSTER to spawn
+        string name = getRandomMonster();
+        GameObject monsType = (GameObject)Resources.Load(name);
+
+        // Instantiate
+        GameObject monster = Instantiate(monsType, new Vector2(floorPosX[posX], floorPosY[posY] + 0.1f), Quaternion.identity);
+        monster.transform.parent = floor.transform;
 
         // Set current floor in Monster to get desired random number
         Monster monsterScript = monster.GetComponent<Monster>();
         int currFloor = posY + 1;
-        //monsterScript.setCurrentFloor(currFloor);
         monsterScript.currentFloor = currFloor;
         totalMonsters++;
+
+        // Set monster name
+        monsterScript.name = name;
     }
 
     // Instantiates the monster and makes it walk to it's position..
-    void monsterArrive(int posX, int posY, GameObject mons, GameObject floor)
-    {
-        float endOfFloor = 3.4f;
-        GameObject monster = Instantiate(mons, new Vector2(floorPosX[posX], floorPosY[posY] + 0.1f), Quaternion.identity);
-        monster.transform.parent = floor.transform;
+    //void monsterArrive(int posX, int posY, GameObject mons, GameObject floor)
+    //{
+    //    float endOfFloor = 3.4f;
+    //    GameObject monster = Instantiate(mons, new Vector2(floorPosX[posX], floorPosY[posY] + 0.1f), Quaternion.identity);
+    //    monster.transform.parent = floor.transform;
 
-        monsterAnim = GetComponent<Animator>();
+    //    monsterAnim = GetComponent<Animator>();
 
-        //GameObject monster = Instantiate(mons, new Vector2(endOfFloor, floorPosY[posY] + 0.1f), Quaternion.identity);
-        //monster.transform.parent = floor.transform;
+    //    //GameObject monster = Instantiate(mons, new Vector2(endOfFloor, floorPosY[posY] + 0.1f), Quaternion.identity);
+    //    //monster.transform.parent = floor.transform;
 
-        //iTween.Init(monster);
-        //iTween.EaseType easing = iTween.EaseType.linear;
-        ////destSpeed = arriveTime - Time.time;
-        //Vector3 destPos = new Vector3(floorPosX[posX], floorPosY[posY] + 0.1f, 0);
-        //iTween.MoveTo(monster, iTween.Hash("position", destPos, "easetype", easing, "time", 2.0f));
+    //    //iTween.Init(monster);
+    //    //iTween.EaseType easing = iTween.EaseType.linear;
+    //    ////destSpeed = arriveTime - Time.time;
+    //    //Vector3 destPos = new Vector3(floorPosX[posX], floorPosY[posY] + 0.1f, 0);
+    //    //iTween.MoveTo(monster, iTween.Hash("position", destPos, "easetype", easing, "time", 2.0f));
 
-        // Set current floor in Monster to get desired random number
-        Monster monsterScript = monster.GetComponent<Monster>();
-        int currFloor = posY + 1;
-        //monsterScript.setCurrentFloor(currFloor);
-        monsterScript.currentFloor = currFloor;
-        totalMonsters++;
+    //    // Set current floor in Monster to get desired random number
+    //    Monster monsterScript = monster.GetComponent<Monster>();
+    //    int currFloor = posY + 1;
+    //    //monsterScript.setCurrentFloor(currFloor);
+    //    monsterScript.currentFloor = currFloor;
+    //    totalMonsters++;
 
-    }
+    //}
 
     // When a monster leaves every monsters shift left
     public void repositionMonstersAtFloor(Transform floor)
@@ -460,6 +471,11 @@ public class GameControllerTest : MonoBehaviour {
             monsterAdding = false;
             monsterTypeCount = 3;
         }
+    }
+
+    public void ShakeFloor(int floorNumber)
+    {
+
     }
 
     // ------------------------------------------------------------------------------
