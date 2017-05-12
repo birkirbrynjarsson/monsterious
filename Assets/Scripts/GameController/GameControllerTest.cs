@@ -473,6 +473,11 @@ public class GameControllerTest : MonoBehaviour {
         }
     }
 
+    public void ShakeFloor(int floorNumber)
+    {
+
+    }
+
     // ------------------------------------------------------------------------------
     //                              Elevator functions
     // ------------------------------------------------------------------------------

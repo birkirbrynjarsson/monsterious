@@ -39,8 +39,6 @@ public class Monster : MonoBehaviour
         // Get access to gamecontroller
         gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
 
-        Debug.Log("NAME: " + name);
-
         anim = gameObject.GetComponent<Animator>();
     }
 
@@ -55,6 +53,11 @@ public class Monster : MonoBehaviour
             Destroy(patience);
             Destroy(gameObject);
             gameScript.monsterLeft(floor);
+        }
+        else if (name == "HulkiestHunk" && patienceScript.currentAmount > 85)
+        {
+            anim.SetInteger("State", 1);
+            gameScript.ShakeFloor(currentFloor);
         }
         else if (patienceScript.currentAmount > 90 && patienceScript.currentAmount < 100)
         {
@@ -78,14 +81,4 @@ public class Monster : MonoBehaviour
         patience.transform.position = newPos;
     }
 
-    internal void setCurrentFloor(int curr)
-    {
-        currentFloor = curr;
-        rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-        desiredFloor = rand.Next(1, 7);
-        while (desiredFloor == currentFloor)
-        {
-            desiredFloor = rand.Next(1, 7);
-        }
-    }
 }
