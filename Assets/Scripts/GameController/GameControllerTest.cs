@@ -184,6 +184,7 @@ public class GameControllerTest : MonoBehaviour {
             }
             if (Time.time - sinceLastState >= regularStateTime)
             {
+                GameObject.Find("MonsterWave").GetComponent<Animator>().SetTrigger("Wave");
                 // HERE IS GOING TO BE A MONSTER WAVE TEXT @Sigrun
                 sinceLastState = Time.time;
                 waveState = 1;
