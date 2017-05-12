@@ -376,7 +376,7 @@ public class GameControllerTest : MonoBehaviour {
             else
             {
                 rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-                randomIndex = rand.Next(0, 4);
+                randomIndex = rand.Next(1, 4);
                 Debug.Log("Random index: "+randomIndex);
                 return monsterNames[randomIndex];
             }
