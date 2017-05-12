@@ -43,11 +43,6 @@ public class Monster : MonoBehaviour
         anim = gameObject.GetComponent<Animator>();
         floor = transform.parent;
 
-        if (name == "MonsterMonroe")
-        {
-            gameScript.PatienceCalmer(floor);
-        }
-
     }
 
     // Update is called once per frame
@@ -69,6 +64,11 @@ public class Monster : MonoBehaviour
         else if (patienceScript.currentAmount > 90 && patienceScript.currentAmount < 100)
         {
             anim.SetInteger("State", 1);
+        }
+
+        if (name == "MonsterMonroe")
+        {
+            gameScript.PatienceCalmer(floor);
         }
     }
 

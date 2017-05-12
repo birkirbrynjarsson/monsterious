@@ -376,7 +376,8 @@ public class GameControllerTest : MonoBehaviour {
             else
             {
                 rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-                randomIndex = rand.Next(1, 4);
+                //randomIndex = rand.Next(1, 4);
+                randomIndex = 1;
                 Debug.Log("Random index: "+randomIndex);
                 return monsterNames[randomIndex];
             }
@@ -481,9 +482,9 @@ public class GameControllerTest : MonoBehaviour {
     // Monster monroe makes everyone at her floor very patient
     public void PatienceCalmer(Transform floor)
     {
-        foreach (Monster child in floor.transform)
+        foreach (Transform monster in floor.transform)
         {
-            child.anim.SetInteger("State", 3);
+            monster.GetComponent<Monster>().anim.SetInteger("State", 3);
         }
     }
 
