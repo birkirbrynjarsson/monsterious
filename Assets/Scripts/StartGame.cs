@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class StartGame : MonoBehaviour {
 
+    void Start()
+    {
+        Time.timeScale = 1;
+    }
+
     public void startGame()
     {
         Debug.Log("clicked");
