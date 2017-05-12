@@ -474,6 +474,20 @@ public class GameControllerTest : MonoBehaviour {
         }
     }
 
+    // ------------------------------------------------------------------------------
+    //                   Monster Abilites that changes the game
+    // ------------------------------------------------------------------------------
+
+    // Monster monroe makes everyone at her floor very patient
+    public void PatienceCalmer(Transform floor)
+    {
+        foreach (Monster child in floor.transform)
+        {
+            child.anim.SetInteger("State", 3);
+        }
+    }
+
+    // The Hulkiest Hunk shakes the floor
     public void ShakeFloor(int floorNumber)
     {
 

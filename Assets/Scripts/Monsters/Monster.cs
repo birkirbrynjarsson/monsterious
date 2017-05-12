@@ -14,7 +14,8 @@ public class Monster : MonoBehaviour
     public Patience patienceScript;
     private GameControllerTest gameScript;
     private static System.Random rand;
-    Animator anim;
+    private Transform floor;
+    public Animator anim;
 
     // Use this for initialization
     void Start()
@@ -40,6 +41,13 @@ public class Monster : MonoBehaviour
         gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
 
         anim = gameObject.GetComponent<Animator>();
+        floor = transform.parent;
+
+        if (name == "MonsterMonroe")
+        {
+            gameScript.PatienceCalmer(floor);
+        }
+
     }
 
     // Update is called once per frame
@@ -48,7 +56,6 @@ public class Monster : MonoBehaviour
         // Check if the patience bubble is 100% red! If it is then remove monster.
         if (patienceScript.currentAmount >= 100f)
         {
-            Transform floor = transform.parent;
             gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
             Destroy(patience);
             Destroy(gameObject);
