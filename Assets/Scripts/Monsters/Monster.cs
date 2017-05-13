@@ -79,6 +79,10 @@ public class Monster : MonoBehaviour
             }
             gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
             gameScript.monsterLeft(currentFloor);
+            if (monsterName == monsterNames[2])
+            {
+                gameScript.destroySomeoneWithMe(floor, gameObject, currentFloor);
+            }
             Destroy(patience);
             gameScript.destroyMe(gameObject);
             
@@ -93,7 +97,6 @@ public class Monster : MonoBehaviour
 			anim.SetInteger("State", 1);
 		}
         
-
         if(monsterName == monsterNames[1] && getPatience() < 100f)
         {
             gameScript.patienceCalmer(floor);
@@ -125,5 +128,10 @@ public class Monster : MonoBehaviour
     private void movePatienceBubble()
     {
         patience.transform.position = new Vector2(transform.position.x, transform.position.y + 250f);
+    }
+
+    public void destroyPatience(Monster monster)
+    {
+        Destroy(monster.patience);
     }
 }

@@ -231,7 +231,7 @@ public class GameControllerScript : MonoBehaviour {
         {
             rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
             randomIndex = rand.Next(typesIntroduced);
-            randomIndex = 1;
+            //randomIndex = 2;
             Debug.Log("Random index: " + randomIndex);
             return monsterNames[randomIndex];
         }
@@ -294,6 +294,22 @@ public class GameControllerScript : MonoBehaviour {
                 Debug.Log("CONTINUE PATIENCE");
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
                 monster.GetComponent<Monster>().anim.SetInteger("State", 1);
+            }
+
+        }
+    }
+
+    public void destroySomeoneWithMe(Transform floor, GameObject drKhil, int floorNr)
+    {
+        foreach (Transform monster in floor.transform)
+        {
+            if (monster.gameObject.tag == "Monster" && monster.gameObject != drKhil)
+            {
+                Debug.Log("Khill him to:" + monster.GetComponent<Monster>().monsterName);
+                monster.GetComponent<Monster>().destroyPatience(monster.GetComponent<Monster>());
+                destroyMe(monster.gameObject);
+                monsterLeft(floorNr);
+                return;
             }
 
         }
