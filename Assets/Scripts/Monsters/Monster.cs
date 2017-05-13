@@ -11,7 +11,7 @@ public class Monster : MonoBehaviour
     public int currentFloor;				// The floor that the monster spawns at
     public int desiredFloor;				// The floor the monster desires to go to
     public string name;						// Monster type/name
-	private static readonly string[] monsterTypes = {"MrMonster1", "MonsterMonroe", "DrKhil", "HulkiestHunk"};
+	private static readonly string[] monsterNames = {"MrMonster1", "MonsterMonroe1", "DrKhil1", "HulkiestHunk1"};
 
 	// Patience bubble
     public GameObject patience;
@@ -70,9 +70,9 @@ public class Monster : MonoBehaviour
 	}
 
 	void checkPatience(){
-		// Check if the patience bubble is 100% red! If it is then remove monster.
-		if (getPatience() >= 100f){
-			Transform floor = transform.parent;
+        // Check if the patience bubble is 100% red! If it is then remove monster.
+        Transform floor = transform.parent;
+        if (getPatience() >= 100f){
 			gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
 			Destroy(patience);
 			Destroy(gameObject);
@@ -86,6 +86,12 @@ public class Monster : MonoBehaviour
 		else if (patienceScript.currentAmount > 90f){
 			anim.SetInteger("State", 1);
 		}
+        
+
+        if(name == monsterNames[1])
+        {
+            gameScript.patienceCalmer(floor);
+        }
 	}
 
     public float getPatience(){
@@ -108,8 +114,7 @@ public class Monster : MonoBehaviour
         patience.transform.position = new Vector2(x, y);
         patienceScript.currentAmount = -1;
         insideElevator = true;
-        //						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x) - 0.05f, (openElevator.GetChild(1).transform.position.y + 0.06f));
-        //						monsterScript.patienceScript.currentAmount = -1;
+
     }
 
     private void movePatienceBubble()
