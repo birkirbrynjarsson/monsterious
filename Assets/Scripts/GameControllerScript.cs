@@ -14,11 +14,14 @@ public class GameControllerScript : MonoBehaviour {
 	// -- MONSTER SPAWN -- Variables related to the spawning of monsters
 	private const int MAX_MONSTERS = 24;
 	private const int MAX_MONSTER_FLOOR = 4;
+	private const float MIN_SPAWN_SPEED = 7.0f;
 	private static float spawnSpeed;		// The time in seconds between every monsterspawn
 	private static int totalMonsters;		// Total monsters that have been spawned and are on floors
 	private static int[] monstersAtFloor;	// The amount of monsters at every floor
 	private static readonly string[] monsterNames = {"MrMonster1", "MonsterMonroe1", "DrKhil1", "HulkiestHunk1"};
 	private static int typesIntroduced;		// The number of monster types that have been introduced during gameplay
+
+	public bool wave;
 
 	// Variables related to the layout, structure of the game
 	private const int FLOOR_AMOUNT = 6;
@@ -57,6 +60,7 @@ public class GameControllerScript : MonoBehaviour {
 		initSpawn ();
 		initLife ();
 		StartCoroutine (spawnMonster ());
+		StartCoroutine (waveScheduler ());
 		StartCoroutine (moveClouds());
         updateScore();
 	}
@@ -80,8 +84,9 @@ public class GameControllerScript : MonoBehaviour {
 
 	// Initialize global variables for spawn here
 	void initSpawn(){
+		wave = false;
 		totalMonsters = 0;
-		spawnSpeed = 7.0f;
+		spawnSpeed = MIN_SPAWN_SPEED;
 		monstersAtFloor = new int[FLOOR_AMOUNT];
 		for (var i = 0; i < monstersAtFloor.Length; i++) {
 			monstersAtFloor [i] = 0;
@@ -151,6 +156,34 @@ public class GameControllerScript : MonoBehaviour {
 	//                     Monster Spawning and other monster functions 
 	// ------------------------------------------------------------------------------
 
+
+	IEnumerator waveScheduler(){
+		float timeBetweenWaves = 50f;
+		float waveLength = 20f;
+		while (true) {
+			yield return new WaitForSeconds (timeBetweenWaves);
+			// Wave is started (High state)
+			wave = true;
+			spawnSpeed = 1.5f;
+			yield return new WaitForSeconds (waveLength);
+			wave = false;
+			spawnSpeed = MIN_SPAWN_SPEED;
+		}
+	}
+
+	IEnumerator regularSpawn(){
+		float incrementSpeed = 14f;
+		float maxSpawnSpeed = 2.1f;
+		float spawnIncrement = 0.25f;
+		while (true) {
+			if (!wave) {
+				if (spawnSpeed > maxSpawnSpeed) {
+					spawnSpeed += spawnIncrement;
+				}
+			}
+			yield return new WaitForSeconds (incrementSpeed);
+		}
+	}
         
 	/* Monster spawn function
 	 */
