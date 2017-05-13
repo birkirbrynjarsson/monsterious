@@ -193,7 +193,7 @@ public class GameControllerScript : MonoBehaviour {
         {
             rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
             randomIndex = rand.Next(typesIntroduced);
-            //randomIndex = 1;
+            randomIndex = 1;
             Debug.Log("Random index: " + randomIndex);
             return monsterNames[randomIndex];
         }
@@ -234,7 +234,7 @@ public class GameControllerScript : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            if (monster.GetComponent<Monster>().name != monsterNames[1] && monster.gameObject.tag == "Monster")
+            if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().name != monsterNames[1])
             {
                 monster.GetComponent<Monster>().anim.SetInteger("State", 3);
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = true;
@@ -246,7 +246,7 @@ public class GameControllerScript : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            if (monster.GetComponent<Monster>().name != monsterNames[1] && monster.gameObject.tag == "Monster")
+            if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().name != monsterNames[1])
             {
                 monster.GetComponent<Monster>().anim.SetInteger("State", 1);
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
