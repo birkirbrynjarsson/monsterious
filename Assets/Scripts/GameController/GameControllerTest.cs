@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using System;
 
 public class GameControllerTest : MonoBehaviour {
 
@@ -47,9 +48,14 @@ public class GameControllerTest : MonoBehaviour {
 	private static float floorStress;
 	private static float otherStress;
     Animator gameOver;
-    private static int score;
+    public int score;
     public bool scoreOn = true;
     //	private static GUIText scoreText;
+
+    // Store
+    public int coins;
+    public Text coinText;
+    
 
     public Scrollbar StressBar;
     public float Stress = 100;
@@ -72,6 +78,8 @@ public class GameControllerTest : MonoBehaviour {
 		incrementSpeed = 14f;
 		spawnIncrement = 0.25f;
 		lastIncrement = Time.time;
+        //coins = int.Parse(GameObject.Find("Coins/CoinText").GetComponent<Text>().text);
+        //Debug.Log(coins);
 
         // --- Wave settings ---
         regularStateTime = 50f; // seconds              
@@ -134,8 +142,8 @@ public class GameControllerTest : MonoBehaviour {
 
         UpdateScore ();
         spawnMonster ();
-
         
+        //UpdateCoins();
     }
 
     // ------------------------------------------------------------------------------
@@ -301,7 +309,7 @@ public class GameControllerTest : MonoBehaviour {
         }
     }
 
-    static void increaseScore(int s)
+    void increaseScore(int s)
     {
         score += s;
         //		scoreText.text = " " + score;
@@ -596,4 +604,20 @@ public class GameControllerTest : MonoBehaviour {
         }
     }
 
+
+    // ------------------------------------------------------------------------------
+    //                              Store
+    // ------------------------------------------------------------------------------
+
+    /*public void AddCoins(int newCoinValue)
+    {
+        coins += newCoinValue;
+        coinText.text = " " + coins;
+        //UpdateScore();
+    }
+    
+    void UpdateCoins()
+    {
+        coinText = " " + coins;
+    }*/
 }
