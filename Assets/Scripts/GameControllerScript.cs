@@ -115,8 +115,12 @@ public class GameControllerScript : MonoBehaviour {
 		regenerateLife ();
 		totalDamage = getTotalFloorPatience () + accumulatedDamage;
 		if (gameOver ()) {
-			Debug.Log ("SORRY IT IS GAME OVER!!!");
-		}
+			//Debug.Log ("SORRY IT IS GAME OVER!!!");
+            Time.timeScale = 0;
+            GameObject.Find("GameOver").transform.GetComponent<Canvas>().enabled = true;
+            GameObject.Find("GameOverScore").GetComponent<Text>().text = score + " points";
+            return;
+        }
 	}
 
 	public float getTotalFloorPatience(){
