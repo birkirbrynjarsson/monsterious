@@ -174,7 +174,7 @@ public class GameControllerScript : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            if (monster.GetComponent<Monster>().name != monsterNames[1])
+            if (monster.GetComponent<Monster>().name != monsterNames[1] && monster.gameObject.tag == "Monster")
             {
                 monster.GetComponent<Monster>().anim.SetInteger("State", 3);
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = true;
@@ -186,7 +186,7 @@ public class GameControllerScript : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            if (monster.GetComponent<Monster>().name != monsterNames[1])
+            if (monster.GetComponent<Monster>().name != monsterNames[1] && monster.gameObject.tag == "Monster")
             {
                 monster.GetComponent<Monster>().anim.SetInteger("State", 1);
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
