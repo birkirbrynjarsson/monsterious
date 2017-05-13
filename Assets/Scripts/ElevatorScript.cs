@@ -23,6 +23,10 @@ public class ElevatorScript : MonoBehaviour {
     GameControllerScript gameController;                // The game controller script
 	public BoxCollider2D doorCollider;					// Elevator box collider to hit and request to open door
 
+	// Floor Indicator gameobjects
+	private GameObject indicatorPos1;
+	private GameObject indicatorPos2;
+
 	public Animator anim;
 
 	public System.Random rand; // Used for random data such as blinking eyes.
@@ -59,13 +63,19 @@ public class ElevatorScript : MonoBehaviour {
 		elevatorRoom = new List<Transform> ();
 		elevatorRoom.Add (transform.GetChild (0));
 		elevatorRoom.Add (transform.GetChild (1));
+
+		// Add indicators to elevator
+		indicatorPos1 = gameObject.transform.FindChild ("indicatorPos1").gameObject;
+		indicatorPos2 = gameObject.transform.FindChild ("indicatorPos2").gameObject;
+
+		triggerIndicators ();
 	}
 
 	/* Check if door was clicked and requests to open if true */
 	void isDoorClicked(){
 		if (Input.touchCount > 0) {
 			RaycastHit2D hit;
-			Touch myTouch = Input.touches[0];
+			Touch myTouch = Input.touches [0];
 			if (myTouch.phase == TouchPhase.Began) {
 				hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position), Vector2.zero);
 				if (hit.collider == doorCollider) {
@@ -171,6 +181,7 @@ public class ElevatorScript : MonoBehaviour {
 			anim.SetTrigger ("openDoor");
 		}
 		doorOpen = true;
+		triggerIndicators ();
 	}
 
 	public void closeDoor(){
@@ -178,6 +189,7 @@ public class ElevatorScript : MonoBehaviour {
 			anim.SetTrigger ("closeDoor");
 		}
 		doorOpen = false;
+		triggerIndicators ();
 	}
 
 	// Gets called by animation start of open door and end of close door
@@ -208,6 +220,31 @@ public class ElevatorScript : MonoBehaviour {
 					}
 				}
 			}
+		}
+	}
+
+	public void triggerIndicators(){
+		turnOffIndicators ();
+		if(!doorOpen) {
+			if (gameObject.transform.FindChild ("pos1").childCount > 0) {
+				GameObject monster = gameObject.transform.FindChild ("pos1").transform.GetChild (0).gameObject;
+				Monster mScript = monster.GetComponent<Monster> ();
+				indicatorPos1.transform.GetChild (mScript.desiredFloor - 1).GetComponent<SpriteRenderer> ().enabled = true;
+			} 
+			if (gameObject.transform.FindChild ("pos2").childCount > 0) {
+				GameObject monster = gameObject.transform.FindChild ("pos2").transform.GetChild (0).gameObject;
+				Monster mScript = monster.GetComponent<Monster> ();
+				indicatorPos2.transform.GetChild (mScript.desiredFloor - 1).GetComponent<SpriteRenderer> ().enabled = true;
+			}
+		}
+	}
+
+	public void turnOffIndicators(){
+		foreach (Transform child in indicatorPos1.transform) {
+			child.GetComponent<SpriteRenderer> ().enabled = false;
+		}
+		foreach (Transform child in indicatorPos2.transform) {
+			child.GetComponent<SpriteRenderer> ().enabled = false;
 		}
 	}
 }
