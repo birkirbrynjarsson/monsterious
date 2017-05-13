@@ -28,7 +28,7 @@ public class GameControllerScript : MonoBehaviour {
 		{ "MrMonster1", 160f },
 		{ "MonsterMonroe1", 240f },
 		{ "DrKhil1", 170f },
-		{ "HulkiestHunk1", 0f }
+		{ "HulkiestHunk1", 90f }
 	};
 
 	// Use this for initialization
@@ -64,7 +64,7 @@ public class GameControllerScript : MonoBehaviour {
 		for (var i = 0; i < monstersAtFloor.Length; i++) {
 			monstersAtFloor [i] = 0;
 		}
-		typesIntroduced = 3;
+		typesIntroduced = 4;
 	}
 	
 	// Update is called once per frame
@@ -162,48 +162,54 @@ public class GameControllerScript : MonoBehaviour {
 				Debug.Log ("Monster GOT CLikked BTICKKS");
 				GameObject monster = hit.transform.gameObject;
 				Transform floor = monster.transform.parent;
-				int floorNr = -1;
-				foreach (Transform f in floors)
-				{
-					if (f == floor)
-					{
-						floorNr = floors.IndexOf(f) + 1;
-					}
-				}
+				Monster monsterScript = monster.GetComponent<Monster>();
+				int floorNr = monsterScript.currentFloor;
+				int floorIndex = floorNr - 1;
 				Transform openElevator = elevatorController.getOpenElevatorAtFloor (floorNr);
-				if (openElevator != null && floorNr != -1) {
-					Monster monsterScript = monster.GetComponent<Monster>();
-					if (openElevator.GetChild(0).childCount == 0)
+				if (openElevator != null) {
+					Transform pos1 = openElevator.GetChild (0);
+					Transform pos2 = openElevator.GetChild (1);
+					// If empty room at pos1 in elevator
+					if (pos1.childCount == 0)
 					{
-						if(monsterScript.name == "MonsterMonroe")
-						{
+						if(monsterScript.name == "MonsterMonroe"){
 //							ContinuePatience(floor);
 						}
-
-						monster.transform.parent = openElevator.GetChild(0).transform;
-						monster.transform.position = new Vector2((openElevator.GetChild(0).transform.position.x), (openElevator.GetChild(0).transform.position.y + 0.06f));
+						monster.transform.parent = pos1.transform;
+						monster.transform.position = new Vector2((pos1.transform.position.x), (pos1.transform.position.y) +  + monsterPosY[monsterScript.name]);
+						Vector3 scale = monster.transform.localScale;
+						scale.x *= 0.6f;
+						scale.y *= 0.6f;
+						monster.transform.localScale = scale;
+						Destroy (monster.GetComponent<BoxCollider2D> ());
 //						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(0).transform.position.x) - 0.05f, (openElevator.GetChild(0).transform.position.y + 0.06f));
 //						monsterScript.patienceScript.currentAmount = -1;
+						monstersAtFloor[floorIndex]--;
 						totalMonsters--;
 						repositionMonstersAtFloor(floor);
 					}
-					else if (openElevator.GetChild(1).childCount == 0)
+					// If empty room at pos2 in elevator
+					else if (pos2.childCount == 0)
 					{
-						if (monsterScript.name == "MonsterMonroe")
-						{
+						if (monsterScript.name == "MonsterMonroe"){
 //							ContinuePatience(floor);
 						}
-
-						monster.transform.parent = openElevator.GetChild(1).transform;
-						monster.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x), (openElevator.GetChild(1).transform.position.y + 0.06f));
+						monster.transform.parent = pos2.transform;
+						monster.transform.position = new Vector2((pos2.transform.position.x), (pos2.transform.position.y) + monsterPosY[monsterScript.name]);
+						Vector3 scale = monster.transform.localScale;
+						scale.x *= 0.6f;
+						scale.y *= 0.6f;
+						monster.transform.localScale = scale;
+						SpriteRenderer[] allChildren = monster.GetComponentsInChildren<SpriteRenderer>();
+						foreach (SpriteRenderer child in allChildren) {
+							child.sortingOrder += 10;
+						}
+						Destroy (monster.GetComponent<BoxCollider2D> ());
 //						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x) - 0.05f, (openElevator.GetChild(1).transform.position.y + 0.06f));
 //						monsterScript.patienceScript.currentAmount = -1;
+						monstersAtFloor[floorIndex]--;
 						totalMonsters--;
 						repositionMonstersAtFloor(floor);
-					}
-					else
-					{
-						Debug.Log("Elevator is full");
 					}
 				}
 			}
