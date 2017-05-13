@@ -22,6 +22,7 @@ public class Menu : MonoBehaviour {
 
     public void Resume()
     {
+        Debug.Log("Hey thereee...");
         GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = false;
         Time.timeScale = 1;
     }
