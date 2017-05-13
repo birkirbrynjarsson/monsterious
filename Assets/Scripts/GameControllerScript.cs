@@ -151,7 +151,7 @@ public class GameControllerScript : MonoBehaviour {
 	//                     Monster Spawning and other monster functions 
 	// ------------------------------------------------------------------------------
 
-
+        
 	/* Monster spawn function
 	 */
 	IEnumerator spawnMonster(){
@@ -182,8 +182,21 @@ public class GameControllerScript : MonoBehaviour {
 	}
 
 	string getRandomMonster(){
-		// Needs probability calculations from Unnr
-		return monsterNames [rand.Next (typesIntroduced)];
+        // Needs probability calculations from Unnr
+        int randomIndex;
+        rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+        if (rand.NextDouble() < 0.6)
+        {
+            return monsterNames[0];
+        }
+        else
+        {
+            rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+            randomIndex = rand.Next(typesIntroduced);
+            //randomIndex = 1;
+            Debug.Log("Random index: " + randomIndex);
+            return monsterNames[randomIndex];
+        }
 	}
 
 	public void monsterLeft(int floorNr){
@@ -212,7 +225,37 @@ public class GameControllerScript : MonoBehaviour {
 		}
 	}
 
-	public void shakeFloor(int floorNr){
+    // ------------------------------------------------------------------------------
+    //                   Monster Abilites that changes the game
+    // ------------------------------------------------------------------------------
+
+    // Monster monroe makes everyone at her floor very patient
+    public void patienceCalmer(Transform floor)
+    {
+        foreach (Transform monster in floor.transform)
+        {
+            if (monster.GetComponent<Monster>().name != monsterNames[1] && monster.gameObject.tag == "Monster")
+            {
+                monster.GetComponent<Monster>().anim.SetInteger("State", 3);
+                monster.GetComponent<Monster>().patienceScript.patienceStopper = true;
+            }
+        }
+    }
+
+    public void continuePatience(Transform floor)
+    {
+        foreach (Transform monster in floor.transform)
+        {
+            if (monster.GetComponent<Monster>().name != monsterNames[1] && monster.gameObject.tag == "Monster")
+            {
+                monster.GetComponent<Monster>().anim.SetInteger("State", 1);
+                monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
+            }
+
+        }
+    }
+
+    public void shakeFloor(int floorNr){
 		// Shake shake, shake shake the floor
 	}
 
@@ -248,8 +291,9 @@ public class GameControllerScript : MonoBehaviour {
 					// If empty room at pos1 in elevator
 					if (pos1.childCount == 0)
 					{
-						if(monsterScript.name == "MonsterMonroe"){
-//							ContinuePatience(floor);
+						if(monsterScript.name == monsterNames[1])
+                        {
+							continuePatience(floor);
 						}
 						monster.transform.parent = pos1.transform;
 						monster.transform.position = new Vector2((pos1.transform.position.x), (pos1.transform.position.y) +  + monsterElevatorPosY[monsterScript.name]);
@@ -268,8 +312,9 @@ public class GameControllerScript : MonoBehaviour {
 					// If empty room at pos2 in elevator
 					else if (pos2.childCount == 0)
 					{
-						if (monsterScript.name == "MonsterMonroe"){
-//							ContinuePatience(floor);
+						if (monsterScript.name == monsterNames[1])
+                        {
+							continuePatience(floor);
 						}
 						monster.transform.parent = pos2.transform;
 						monster.transform.position = new Vector2((pos2.transform.position.x), (pos2.transform.position.y) + monsterElevatorPosY[monsterScript.name]);
