@@ -36,10 +36,7 @@ public class Patience : MonoBehaviour {
             {
                 currentAmount += speed * Time.deltaTime;
             }
-            else // 100
-            {
-                //TODO: Let the monster know that it should leave.. and the Patience meter will drop 
-            }
+
             LoadingBar.GetComponent<Image>().fillAmount = currentAmount / 100;
         }
 

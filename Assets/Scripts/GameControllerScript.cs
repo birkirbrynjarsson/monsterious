@@ -121,6 +121,7 @@ public class GameControllerScript : MonoBehaviour {
             GameObject.Find("GameOverScore").GetComponent<Text>().text = score + " points";
             return;
         }
+
 	}
 
 	public float getTotalFloorPatience(){
@@ -213,7 +214,7 @@ public class GameControllerScript : MonoBehaviour {
 		monster.transform.parent = floors[floorIndex];
 		Monster monsterScript = monster.GetComponent<Monster>();
 		monsterScript.currentFloor = floorIndex + 1;
-		monsterScript.name = monsterName;
+		monsterScript.monsterName = monsterName;
 		totalMonsters++;
 		monstersAtFloor[floorIndex]++;
 	}
@@ -262,6 +263,11 @@ public class GameControllerScript : MonoBehaviour {
 		}
 	}
 
+    public void destroyMe(GameObject monster)
+    {
+        Destroy(monster);
+    }
+
     // ------------------------------------------------------------------------------
     //                   Monster Abilites that changes the game
     // ------------------------------------------------------------------------------
@@ -271,7 +277,7 @@ public class GameControllerScript : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().name != monsterNames[1])
+            if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().monsterName != monsterNames[1])
             {
                 monster.GetComponent<Monster>().anim.SetInteger("State", 3);
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = true;
@@ -283,10 +289,11 @@ public class GameControllerScript : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().name != monsterNames[1])
+            if (monster.gameObject.tag == "Monster")
             {
-                monster.GetComponent<Monster>().anim.SetInteger("State", 1);
+                Debug.Log("CONTINUE PATIENCE");
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
+                monster.GetComponent<Monster>().anim.SetInteger("State", 1);
             }
 
         }
@@ -328,12 +335,12 @@ public class GameControllerScript : MonoBehaviour {
 					// If empty room at pos1 in elevator
 					if (pos1.childCount == 0)
 					{
-						if(monsterScript.name == monsterNames[1])
+						if(monsterScript.monsterName == monsterNames[1])
                         {
 							continuePatience(floor);
 						}
 						monster.transform.parent = pos1.transform;
-						monster.transform.position = new Vector2((pos1.transform.position.x), (pos1.transform.position.y) +  + monsterElevatorPosY[monsterScript.name]);
+						monster.transform.position = new Vector2((pos1.transform.position.x), (pos1.transform.position.y) +  + monsterElevatorPosY[monsterScript.monsterName]);
 						Vector3 scale = monster.transform.localScale;
 						scale.x *= 0.6f;
 						scale.y *= 0.6f;
@@ -349,12 +356,12 @@ public class GameControllerScript : MonoBehaviour {
 					// If empty room at pos2 in elevator
 					else if (pos2.childCount == 0)
 					{
-						if (monsterScript.name == monsterNames[1])
+						if (monsterScript.monsterName == monsterNames[1])
                         {
 							continuePatience(floor);
 						}
 						monster.transform.parent = pos2.transform;
-						monster.transform.position = new Vector2((pos2.transform.position.x), (pos2.transform.position.y) + monsterElevatorPosY[monsterScript.name]);
+						monster.transform.position = new Vector2((pos2.transform.position.x), (pos2.transform.position.y) + monsterElevatorPosY[monsterScript.monsterName]);
 						Vector3 scale = monster.transform.localScale;
 						scale.x *= 0.6f;
 						scale.y *= 0.6f;
