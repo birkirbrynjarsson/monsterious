@@ -164,7 +164,7 @@ public class GameControllerScript : MonoBehaviour {
 			yield return new WaitForSeconds (timeBetweenWaves);
 			// Wave is started (High state)
 			wave = true;
-			spawnSpeed = 1.5f;
+			spawnSpeed = 1.8f;
 			yield return new WaitForSeconds (waveLength);
 			wave = false;
 			spawnSpeed = MIN_SPAWN_SPEED;
