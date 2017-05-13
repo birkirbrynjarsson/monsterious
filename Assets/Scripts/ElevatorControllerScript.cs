@@ -13,6 +13,8 @@ public class ElevatorControllerScript : MonoBehaviour {
 
 	private List<Transform> elevators;		// List of the 3x elevator gameObjects
 
+	private GameControllerScript gameController;
+
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = 1;
@@ -30,6 +32,9 @@ public class ElevatorControllerScript : MonoBehaviour {
 			elevators.Add (elevator);
 		}
 		elevators [elevators.Count-1].GetComponent<ElevatorScript> ().openDoor ();
+
+		// Add the gameController for score handling and other stuff
+		gameController = GetComponent<GameControllerScript>();
 	}
 
 	public void moveElevator(int elevNr, int floorNr){
@@ -54,6 +59,8 @@ public class ElevatorControllerScript : MonoBehaviour {
 		if (getOpenElevatorAtFloor (e.currFloor) == null) {
 			e.openDoor ();
 		}
+		// letOutMonsters is triggered by open door animation
+		// e.letOutMonsters ();
 	}
 
 	/* Takes care of opening another elevator if there is one at the floor

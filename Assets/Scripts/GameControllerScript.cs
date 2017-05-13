@@ -168,7 +168,6 @@ public class GameControllerScript : MonoBehaviour {
 			}
 			else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
 			{
-				Debug.Log ("Monster GOT CLikked BTICKKS");
 				GameObject monster = hit.transform.gameObject;
 				Transform floor = monster.transform.parent;
 				Monster monsterScript = monster.GetComponent<Monster>();

@@ -13,6 +13,8 @@ public class ElevatorScript : MonoBehaviour {
 	public bool movingDown;		// Indicator, true if elevator is moving down
 	public bool doorOpen;		// Indicator, true if elevator door is open
 
+	private List<Transform> elevatorRoom;	// List of monster rooms in elevator
+
 	// iTween parameters, global to use between functions
 	Vector3 destPos; 
 	float travelTime;
@@ -50,6 +52,11 @@ public class ElevatorScript : MonoBehaviour {
 		anim = GetComponent<Animator> ();
 
 		rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+
+		// Add elevator rooms to list
+		elevatorRoom = new List<Transform> ();
+		elevatorRoom.Add (transform.GetChild (0));
+		elevatorRoom.Add (transform.GetChild (1));
 	}
 
 	/* Check if door was clicked and requests to open if true */
@@ -182,6 +189,23 @@ public class ElevatorScript : MonoBehaviour {
 		allChildren = pos2.GetComponentsInChildren<SpriteRenderer>();
 		foreach (SpriteRenderer child in allChildren) {
 			child.enabled = doorOpen;
+		}
+	}
+
+	// Let out monsters if they are arriving at desired floor
+	public void letOutMonsters(){
+		foreach (Transform pos in elevatorRoom) {
+			if (pos.childCount > 0) {
+				Transform monster = pos.GetChild (0);
+				if (monster.gameObject.tag == "Monster") {
+					Monster monsterScript = monster.GetComponent<Monster> ();
+					if (monsterScript.desiredFloor == currFloor) {
+						// AddScore (monsterScript.name);
+						Destroy (monsterScript.patience);
+						Destroy (monster.gameObject);
+					}
+				}
+			}
 		}
 	}
 }
