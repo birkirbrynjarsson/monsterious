@@ -27,12 +27,12 @@ public class Monster : MonoBehaviour
     // Use this for initialization
     void Start(){
 		init ();
-//		createPatienceBubble ();
+		createPatienceBubble ();
     }
 
     // Update is called once per frame
     void Update(){
-//		checkPatience ();
+		checkPatience ();
     }
 
 	// Initialize variables
@@ -54,7 +54,7 @@ public class Monster : MonoBehaviour
 		GameObject patienceBubble = (GameObject)Resources.Load("PatienceBubble 1");
 		GameObject canvas = GameObject.Find("PatienceSpawn");
 
-		patience = Instantiate(patienceBubble, new Vector2(transform.position.x - 0.05f, transform.position.y + 0.68f), Quaternion.identity);
+		patience = Instantiate(patienceBubble, new Vector2(transform.position.x, transform.position.y + 250f), Quaternion.identity);
 		patience.transform.SetParent(canvas.transform, true);
 
 		// Get desired floor number from the patience bubble
