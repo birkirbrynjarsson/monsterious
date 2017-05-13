@@ -202,7 +202,7 @@ public class ElevatorScript : MonoBehaviour {
 				if (monster.gameObject.tag == "Monster") {
 					Monster monsterScript = monster.GetComponent<Monster> ();
 					if (monsterScript.desiredFloor == currFloor) {
-						gameController.addScore (monsterScript.name);
+						gameController.addScore (monsterScript.monsterName);
 						Destroy (monsterScript.patience);
 						Destroy (monster.gameObject);
 					}
