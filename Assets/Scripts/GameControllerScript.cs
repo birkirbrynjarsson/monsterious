@@ -183,8 +183,9 @@ public class GameControllerScript : MonoBehaviour {
 						scale.y *= 0.6f;
 						monster.transform.localScale = scale;
 						Destroy (monster.GetComponent<BoxCollider2D> ());
-//						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(0).transform.position.x) - 0.05f, (openElevator.GetChild(0).transform.position.y + 0.06f));
-//						monsterScript.patienceScript.currentAmount = -1;
+                        //						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(0).transform.position.x) - 0.05f, (openElevator.GetChild(0).transform.position.y + 0.06f));
+                        //						monsterScript.patienceScript.currentAmount = -1;
+                        monsterScript.monsterInsideElevator(openElevator, pos1);
 						monstersAtFloor[floorIndex]--;
 						totalMonsters--;
 						repositionMonstersAtFloor(floor);
@@ -206,9 +207,10 @@ public class GameControllerScript : MonoBehaviour {
 							child.sortingOrder += 10;
 						}
 						Destroy (monster.GetComponent<BoxCollider2D> ());
-//						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x) - 0.05f, (openElevator.GetChild(1).transform.position.y + 0.06f));
-//						monsterScript.patienceScript.currentAmount = -1;
-						monstersAtFloor[floorIndex]--;
+                        //						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x) - 0.05f, (openElevator.GetChild(1).transform.position.y + 0.06f));
+                        //						monsterScript.patienceScript.currentAmount = -1;
+                        monsterScript.monsterInsideElevator(openElevator, pos2);
+                        monstersAtFloor[floorIndex]--;
 						totalMonsters--;
 						repositionMonstersAtFloor(floor);
 					}
