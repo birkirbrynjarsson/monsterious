@@ -98,7 +98,7 @@ public class GameControllerScript : MonoBehaviour {
 		while (true) {
 			if (totalMonsters < MAX_MONSTERS) {
 				int floorIndex = rand.Next (FLOOR_AMOUNT);
-				floorIndex = 0;
+				//floorIndex = 0;
 				while (monstersAtFloor [floorIndex] >= MAX_MONSTER_FLOOR) {
 					floorIndex = rand.Next (FLOOR_AMOUNT);
 				}
@@ -123,8 +123,21 @@ public class GameControllerScript : MonoBehaviour {
 	}
 
 	string getRandomMonster(){
-		// Needs probability calculations from Unnr
-		return monsterNames [rand.Next (typesIntroduced)];
+        // Needs probability calculations from Unnr
+        int randomIndex;
+        rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+        if (rand.NextDouble() < 0.6)
+        {
+            return monsterNames[0];
+        }
+        else
+        {
+            rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+            randomIndex = rand.Next(typesIntroduced);
+            //randomIndex = 1;
+            Debug.Log("Random index: " + randomIndex);
+            return monsterNames[randomIndex];
+        }
 	}
 
 	public void monsterLeft(int floorNr){
