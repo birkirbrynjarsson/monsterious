@@ -170,4 +170,18 @@ public class ElevatorScript : MonoBehaviour {
 		}
 		doorOpen = false;
 	}
+
+	// Gets called by animation start of open door and end of close door
+	public void triggerMonsterVisibility(){
+		Transform pos1 = transform.GetChild (0);
+		Transform pos2 = transform.GetChild (1);
+		SpriteRenderer[] allChildren = pos1.GetComponentsInChildren<SpriteRenderer>();
+		foreach (SpriteRenderer child in allChildren) {
+			child.enabled = doorOpen;
+		}
+		allChildren = pos2.GetComponentsInChildren<SpriteRenderer>();
+		foreach (SpriteRenderer child in allChildren) {
+			child.enabled = doorOpen;
+		}
+	}
 }
