@@ -6,76 +6,90 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
+	private const int MAX_FLOORS = 6;
 
-    public int currentFloor;
-    public int desiredFloor;
-    public string name;
+    public int currentFloor;				// The floor that the monster spawns at
+    public int desiredFloor;				// The floor the monster desires to go to
+    public string name;						// Monster type/name
+	private static readonly string[] monsterTypes = {"MrMonster1", "MonsterMonroe", "DrKhil", "HulkiestHunk"};
+
+	// Patience bubble
     public GameObject patience;
     public Patience patienceScript;
-    private GameControllerTest gameScript;
-    private static System.Random rand;
+
+	// Game controller script
+	//  private GameControllerTest gameScript;
+	private GameControllerScript gameScript;
+    
+	private static System.Random rand;
     Animator anim;
 
     // Use this for initialization
-    void Start()
-    {
-        rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-        desiredFloor = rand.Next(1, 7);
-        while (desiredFloor == currentFloor)
-        {
-            desiredFloor = rand.Next(1, 7);
-        }
-        // Create/Instantiate Patience Bubble above the monster with the floor number
-        GameObject patienceBubble = (GameObject)Resources.Load("PatienceBubble 1");
-        GameObject canvas = GameObject.Find("PatienceSpawn");
+    void Start(){
+		init ();
+//		createPatienceBubble ();
 
-        patience = Instantiate(patienceBubble, new Vector2(transform.position.x - 0.05f, transform.position.y + 0.68f), Quaternion.identity);
-        patience.transform.SetParent(canvas.transform, true);
-
-        // Get desired floor number from the patience bubble
-        patienceScript = patience.GetComponent<Patience>();
-        patienceScript.setDesiredFloor(desiredFloor);
-
-        // Get access to gamecontroller
-        gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
-
-        anim = gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        // Check if the patience bubble is 100% red! If it is then remove monster.
-        if (patienceScript.currentAmount >= 100f)
-        {
-            Transform floor = transform.parent;
-            gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
-            Destroy(patience);
-            Destroy(gameObject);
-            gameScript.monsterLeft(floor);
-        }
-        else if (name == "HulkiestHunk" && patienceScript.currentAmount > 85)
-        {
-            anim.SetInteger("State", 1);
-            gameScript.ShakeFloor(currentFloor);
-        }
-        else if (patienceScript.currentAmount > 90 && patienceScript.currentAmount < 100)
-        {
-            anim.SetInteger("State", 1);
-        }
+    void Update(){
+//		checkPatience ();
     }
 
-    public float getPatience()
-    {
-        if (patienceScript != null)
-        {
+	// Initialize variables
+	void init(){
+		rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+		desiredFloor = rand.Next(MAX_FLOORS) + 1;
+		while (desiredFloor == currentFloor){
+			desiredFloor = rand.Next(MAX_FLOORS) + 1;
+		}
+
+//		gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
+		gameScript = GameObject.Find("GameController").GetComponent<GameControllerScript>();
+
+		anim = gameObject.GetComponent<Animator>();
+	}
+
+	void createPatienceBubble(){
+		// Create/Instantiate Patience Bubble above the monster with the floor number
+		GameObject patienceBubble = (GameObject)Resources.Load("PatienceBubble 1");
+		GameObject canvas = GameObject.Find("PatienceSpawn");
+
+		patience = Instantiate(patienceBubble, new Vector2(transform.position.x - 0.05f, transform.position.y + 0.68f), Quaternion.identity);
+		patience.transform.SetParent(canvas.transform, true);
+
+		// Get desired floor number from the patience bubble
+		patienceScript = patience.GetComponent<Patience>();
+		patienceScript.setDesiredFloor(desiredFloor);
+	}
+
+	void checkPatience(){
+		// Check if the patience bubble is 100% red! If it is then remove monster.
+		if (getPatience() >= 100f){
+			Transform floor = transform.parent;
+			gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
+			Destroy(patience);
+			Destroy(gameObject);
+//			gameScript.monsterLeft(floor);
+			gameScript.monsterLeft(currentFloor);
+		}
+		else if (name == "HulkiestHunk" && patienceScript.currentAmount > 85f){
+			anim.SetInteger("State", 1);
+			gameScript.shakeFloor(currentFloor);
+		}
+		else if (patienceScript.currentAmount > 90f){
+			anim.SetInteger("State", 1);
+		}
+	}
+
+    public float getPatience(){
+        if (patienceScript != null){
             return patienceScript.currentAmount;
         }
         return 0.0f;
     }
 
-    internal void updatePos(Vector2 pos)
-    {
+    internal void updatePos(Vector2 pos){
         Vector2 newPos = patience.transform.position;
         newPos.x = pos.x - 0.05f;
         patience.transform.position = newPos;

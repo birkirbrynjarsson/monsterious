@@ -305,7 +305,7 @@ public class GameControllerTest : MonoBehaviour {
         floorStress = 0.0f;
         foreach (Transform f in floors)
         {
-            foreach (Transform m in f)
+			foreach (Transform m in f)
             {
                 floorStress += m.GetComponent<Monster>().getPatience();
             }
@@ -474,7 +474,7 @@ public class GameControllerTest : MonoBehaviour {
         }
     }
 
-    public void ShakeFloor(int floorNumber)
+    public void shakeFloor(int floorNumber)
     {
 
     }
