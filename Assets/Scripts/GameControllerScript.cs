@@ -96,6 +96,7 @@ public class GameControllerScript : MonoBehaviour {
 	void instantiateMonster(int floorIndex){
 		string monsterName = getRandomMonster ();
 		GameObject monsterType = (GameObject)Resources.Load (monsterName);
+		Debug.Log ("FloorIndex: " + floorIndex + ", MonstersAtFloor: " + monstersAtFloor[floorIndex] + ", floorPosX: " + floorPosX[monstersAtFloor[floorIndex]]);
 		Vector2 spawnPosition = new Vector2(floorPosX[monstersAtFloor[floorIndex]], floorPosY[floorIndex] + monsterPosY[monsterName]);
 		GameObject monster = Instantiate(monsterType, spawnPosition, Quaternion.identity);
 		monster.transform.parent = floors[floorIndex];
