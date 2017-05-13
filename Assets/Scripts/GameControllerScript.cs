@@ -311,13 +311,22 @@ public class GameControllerScript : MonoBehaviour {
                 monsterLeft(floorNr);
                 return;
             }
-
         }
     }
 
-    public void shakeFloor(int floorNr){
-		// Shake shake, shake shake the floor
-	}
+    public void shakeFloor(Transform floor)
+    {
+        // Shake shake, shake shake the floor
+        foreach (Transform monster in floor.transform)
+        {
+            if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().monsterName != monsterNames[3])
+            {
+                //monster.GetComponent<Monster>().anim.SetInteger("State", 3); Snidugt ad hafa eitthvad animation her a ollum
+                monster.GetComponent<Monster>().patienceScript.currentAmount = monster.GetComponent<Monster>().patienceScript.currentAmount + 10f;
+            }
+        }
+
+    }
 
 
 	// ------------------------------------------------------------------------------

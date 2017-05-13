@@ -24,13 +24,17 @@ public class Monster : MonoBehaviour
 	private static System.Random rand;
     public Animator anim;
 
-    public bool insideElevator; 
+    public bool insideElevator;
+
+    // For Hulkiest Hunk
+    private bool hasShakedFloor;
 
     // Use this for initialization
     void Start(){
 		init ();
 		createPatienceBubble ();
         insideElevator = false;
+        hasShakedFloor = false;
     }
 
     // Update is called once per frame
@@ -89,9 +93,12 @@ public class Monster : MonoBehaviour
 //			gameScript.monsterLeft(floor);
 			
         }
-		else if (monsterName == "HulkiestHunk" && patienceScript.currentAmount > 85f){
-			anim.SetInteger("State", 1);
-			gameScript.shakeFloor(currentFloor);
+		else if (monsterName == monsterNames[3] && patienceScript.currentAmount > 85f){
+            if(!hasShakedFloor)
+            {
+                anim.SetInteger("State", 1);
+                gameScript.shakeFloor(floor);
+            }
 		}
 		else if (patienceScript.currentAmount > 90f){
 			anim.SetInteger("State", 1);
