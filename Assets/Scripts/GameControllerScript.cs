@@ -28,7 +28,13 @@ public class GameControllerScript : MonoBehaviour {
 		{ "MrMonster1", 160f },
 		{ "MonsterMonroe1", 240f },
 		{ "DrKhil1", 170f },
-		{ "HulkiestHunk1", 90f }
+		{ "HulkiestHunk1", 140f }
+	};
+	private static readonly Dictionary<string, float> monsterElevatorPosY = new Dictionary<string, float> {
+		{ "MrMonster1", 145f },
+		{ "MonsterMonroe1", 190f },
+		{ "DrKhil1", 160f },
+		{ "HulkiestHunk1", 132f }
 	};
 
 	// Use this for initialization
@@ -84,6 +90,7 @@ public class GameControllerScript : MonoBehaviour {
 		while (true) {
 			if (totalMonsters < MAX_MONSTERS) {
 				int floorIndex = rand.Next (FLOOR_AMOUNT);
+				floorIndex = 0;
 				while (monstersAtFloor [floorIndex] >= MAX_MONSTER_FLOOR) {
 					floorIndex = rand.Next (FLOOR_AMOUNT);
 				}
@@ -116,6 +123,7 @@ public class GameControllerScript : MonoBehaviour {
 		int floorIndex = floorNr - 1;
 		monstersAtFloor [floorIndex]--;
 		totalMonsters--;
+		repositionMonstersAtFloor (floors [floorIndex]);
 //		Stresser (LEAVE_PENALTY);
 //		repositionMonstersAtFloor(floor);
 	}
@@ -177,7 +185,7 @@ public class GameControllerScript : MonoBehaviour {
 //							ContinuePatience(floor);
 						}
 						monster.transform.parent = pos1.transform;
-						monster.transform.position = new Vector2((pos1.transform.position.x), (pos1.transform.position.y) +  + monsterPosY[monsterScript.name]);
+						monster.transform.position = new Vector2((pos1.transform.position.x), (pos1.transform.position.y) +  + monsterElevatorPosY[monsterScript.name]);
 						Vector3 scale = monster.transform.localScale;
 						scale.x *= 0.6f;
 						scale.y *= 0.6f;
@@ -197,7 +205,7 @@ public class GameControllerScript : MonoBehaviour {
 //							ContinuePatience(floor);
 						}
 						monster.transform.parent = pos2.transform;
-						monster.transform.position = new Vector2((pos2.transform.position.x), (pos2.transform.position.y) + monsterPosY[monsterScript.name]);
+						monster.transform.position = new Vector2((pos2.transform.position.x), (pos2.transform.position.y) + monsterElevatorPosY[monsterScript.name]);
 						Vector3 scale = monster.transform.localScale;
 						scale.x *= 0.6f;
 						scale.y *= 0.6f;
