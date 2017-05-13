@@ -24,15 +24,22 @@ public class Monster : MonoBehaviour
 	private static System.Random rand;
     public Animator anim;
 
+    public bool insideElevator; 
+
     // Use this for initialization
     void Start(){
 		init ();
 		createPatienceBubble ();
+        insideElevator = false;
     }
 
     // Update is called once per frame
     void Update(){
 		checkPatience ();
+        if (insideElevator)
+        {
+            movePatienceBubble();
+        }
     }
 
 	// Initialize variables
@@ -94,4 +101,19 @@ public class Monster : MonoBehaviour
         patience.transform.position = newPos;
     }
 
+    public void monsterInsideElevator(Transform openElevator, Transform pos)
+    {
+        float x = pos.transform.position.x;
+        float y = pos.transform.position.y;
+        patience.transform.position = new Vector2(x, y);
+        patienceScript.currentAmount = -1;
+        insideElevator = true;
+        //						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x) - 0.05f, (openElevator.GetChild(1).transform.position.y + 0.06f));
+        //						monsterScript.patienceScript.currentAmount = -1;
+    }
+
+    private void movePatienceBubble()
+    {
+        patience.transform.position = new Vector2(transform.position.x, transform.position.y + 250f);
+    }
 }
