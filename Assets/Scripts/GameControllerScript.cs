@@ -7,6 +7,9 @@ public class GameControllerScript : MonoBehaviour {
 	// Random operator
 	public static System.Random rand;
 
+	// Elevator Controller
+	private ElevatorControllerScript elevatorController;
+
 	// -- MONSTER SPAWN -- Variables related to the spawning of monsters
 	private const int MAX_MONSTERS = 24;
 	private const int MAX_MONSTER_FLOOR = 4;
@@ -38,7 +41,9 @@ public class GameControllerScript : MonoBehaviour {
 
 	// Initialize shared global variables here
 	void init(){
-		rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF); 
+		rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+
+		elevatorController = GetComponent<ElevatorControllerScript> ();
 	}
 
 	void initFloors(){
@@ -64,12 +69,12 @@ public class GameControllerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		monsterClicked ();
 	}
 
 
 	// ------------------------------------------------------------------------------
-	//                              Monster Spawning 
+	//                     Monster Spawning and other monster functions 
 	// ------------------------------------------------------------------------------
 
 
@@ -114,7 +119,94 @@ public class GameControllerScript : MonoBehaviour {
 //		repositionMonstersAtFloor(floor);
 	}
 
+	// When a monster leaves every monsters shift left
+	public void repositionMonstersAtFloor(Transform floor)
+	{
+		int i = 0;
+		foreach (Transform child in floor.transform)
+		{
+			if (child.gameObject.tag == "Monster") {
+				Vector3 pos = child.gameObject.transform.position;
+				pos.x = floorPosX[i];
+				child.gameObject.transform.position = pos;
+				child.gameObject.GetComponent<Monster>().updatePos(pos);
+				i++;
+			}
+		}
+	}
+
 	public void shakeFloor(int floorNr){
 		// Shake shake, shake shake the floor
+	}
+
+
+	// ------------------------------------------------------------------------------
+	//                              Monster Clicking
+	// ------------------------------------------------------------------------------
+
+	void monsterClicked()
+	{
+		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+		{
+			RaycastHit2D hit;
+			hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Vector2.zero);
+			if (hit.collider != null && (hit.transform.gameObject.tag == "Reset" || hit.transform.gameObject.tag == "MainMenu"))
+			{
+				Time.timeScale = 0;
+//				GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
+//				GameObject.Find("MenuScore").GetComponent<Text>().text = "score " + score;
+				return;
+			}
+			else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
+			{
+				Debug.Log ("Monster GOT CLikked BTICKKS");
+				GameObject monster = hit.transform.gameObject;
+				Transform floor = monster.transform.parent;
+				int floorNr = -1;
+				foreach (Transform f in floors)
+				{
+					if (f == floor)
+					{
+						floorNr = floors.IndexOf(f) + 1;
+					}
+				}
+				Transform openElevator = elevatorController.getOpenElevatorAtFloor (floorNr);
+				if (openElevator != null && floorNr != -1) {
+					Monster monsterScript = monster.GetComponent<Monster>();
+					if (openElevator.GetChild(0).childCount == 0)
+					{
+						if(monsterScript.name == "MonsterMonroe")
+						{
+//							ContinuePatience(floor);
+						}
+
+						monster.transform.parent = openElevator.GetChild(0).transform;
+						monster.transform.position = new Vector2((openElevator.GetChild(0).transform.position.x), (openElevator.GetChild(0).transform.position.y + 0.06f));
+//						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(0).transform.position.x) - 0.05f, (openElevator.GetChild(0).transform.position.y + 0.06f));
+//						monsterScript.patienceScript.currentAmount = -1;
+						totalMonsters--;
+						repositionMonstersAtFloor(floor);
+					}
+					else if (openElevator.GetChild(1).childCount == 0)
+					{
+						if (monsterScript.name == "MonsterMonroe")
+						{
+//							ContinuePatience(floor);
+						}
+
+						monster.transform.parent = openElevator.GetChild(1).transform;
+						monster.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x), (openElevator.GetChild(1).transform.position.y + 0.06f));
+//						monsterScript.patience.transform.position = new Vector2((openElevator.GetChild(1).transform.position.x) - 0.05f, (openElevator.GetChild(1).transform.position.y + 0.06f));
+//						monsterScript.patienceScript.currentAmount = -1;
+						totalMonsters--;
+						repositionMonstersAtFloor(floor);
+					}
+					else
+					{
+						Debug.Log("Elevator is full");
+					}
+				}
+			}
+		}
 	}
 }
