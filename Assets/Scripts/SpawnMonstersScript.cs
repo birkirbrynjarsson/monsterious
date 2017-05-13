@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorBtnsScript : MonoBehaviour {
+public class SpawnMonstersScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
