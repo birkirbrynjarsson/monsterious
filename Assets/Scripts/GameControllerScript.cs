@@ -116,7 +116,12 @@ public class GameControllerScript : MonoBehaviour {
 		totalDamage = getTotalFloorPatience () + accumulatedDamage;
 		if (gameOver ()) {
 			//Debug.Log ("SORRY IT IS GAME OVER!!!");
-		}
+            Time.timeScale = 0;
+            GameObject.Find("GameOver").transform.GetComponent<Canvas>().enabled = true;
+            GameObject.Find("GameOverScore").GetComponent<Text>().text = score + " points";
+            return;
+        }
+
 	}
 
 	public float getTotalFloorPatience(){
@@ -312,8 +317,8 @@ public class GameControllerScript : MonoBehaviour {
 			if (hit.collider != null && (hit.transform.gameObject.tag == "Reset" || hit.transform.gameObject.tag == "MainMenu"))
 			{
 				Time.timeScale = 0;
-//				GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
-//				GameObject.Find("MenuScore").GetComponent<Text>().text = "score " + score;
+				GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
+				//GameObject.Find("MenuScore").GetComponent<Text>().text = "score " + score;
 				return;
 			}
 			else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
