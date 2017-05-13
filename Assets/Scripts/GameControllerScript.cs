@@ -44,12 +44,20 @@ public class GameControllerScript : MonoBehaviour {
     private static int score;
     public bool scoreOn = true;
 
+	// Patience or Life metering
+	public float totalDamage;
+	public float accumulatedDamage;
+	private const float LEAVE_PENALTY = 0.2f;
+	private CloudCoverScript cloudCoverScript;
+
     // Use this for initialization
     void Start () {
 		init();
 		initFloors ();
 		initSpawn ();
+		initLife ();
 		StartCoroutine (spawnMonster ());
+		StartCoroutine (moveClouds());
         updateScore();
 	}
 
@@ -80,10 +88,62 @@ public class GameControllerScript : MonoBehaviour {
 		}
 		typesIntroduced = 4;
 	}
+
+	void initLife(){
+		accumulatedDamage = 0f;
+		cloudCoverScript = GameObject.Find ("cloudCover").GetComponent<CloudCoverScript>();
+		cloudCoverScript.move (80f);
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		monsterClicked ();
+		life (); // Calculation of left monsters and their patience
+	}
+
+
+	// ------------------------------------------------------------------------------
+	//                     Total patience life 
+	// ------------------------------------------------------------------------------
+
+	public void life(){
+		regenerateLife ();
+		totalDamage = getTotalFloorPatience () + accumulatedDamage;
+		if (gameOver ()) {
+			Debug.Log ("SORRY IT IS GAME OVER!!!");
+		}
+	}
+
+	public float getTotalFloorPatience(){
+		float totalFloorPatience = 0.0f;
+		foreach (Transform floor in floors)
+		{
+			foreach (Transform child in floor.transform)
+			{
+				if(child.gameObject.tag == "Monster"){
+					totalFloorPatience += child.GetComponent<Monster>().getPatience();
+				}
+			}
+		}
+		return totalFloorPatience / ((MAX_MONSTERS - MAX_MONSTER_FLOOR) * 100.0f);
+	}
+
+	// Magic numbers, should be decleared as constants
+	public void regenerateLife(){
+		if (accumulatedDamage > 0.0 && totalMonsters < 6){
+			accumulatedDamage -= Time.deltaTime / 80f;
+		}
+	}
+
+	IEnumerator moveClouds(){
+		while(true){
+			cloudCoverScript.move(totalDamage);
+			yield return new WaitForSeconds(0.2f);
+		}
+	}
+
+	bool gameOver(){
+		return cloudCoverScript.isMaxed ();
 	}
 
 
@@ -98,7 +158,6 @@ public class GameControllerScript : MonoBehaviour {
 		while (true) {
 			if (totalMonsters < MAX_MONSTERS) {
 				int floorIndex = rand.Next (FLOOR_AMOUNT);
-				floorIndex = 0;
 				while (monstersAtFloor [floorIndex] >= MAX_MONSTER_FLOOR) {
 					floorIndex = rand.Next (FLOOR_AMOUNT);
 				}
@@ -131,6 +190,7 @@ public class GameControllerScript : MonoBehaviour {
 		int floorIndex = floorNr - 1;
 		monstersAtFloor [floorIndex]--;
 		totalMonsters--;
+		accumulatedDamage += LEAVE_PENALTY;
 		repositionMonstersAtFloor (floors [floorIndex]);
 //		Stresser (LEAVE_PENALTY);
 //		repositionMonstersAtFloor(floor);
