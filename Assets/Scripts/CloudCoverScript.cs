@@ -21,16 +21,37 @@ public class CloudCoverScript : MonoBehaviour {
 		transform.position = new Vector3 (0.0f, yOrigin, 0f);
 		animationSpeed = 0.4f;
 		maxDistance = Mathf.Abs(yMax - yOrigin);
+
+		StartCoroutine (stopOverdueClouds ());
 	}
 
 	void Update(){
-		float f = Mathf.Sin(Time.time * vertSpeed) * maxMove;
-		transform.localPosition = new Vector3(0.0f, (transform.localPosition.y + f), 0.0f);
+//		float f = Mathf.Sin(Time.time * vertSpeed) * maxMove;
+//		transform.localPosition = new Vector3(0.0f, (transform.localPosition.y + f), 0.0f);
+
 	}
 
 	// This function should take as input a percentage between 0 and 1
-	void move(float coverage){
+	public void move(float coverage){
 		float yPos = yOrigin + (maxDistance * coverage);
-		iTween.MoveTo(gameObject, iTween.Hash("position", (new Vector3 (0f, yPos, 0f)), "easetype", iTween.EaseType.easeInOutSine, "time", animationSpeed));
+		if (transform.position.y < yMax) {
+			iTween.MoveTo (gameObject, iTween.Hash ("position", (new Vector3 (0f, yPos, 0f)), "easetype", iTween.EaseType.easeInOutSine, "time", animationSpeed));
+		}
+	}
+
+	public bool isMaxed(){
+		if (transform.position.y >= yMax){
+			return true;
+		}
+		return false;
+	}
+
+	IEnumerator stopOverdueClouds(){
+		while (true) {
+			yield return new WaitForSeconds (0.1f);
+			if (transform.position.y >= yMax) {
+				iTween.Stop (gameObject);
+			}
+		}
 	}
 }
