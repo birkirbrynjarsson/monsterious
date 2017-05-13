@@ -246,6 +246,11 @@ public class GameControllerTest : MonoBehaviour {
                     {
                         if (el.GetChild(0).childCount == 0)
                         {
+                            if(monsterScript.name == "MonsterMonroe")
+                            {
+                                ContinuePatience(floor);
+                            }
+
                             monster.transform.parent = el.GetChild(0).transform;
                             monster.transform.position = new Vector2((el.GetChild(0).transform.position.x), (el.GetChild(0).transform.position.y + 0.06f));
                             monsterScript.patience.transform.position = new Vector2((el.GetChild(0).transform.position.x) - 0.05f, (el.GetChild(0).transform.position.y + 0.06f));
@@ -255,6 +260,11 @@ public class GameControllerTest : MonoBehaviour {
                         }
                         else if (el.GetChild(1).childCount == 0)
                         {
+                            if (monsterScript.name == "MonsterMonroe")
+                            {
+                                ContinuePatience(floor);
+                            }
+
                             monster.transform.parent = el.GetChild(1).transform;
                             monster.transform.position = new Vector2((el.GetChild(1).transform.position.x), (el.GetChild(1).transform.position.y + 0.06f));
                             monsterScript.patience.transform.position = new Vector2((el.GetChild(1).transform.position.x) - 0.05f, (el.GetChild(1).transform.position.y + 0.06f));
@@ -376,8 +386,8 @@ public class GameControllerTest : MonoBehaviour {
             else
             {
                 rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
-                //randomIndex = rand.Next(1, 4);
-                randomIndex = 1;
+                randomIndex = rand.Next(1, 4);
+                //randomIndex = 1;
                 Debug.Log("Random index: "+randomIndex);
                 return monsterNames[randomIndex];
             }
@@ -407,33 +417,6 @@ public class GameControllerTest : MonoBehaviour {
         // Set monster name
         monsterScript.name = name;
     }
-
-    // Instantiates the monster and makes it walk to it's position..
-    //void monsterArrive(int posX, int posY, GameObject mons, GameObject floor)
-    //{
-    //    float endOfFloor = 3.4f;
-    //    GameObject monster = Instantiate(mons, new Vector2(floorPosX[posX], floorPosY[posY] + 0.1f), Quaternion.identity);
-    //    monster.transform.parent = floor.transform;
-
-    //    monsterAnim = GetComponent<Animator>();
-
-    //    //GameObject monster = Instantiate(mons, new Vector2(endOfFloor, floorPosY[posY] + 0.1f), Quaternion.identity);
-    //    //monster.transform.parent = floor.transform;
-
-    //    //iTween.Init(monster);
-    //    //iTween.EaseType easing = iTween.EaseType.linear;
-    //    ////destSpeed = arriveTime - Time.time;
-    //    //Vector3 destPos = new Vector3(floorPosX[posX], floorPosY[posY] + 0.1f, 0);
-    //    //iTween.MoveTo(monster, iTween.Hash("position", destPos, "easetype", easing, "time", 2.0f));
-
-    //    // Set current floor in Monster to get desired random number
-    //    Monster monsterScript = monster.GetComponent<Monster>();
-    //    int currFloor = posY + 1;
-    //    //monsterScript.setCurrentFloor(currFloor);
-    //    monsterScript.currentFloor = currFloor;
-    //    totalMonsters++;
-
-    //}
 
     // When a monster leaves every monsters shift left
     public void repositionMonstersAtFloor(Transform floor)
@@ -484,7 +467,24 @@ public class GameControllerTest : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            monster.GetComponent<Monster>().anim.SetInteger("State", 3);
+            if(monster.GetComponent<Monster>().name != "MonsterMonroe")
+            {
+                monster.GetComponent<Monster>().anim.SetInteger("State", 3);
+                monster.GetComponent<Monster>().patienceScript.patienceStopper = true;
+            }
+        }
+    }
+
+    public void ContinuePatience(Transform floor)
+    {
+        foreach (Transform monster in floor.transform)
+        {
+            if (monster.GetComponent<Monster>().name != "MonsterMonroe")
+            {
+                monster.GetComponent<Monster>().anim.SetInteger("State", 1);
+                monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
+            }
+
         }
     }
 
