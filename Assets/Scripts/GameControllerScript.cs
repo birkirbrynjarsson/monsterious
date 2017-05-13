@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameControllerScript : MonoBehaviour {
 
@@ -37,12 +38,19 @@ public class GameControllerScript : MonoBehaviour {
 		{ "HulkiestHunk1", 132f }
 	};
 
-	// Use this for initialization
-	void Start () {
+    // Score variables
+    public Text scoreText;
+    public int scoreValue;
+    private static int score;
+    public bool scoreOn = true;
+
+    // Use this for initialization
+    void Start () {
 		init();
 		initFloors ();
 		initSpawn ();
 		StartCoroutine (spawnMonster ());
+        updateScore();
 	}
 
 	// Initialize shared global variables here
@@ -225,4 +233,30 @@ public class GameControllerScript : MonoBehaviour {
 			}
 		}
 	}
+
+    // ------------------------------------------------------------------------------
+    //                                 Score
+    // ------------------------------------------------------------------------------
+
+    public void addScore(string monsterName)
+    {
+        if (monsterName == monsterNames[0])
+        {
+            score += 10;
+        }
+        else 
+        {
+            score += 30;
+        }
+        updateScore();
+    }
+
+    void updateScore()
+    {
+        scoreText.text = "Score " + score;
+        if (scoreOn)
+        {
+            GetComponent<AudioSource>().Play();
+        }
+    }
 }

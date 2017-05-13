@@ -20,6 +20,7 @@ public class ElevatorScript : MonoBehaviour {
 	float travelTime;
 
 	ElevatorControllerScript elevatorController;		// The elevator controller script, stored in the gamecontroller
+    GameControllerScript gameController;                // The game controller script
 	public BoxCollider2D doorCollider;					// Elevator box collider to hit and request to open door
 
 	public Animator anim;
@@ -47,7 +48,8 @@ public class ElevatorScript : MonoBehaviour {
 		doorOpen = false;
 
 		elevatorController = GameObject.Find ("GameController").GetComponent<ElevatorControllerScript> ();
-		doorCollider = gameObject.GetComponent<BoxCollider2D> ();
+        gameController = GameObject.Find("GameController").GetComponent<GameControllerScript>();
+        doorCollider = gameObject.GetComponent<BoxCollider2D> ();
 
 		anim = GetComponent<Animator> ();
 
@@ -200,7 +202,7 @@ public class ElevatorScript : MonoBehaviour {
 				if (monster.gameObject.tag == "Monster") {
 					Monster monsterScript = monster.GetComponent<Monster> ();
 					if (monsterScript.desiredFloor == currFloor) {
-						// AddScore (monsterScript.name);
+						gameController.addScore (monsterScript.name);
 						Destroy (monsterScript.patience);
 						Destroy (monster.gameObject);
 					}
