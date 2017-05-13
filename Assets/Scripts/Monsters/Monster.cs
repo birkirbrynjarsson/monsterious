@@ -22,13 +22,12 @@ public class Monster : MonoBehaviour
 	private GameControllerScript gameScript;
     
 	private static System.Random rand;
-    Animator anim;
+    public Animator anim;
 
     // Use this for initialization
     void Start(){
 		init ();
 //		createPatienceBubble ();
-
     }
 
     // Update is called once per frame
