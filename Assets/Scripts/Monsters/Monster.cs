@@ -73,12 +73,16 @@ public class Monster : MonoBehaviour
         // Check if the patience bubble is 100% red! If it is then remove monster.
         Transform floor = transform.parent;
         if (getPatience() >= 100f){
-			gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
+            if (name == monsterNames[1])
+            {
+                gameScript.continuePatience(floor);
+            }
+            gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
 			Destroy(patience);
 			Destroy(gameObject);
 //			gameScript.monsterLeft(floor);
 			gameScript.monsterLeft(currentFloor);
-		}
+        }
 		else if (name == "HulkiestHunk" && patienceScript.currentAmount > 85f){
 			anim.SetInteger("State", 1);
 			gameScript.shakeFloor(currentFloor);
