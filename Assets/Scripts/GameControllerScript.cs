@@ -239,7 +239,7 @@ public class GameControllerScript : MonoBehaviour {
         {
             rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
             randomIndex = rand.Next(typesIntroduced);
-            randomIndex = 1;
+	        // randomIndex = 2;
             Debug.Log("Random index: " + randomIndex);
             return monsterNames[randomIndex];
         }
@@ -317,8 +317,9 @@ public class GameControllerScript : MonoBehaviour {
 			if (monster.gameObject.tag == "Monster" && monster.gameObject != drKhil && monster.GetComponent<Monster>().monsterName != monsterNames[2])
             {
 				Debug.Log("Khill him to:" + monster.GetComponent<Monster>().monsterName);
-				monster.GetComponent<Monster> ().increasePatience (50f);
-				break;
+                monster.GetComponent<Monster>().drkhilled = true;
+                monster.GetComponent<Monster> ().increasePatience (100f);
+                break;
 //                monster.GetComponent<Monster>().destroyPatience(monster.GetComponent<Monster>());
 //                destroyMe(monster.gameObject);
 //                monsterLeft(floorNr);
@@ -330,6 +331,7 @@ public class GameControllerScript : MonoBehaviour {
     public void shakeFloor(Transform floor)
     {
         // Shake shake, shake shake the floor
+		StartCoroutine(floor.GetComponent<FloorScript>().shakeFloor());
         foreach (Transform monster in floor.transform)
         {
             if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().monsterName != monsterNames[3])
