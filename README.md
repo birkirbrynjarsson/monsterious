@@ -11,9 +11,9 @@ Monster terminal is a mobile game where you are the elevator master that control
 
 There are four different kind of monsters in the game with different abilities.
 * Mr Monster
-* Dr Khil
-* Hulkiest Hulk
-* Monster Monroe
+* Dr Khil. He convinces some other monster at his floor to leave with him
+* Hulkiest Hulk. He shakes the floor with his anger when getting impatient leaving every other monster on the floor a little bit more impatient. 
+* Monster Monroe. She is so attractive that the other monster's patience timer stops.
 
 ## How to play ##
 Install the apk file to your android device, press play, follow the tutorial and have fun!
