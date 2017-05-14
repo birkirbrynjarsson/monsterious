@@ -44,7 +44,7 @@ public class ElevatorScript : MonoBehaviour {
 	}
 
 	void init(){
-		floorSpeed = 0.9f;
+		floorSpeed = 0.7f;
 		currFloor = 1;
 		destFloor = currFloor;
 		movingUp = false;
@@ -78,7 +78,7 @@ public class ElevatorScript : MonoBehaviour {
 			Touch myTouch = Input.touches [0];
 			if (myTouch.phase == TouchPhase.Began) {
 				hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position), Vector2.zero);
-				if (hit.collider == doorCollider) {
+				if (hit.collider == doorCollider && !movingUp && !movingDown && !doorOpen) {
 					requestOpenDoor ();
 				}
 			}
@@ -169,9 +169,10 @@ public class ElevatorScript : MonoBehaviour {
 		elevatorController.elevatorArrived(gameObject);
 	}
 
+
 	public void requestOpenDoor(){
-		if (!movingUp && !movingDown && !doorOpen) {
-			elevatorController.closeOtherElevatorsAtFloor (gameObject, currFloor);
+		if (!movingUp && !movingDown && !doorOpen && currFloor == destFloor) {
+			elevatorController.closeAllElevatorsAtFloor (gameObject, currFloor);
 			openDoor ();
 		}
 	}

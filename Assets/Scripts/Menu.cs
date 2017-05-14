@@ -65,4 +65,18 @@ public class Menu : MonoBehaviour {
     {
         GameObject.Find("StoreMenu").transform.GetComponent<Canvas>().enabled = false;
     }
+
+    public void GoToTutorial()
+    {
+        GameObject.Find("GoToTutorial").transform.GetComponent<Canvas>().enabled = true;
+    }
+
+    public void ImGoingToTutorial()
+    {
+        SceneManager.LoadScene(1);
+    }
+    public void TakeMeBack()
+    {
+        GameObject.Find("GoToTutorial").transform.GetComponent<Canvas>().enabled = false;
+    }
 }

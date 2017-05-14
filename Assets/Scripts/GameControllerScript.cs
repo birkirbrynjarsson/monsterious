@@ -179,13 +179,15 @@ public class GameControllerScript : MonoBehaviour {
             wave = true;
 			spawnSpeed = 1.8f;
 			yield return new WaitForSeconds (waveLength);
+			timeBetweenWaves *= 1.2f;
+			waveLength *= 1.2f;
 			wave = false;
 			spawnSpeed = MIN_SPAWN_SPEED;
 		}
 	}
 
 	IEnumerator regularSpawn(){
-		float incrementSpeed = 14f;
+		float incrementSpeed = 10f;
 		float maxSpawnSpeed = 2.1f;
 		float spawnIncrement = 0.25f;
 		while (true) {
@@ -359,7 +361,7 @@ public class GameControllerScript : MonoBehaviour {
 			{
 				Time.timeScale = 0;
 				GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
-				//GameObject.Find("MenuScore").GetComponent<Text>().text = "score " + score;
+				GameObject.Find("MenuScore").GetComponent<Text>().text = "" + score;
 				return;
 			}
 			else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
@@ -451,7 +453,7 @@ public class GameControllerScript : MonoBehaviour {
 
     void updateScore()
     {
-        scoreText.text = "   " + score;
+        scoreText.text = "" + score;
         if (scoreOn)
         {
             GetComponent<AudioSource>().Play();
