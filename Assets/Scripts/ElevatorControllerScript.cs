@@ -72,14 +72,16 @@ public class ElevatorControllerScript : MonoBehaviour {
 			foreach (Transform elevator in elevators){
 				ElevatorScript e = elevator.gameObject.GetComponent<ElevatorScript>();
 				if (e.currFloor == floorNr && e.destFloor == floorNr && !e.movingUp && !e.movingDown && !e.doorOpen) {
-					e.openDoor ();
-					return;
+					e.requestOpenDoor ();
+					break;
+					// e.openDoor();
+					// return;
 				}
 			}
 		}
 	}
 
-	/* Find the elevator that is open at requested floor, return null if none. */
+	/* 				Find the elevator that is open at requested floor, return null if none. */
 	public Transform getOpenElevatorAtFloor(int floorNr)
 	{
 		foreach (Transform elevator in elevators){
