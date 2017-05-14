@@ -361,7 +361,7 @@ public class GameControllerScript : MonoBehaviour {
 			{
 				Time.timeScale = 0;
 				GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
-				//GameObject.Find("MenuScore").GetComponent<Text>().text = "score " + score;
+				GameObject.Find("MenuScore").GetComponent<Text>().text = "" + score;
 				return;
 			}
 			else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
@@ -453,7 +453,7 @@ public class GameControllerScript : MonoBehaviour {
 
     void updateScore()
     {
-        scoreText.text = "Score " + score;
+        scoreText.text = "" + score;
         if (scoreOn)
         {
             GetComponent<AudioSource>().Play();
