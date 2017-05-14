@@ -239,7 +239,7 @@ public class GameControllerScript : MonoBehaviour {
         {
             rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
             randomIndex = rand.Next(typesIntroduced);
-            //randomIndex = 2;
+            randomIndex = 1;
             Debug.Log("Random index: " + randomIndex);
             return monsterNames[randomIndex];
         }
@@ -288,6 +288,7 @@ public class GameControllerScript : MonoBehaviour {
             if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().monsterName != monsterNames[1])
             {
                 monster.GetComponent<Monster>().anim.SetInteger("State", 3);
+                monster.GetComponent<Monster>().spawnHeartParticles();
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = true;
             }
         }
@@ -301,6 +302,7 @@ public class GameControllerScript : MonoBehaviour {
             {
                 Debug.Log("CONTINUE PATIENCE");
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
+                monster.GetComponent<Monster>().stopHeartParticles();
                 monster.GetComponent<Monster>().anim.SetInteger("State", 0);
             }
 
@@ -376,6 +378,10 @@ public class GameControllerScript : MonoBehaviour {
                         {
 							continuePatience(floor);
 						}
+                        if(monsterScript.isInLove)
+                        {
+                            monsterScript.stopHeartParticles();
+                        }
 						monster.transform.parent = pos1.transform;
 						monster.transform.position = new Vector2((pos1.transform.position.x), (pos1.transform.position.y) +  + monsterElevatorPosY[monsterScript.monsterName]);
 						Vector3 scale = monster.transform.localScale;
@@ -397,7 +403,11 @@ public class GameControllerScript : MonoBehaviour {
                         {
 							continuePatience(floor);
 						}
-						monster.transform.parent = pos2.transform;
+                        if (monsterScript.isInLove)
+                        {
+                            monsterScript.stopHeartParticles();
+                        }
+                        monster.transform.parent = pos2.transform;
 						monster.transform.position = new Vector2((pos2.transform.position.x), (pos2.transform.position.y) + monsterElevatorPosY[monsterScript.monsterName]);
 						Vector3 scale = monster.transform.localScale;
 						scale.x *= 0.6f;
