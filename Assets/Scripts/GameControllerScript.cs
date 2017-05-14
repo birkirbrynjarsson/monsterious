@@ -277,7 +277,7 @@ public class GameControllerScript : MonoBehaviour {
     {
         Destroy(monster);
     }
-
+     
     // ------------------------------------------------------------------------------
     //                   Monster Abilites that changes the game
     // ------------------------------------------------------------------------------
