@@ -174,8 +174,9 @@ public class GameControllerScript : MonoBehaviour {
 		float waveLength = 20f;
 		while (true) {
 			yield return new WaitForSeconds (timeBetweenWaves);
-			// Wave is started (High state)
-			wave = true;
+            // Wave is started (High state)
+            GameObject.Find("MonsterWave").GetComponent<Animator>().SetTrigger("Wave");
+            wave = true;
 			spawnSpeed = 1.8f;
 			yield return new WaitForSeconds (waveLength);
 			wave = false;
