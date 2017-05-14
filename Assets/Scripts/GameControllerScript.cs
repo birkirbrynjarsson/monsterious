@@ -53,6 +53,10 @@ public class GameControllerScript : MonoBehaviour {
 	private const float LEAVE_PENALTY = 0.2f;
 	private CloudCoverScript cloudCoverScript;
 
+    // Coin variables
+    private static int coins;
+    public Text coinText;
+
     // Use this for initialization
     void Start () {
 		init();
@@ -63,11 +67,14 @@ public class GameControllerScript : MonoBehaviour {
 		StartCoroutine (waveScheduler ());
 		StartCoroutine (moveClouds());
         updateScore();
+        updateCoins();
 	}
 
 	// Initialize shared global variables here
 	void init(){
 		rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
+        coins += score;
+        score = 0;
 
 		elevatorController = GetComponent<ElevatorControllerScript> ();
 	}
@@ -115,10 +122,10 @@ public class GameControllerScript : MonoBehaviour {
 		regenerateLife ();
 		totalDamage = getTotalFloorPatience () + accumulatedDamage;
 		if (gameOver ()) {
-			//Debug.Log ("SORRY IT IS GAME OVER!!!");
             Time.timeScale = 0;
             GameObject.Find("GameOver").transform.GetComponent<Canvas>().enabled = true;
             GameObject.Find("GameOverScore").GetComponent<Text>().text = score + " points";
+      
             return;
         }
 
@@ -407,5 +414,10 @@ public class GameControllerScript : MonoBehaviour {
         {
             GetComponent<AudioSource>().Play();
         }
+    }
+
+    public void updateCoins()
+    {
+        coinText.text = " " + coins;
     }
 }
