@@ -454,6 +454,7 @@ public class GameControllerScript : MonoBehaviour {
         if (scoreOn)
         {
             GetComponent<AudioSource>().Play();
+            GameObject.Find("Score").GetComponent<Animator>().SetTrigger("Score");
         }
     }
 
