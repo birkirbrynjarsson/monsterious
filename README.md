@@ -9,4 +9,4 @@
 
 
 ## References ##
-For the heart and star particles we used [Kenney game assets](https://kenney.nl/assets/roguelike-rpg-pack)
+* For the heart and star particles we used [Kenney game assets](https://kenney.nl/assets/roguelike-rpg-pack)
