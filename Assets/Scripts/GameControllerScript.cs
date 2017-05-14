@@ -238,7 +238,7 @@ public class GameControllerScript : MonoBehaviour {
         {
             rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
             randomIndex = rand.Next(typesIntroduced);
-            randomIndex = 1;
+            //randomIndex = 2;
             Debug.Log("Random index: " + randomIndex);
             return monsterNames[randomIndex];
         }
@@ -300,15 +300,44 @@ public class GameControllerScript : MonoBehaviour {
             {
                 Debug.Log("CONTINUE PATIENCE");
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
-                monster.GetComponent<Monster>().anim.SetInteger("State", 1);
+                monster.GetComponent<Monster>().anim.SetInteger("State", 0);
             }
 
         }
     }
 
-    public void shakeFloor(int floorNr){
-		// Shake shake, shake shake the floor
-	}
+    public void destroySomeoneWithMe(Transform floor, GameObject drKhil, int floorNr)
+    {
+        foreach (Transform monster in floor.transform)
+        {
+			// If another monster, and that monster is not also a drKhil
+			if (monster.gameObject.tag == "Monster" && monster.gameObject != drKhil && monster.GetComponent<Monster>().monsterName != monsterNames[2])
+            {
+				Debug.Log("Khill him to:" + monster.GetComponent<Monster>().monsterName);
+				monster.GetComponent<Monster> ().increasePatience (50f);
+				break;
+//                monster.GetComponent<Monster>().destroyPatience(monster.GetComponent<Monster>());
+//                destroyMe(monster.gameObject);
+//                monsterLeft(floorNr);
+//                return;
+            }
+        }
+    }
+
+    public void shakeFloor(Transform floor)
+    {
+        // Shake shake, shake shake the floor
+        foreach (Transform monster in floor.transform)
+        {
+            if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().monsterName != monsterNames[3])
+            {
+                //monster.GetComponent<Monster>().anim.SetInteger("State", 3); Snidugt ad hafa eitthvad animation her a ollum
+                float currPatience = monster.GetComponent<Monster>().patienceScript.currentAmount;
+                monster.GetComponent<Monster>().patienceScript.currentAmount = currPatience + 10f;
+            }
+        }
+
+    }
 
 
 	// ------------------------------------------------------------------------------

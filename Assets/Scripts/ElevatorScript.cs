@@ -44,7 +44,7 @@ public class ElevatorScript : MonoBehaviour {
 	}
 
 	void init(){
-		floorSpeed = 1.2f;
+		floorSpeed = 0.9f;
 		currFloor = 1;
 		destFloor = currFloor;
 		movingUp = false;
@@ -181,7 +181,6 @@ public class ElevatorScript : MonoBehaviour {
 			anim.SetTrigger ("openDoor");
 		}
 		doorOpen = true;
-		triggerIndicators ();
 	}
 
 	public void closeDoor(){
@@ -189,7 +188,6 @@ public class ElevatorScript : MonoBehaviour {
 			anim.SetTrigger ("closeDoor");
 		}
 		doorOpen = false;
-		triggerIndicators ();
 	}
 
 	// Gets called by animation start of open door and end of close door
@@ -214,6 +212,7 @@ public class ElevatorScript : MonoBehaviour {
 				if (monster.gameObject.tag == "Monster") {
 					Monster monsterScript = monster.GetComponent<Monster> ();
 					if (monsterScript.desiredFloor == currFloor) {
+						spawnStarParticles (monster);
 						gameController.addScore (monsterScript.monsterName);
 						Destroy (monsterScript.patience);
 						Destroy (monster.gameObject);
@@ -223,6 +222,14 @@ public class ElevatorScript : MonoBehaviour {
 		}
 	}
 
+	public void spawnStarParticles(Transform monster){
+		GameObject stars = (GameObject)Resources.Load ("Particles/StarParticles");
+		Vector2 spawnPosition = new Vector2 (monster.position.x, monster.position.y);
+		GameObject starParticles = Instantiate(stars, spawnPosition, Quaternion.identity);
+		Destroy (starParticles, 1.0f);
+	}
+
+	// Should be triggered by animation
 	public void triggerIndicators(){
 		turnOffIndicators ();
 		if(!doorOpen) {
@@ -239,6 +246,7 @@ public class ElevatorScript : MonoBehaviour {
 		}
 	}
 
+	// Should be triggered by animation
 	public void turnOffIndicators(){
 		foreach (Transform child in indicatorPos1.transform) {
 			child.GetComponent<SpriteRenderer> ().enabled = false;

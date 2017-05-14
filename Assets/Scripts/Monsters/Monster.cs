@@ -24,13 +24,17 @@ public class Monster : MonoBehaviour
 	private static System.Random rand;
     public Animator anim;
 
-    public bool insideElevator; 
+    public bool insideElevator;
+
+    // For Hulkiest Hunk
+    private bool hasShakedFloor;
 
     // Use this for initialization
     void Start(){
 		init ();
 		createPatienceBubble ();
         insideElevator = false;
+        hasShakedFloor = false;
     }
 
     // Update is called once per frame
@@ -77,27 +81,49 @@ public class Monster : MonoBehaviour
             {
                 gameScript.continuePatience(floor);
             }
-            gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
-            gameScript.monsterLeft(currentFloor);
-            Destroy(patience);
-            gameScript.destroyMe(gameObject);
+
+			// Dr Khil, leave with me yo!
+            if (monsterName == monsterNames[2]) {
+                gameScript.destroySomeoneWithMe(floor, gameObject, currentFloor);
+            }
+            
+			StartCoroutine(destroyMonster());
             
 //			gameScript.monsterLeft(floor);
 			
         }
-		else if (monsterName == "HulkiestHunk" && patienceScript.currentAmount > 85f){
-			anim.SetInteger("State", 1);
-			gameScript.shakeFloor(currentFloor);
+		else if (monsterName == monsterNames[3] && patienceScript.currentAmount > 85f){
+            if(!hasShakedFloor)
+            {
+                anim.SetTrigger("Jump");
+                gameScript.shakeFloor(floor);
+                hasShakedFloor = true;
+            }
 		}
 		else if (patienceScript.currentAmount > 90f){
 			anim.SetInteger("State", 1);
 		}
         
-
         if(monsterName == monsterNames[1] && getPatience() < 100f)
         {
             gameScript.patienceCalmer(floor);
         }
+	}
+
+	IEnumerator destroyMonster(){
+		float time = 1.0f;
+		spawnCloudParticles ();
+		gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
+		Destroy(patience);
+		yield return new WaitForSeconds (time);
+		gameScript.monsterLeft(currentFloor);
+		gameScript.destroyMe (gameObject);
+	}
+
+	public void spawnCloudParticles(){
+		GameObject clouds = (GameObject)Resources.Load ("Particles/CloudParticles");
+		GameObject cloudParticles = Instantiate(clouds, transform.position, Quaternion.identity);
+		Destroy (cloudParticles, 1.5f);
 	}
 
     public float getPatience(){
@@ -126,4 +152,13 @@ public class Monster : MonoBehaviour
     {
         patience.transform.position = new Vector2(transform.position.x, transform.position.y + 250f);
     }
+
+    public void destroyPatience(Monster monster)
+    {
+        Destroy(monster.patience);
+    }
+
+	public void increasePatience(float increment){
+		patienceScript.currentAmount += increment;
+	}
 }
