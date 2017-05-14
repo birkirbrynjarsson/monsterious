@@ -1,9 +1,12 @@
-# Monster Terminal #
+![alt text](https://github.com/birkirbrynjarsson/monsterious/blob/master/Assets/Sprites/Logo/MonsterTerminalLogo0.2.png "Monster Terminal")
 ### Monsterious Games ###
 #### Birkir Brynjarsson, Sigrún Tinna Gissurardóttir & Unnur Sól Ingimarsdóttir ####
 
-![alt text](https://github.com/birkirbrynjarsson/monsterious/blob/master/Assets/Sprites/Logo/MonsterTerminalLogo0.2.png "Monster Terminal")
 
+
+
+## About the game ##
+![alt text](https://github.com/birkirbrynjarsson/monsterious/blob/fb51c14ca13bdf9dc2d3e9243ea49aa1835e0d7d/Assets/sprites/logo/MonsterCharacters.png "Monster Terminal")
 
 ## How to play ##
 
