@@ -8,7 +8,7 @@ public class MonsterMenu : MonoBehaviour {
     int monster = 0;
     string aboutMrMonster = "Mr. Monster \n Hello how ya doing...";
     string aboutDrKhil = "Dr. Khil \n Psychologist that has his own television show, where he helps monster families with their problems. Be vary, if you don’t get him to the elevator in time he will convince someone to leave with him.";
-    string aboutMonsterMonroe = "Monster Monroe \n She is a very famous model and actress in the monsterverse. She is so attractive that the timer on the monsters on her floor slows down.";
+    string aboutMonsterMonroe = "Monster Monroe \n She is a very famous model and actress in the monsterverse. She is so attractive that the timer on the monsters on her floor stops.";
 
     public void Left()
     {
