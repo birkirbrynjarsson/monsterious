@@ -450,7 +450,7 @@ public class GameControllerScript : MonoBehaviour {
 
     void updateScore()
     {
-        scoreText.text = "Score " + score;
+        scoreText.text = "   " + score;
         if (scoreOn)
         {
             GetComponent<AudioSource>().Play();
