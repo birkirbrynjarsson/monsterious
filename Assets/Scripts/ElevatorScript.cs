@@ -44,7 +44,7 @@ public class ElevatorScript : MonoBehaviour {
 	}
 
 	void init(){
-		floorSpeed = 0.9f;
+		floorSpeed = 0.7f;
 		currFloor = 1;
 		destFloor = currFloor;
 		movingUp = false;
