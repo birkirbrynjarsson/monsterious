@@ -29,6 +29,10 @@ public class Monster : MonoBehaviour
     // For Hulkiest Hunk
     private bool hasShakedFloor;
 
+	// Variables for the particles of clouds spawning above their head when impatient
+	bool isImpatient;
+	GameObject patienceParticles;
+
     // Use this for initialization
     void Start(){
 		init ();
@@ -48,6 +52,8 @@ public class Monster : MonoBehaviour
 
 	// Initialize variables
 	void init(){
+		isImpatient = false;
+
 		rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
 		desiredFloor = rand.Next(MAX_FLOORS) + 1;
 		while (desiredFloor == currentFloor){
@@ -76,6 +82,14 @@ public class Monster : MonoBehaviour
 	void checkPatience(){
         // Check if the patience bubble is 100% red! If it is then remove monster.
         Transform floor = transform.parent;
+		if (getPatience () >= 50f) {
+			if (!isImpatient) {
+				spawnPatienceParticles ();
+				isImpatient = true;
+			}
+			increasePatienceParticles ();
+		}
+
         if (getPatience() >= 100f){
             if (monsterName == monsterNames[1])
             {
@@ -115,6 +129,7 @@ public class Monster : MonoBehaviour
 		spawnCloudParticles ();
 		gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
 		Destroy(patience);
+		Destroy (patienceParticles);
 		yield return new WaitForSeconds (time);
 		gameScript.monsterLeft(currentFloor);
 		gameScript.destroyMe (gameObject);
@@ -124,6 +139,18 @@ public class Monster : MonoBehaviour
 		GameObject clouds = (GameObject)Resources.Load ("Particles/CloudParticles");
 		GameObject cloudParticles = Instantiate(clouds, transform.position, Quaternion.identity);
 		Destroy (cloudParticles, 1.5f);
+	}
+
+	public void spawnPatienceParticles(){
+		GameObject patience = (GameObject)Resources.Load ("Particles/MonsterClouds");
+		Vector3 particlesPos = transform.position;
+		particlesPos.y += 150f;
+		patienceParticles = Instantiate(patience, particlesPos, Quaternion.identity);
+		patienceParticles.transform.parent = transform.parent;
+	}
+
+	public void increasePatienceParticles(){
+		patienceParticles.GetComponent<ParticleSystem> ().startLifetime = (getPatience () * 0.014f) - 0.2f;
 	}
 
     public float getPatience(){
@@ -137,6 +164,11 @@ public class Monster : MonoBehaviour
         Vector2 newPos = patience.transform.position;
         newPos.x = pos.x - 0.05f;
         patience.transform.position = newPos;
+		if (patienceParticles != null) {
+			Vector3 newParticlePosition = patienceParticles.transform.position;
+			newParticlePosition.x = transform.position.x;
+			patienceParticles.transform.position = newParticlePosition;
+		}
     }
 
     public void monsterInsideElevator(Transform openElevator, Transform pos)
@@ -146,7 +178,14 @@ public class Monster : MonoBehaviour
         patience.transform.position = new Vector2(x, y);
         patienceScript.currentAmount = -1;
         insideElevator = true;
+		if (patienceParticles != null) {
+			Destroy (patienceParticles);
+		}
     }
+
+	public void triggerPatienceVisibility(bool visible){
+		patience.SetActive(visible);
+	}
 
     private void movePatienceBubble()
     {
