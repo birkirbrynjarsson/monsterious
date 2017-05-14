@@ -21,6 +21,9 @@ public class Monster : MonoBehaviour
     public GameObject heartParticles;
     public bool isInLove;
 
+    // DrKhil cloud particle
+    public bool drkhilled;
+
     // Game controller script
     //  private GameControllerTest gameScript;
     private GameControllerScript gameScript;
@@ -63,6 +66,15 @@ public class Monster : MonoBehaviour
 		while (desiredFloor == currentFloor){
 			desiredFloor = rand.Next(MAX_FLOORS) + 1;
 		}
+        
+        if(monsterName == monsterNames[2])
+        {
+            drkhilled = true;
+        }
+        else
+        {
+            drkhilled = false;
+        }
 
 //		gameScript = GameObject.Find("GameController").GetComponent<GameControllerTest>();
 		gameScript = GameObject.Find("GameController").GetComponent<GameControllerScript>();
@@ -141,9 +153,20 @@ public class Monster : MonoBehaviour
 	}
 
 	public void spawnCloudParticles(){
+        if (drkhilled)
+        {
+            GameObject clouds = (GameObject)Resources.Load("Particles/CloudParticlesGreen");
+            GameObject cloudParticles = Instantiate(clouds, transform.position, Quaternion.identity);
+            Destroy(cloudParticles, 1.5f);
+        }
+        else
+        {
             GameObject clouds = (GameObject)Resources.Load("Particles/CloudParticles");
             GameObject cloudParticles = Instantiate(clouds, transform.position, Quaternion.identity);
             Destroy(cloudParticles, 1.5f);
+        }
+        
+
 	}
 		
 	public void spawnPatienceParticles(){
