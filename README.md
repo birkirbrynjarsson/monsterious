@@ -9,4 +9,7 @@
 
 
 ## References ##
-* For the heart and star particles we used [Kenney game assets](https://kenney.nl/assets/roguelike-rpg-pack)
+* We used [Kenney game assets](https://kenney.nl/assets/roguelike-rpg-pack) for the heart and star particles.
+* We used.. for sound 
+* We used [Open Game Art](https://opengameart.org/content/5x-special-effects-2d) for the Mr. Monster sprite animation when he arrives.
+* We made every other assets in the game ourselves in photoshop
