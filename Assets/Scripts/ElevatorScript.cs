@@ -169,9 +169,10 @@ public class ElevatorScript : MonoBehaviour {
 		elevatorController.elevatorArrived(gameObject);
 	}
 
+
 	public void requestOpenDoor(){
 		if (!movingUp && !movingDown && !doorOpen && currFloor == destFloor) {
-			elevatorController.closeOtherElevatorsAtFloor (gameObject, currFloor);
+			elevatorController.closeAllElevatorsAtFloor (gameObject, currFloor);
 			openDoor ();
 		}
 	}
