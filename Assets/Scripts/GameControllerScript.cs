@@ -179,13 +179,15 @@ public class GameControllerScript : MonoBehaviour {
             wave = true;
 			spawnSpeed = 1.8f;
 			yield return new WaitForSeconds (waveLength);
+			timeBetweenWaves *= 1.2f;
+			waveLength *= 1.2f;
 			wave = false;
 			spawnSpeed = MIN_SPAWN_SPEED;
 		}
 	}
 
 	IEnumerator regularSpawn(){
-		float incrementSpeed = 14f;
+		float incrementSpeed = 10f;
 		float maxSpawnSpeed = 2.1f;
 		float spawnIncrement = 0.25f;
 		while (true) {

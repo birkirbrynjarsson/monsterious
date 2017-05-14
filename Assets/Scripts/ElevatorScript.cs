@@ -44,7 +44,7 @@ public class ElevatorScript : MonoBehaviour {
 	}
 
 	void init(){
-		floorSpeed = 0.9f;
+		floorSpeed = 0.7f;
 		currFloor = 1;
 		destFloor = currFloor;
 		movingUp = false;
@@ -170,7 +170,7 @@ public class ElevatorScript : MonoBehaviour {
 	}
 
 	public void requestOpenDoor(){
-		if (!movingUp && !movingDown && !doorOpen) {
+		if (!movingUp && !movingDown && !doorOpen && currFloor == destFloor) {
 			elevatorController.closeOtherElevatorsAtFloor (gameObject, currFloor);
 			openDoor ();
 		}

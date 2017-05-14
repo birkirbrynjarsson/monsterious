@@ -213,8 +213,7 @@ public class Monster : MonoBehaviour
 			newParticlePosition.x = transform.position.x;
 			patienceParticles.transform.position = newParticlePosition;
 		}
-        if (isInLove)
-        {
+		if (heartParticles != null){
             heartParticles.transform.position = newPos;
         }     
     }
