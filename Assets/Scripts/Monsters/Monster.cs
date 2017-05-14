@@ -81,14 +81,13 @@ public class Monster : MonoBehaviour
             {
                 gameScript.continuePatience(floor);
             }
-            gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
-            gameScript.monsterLeft(currentFloor);
-            if (monsterName == monsterNames[2])
-            {
+
+			// Dr Khil, leave with me yo!
+            if (monsterName == monsterNames[2]) {
                 gameScript.destroySomeoneWithMe(floor, gameObject, currentFloor);
             }
-            Destroy(patience);
-            gameScript.destroyMe(gameObject);
+            
+			StartCoroutine(destroyMonster());
             
 //			gameScript.monsterLeft(floor);
 			
@@ -109,6 +108,22 @@ public class Monster : MonoBehaviour
         {
             gameScript.patienceCalmer(floor);
         }
+	}
+
+	IEnumerator destroyMonster(){
+		float time = 1.0f;
+		spawnCloudParticles ();
+		gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
+		Destroy(patience);
+		yield return new WaitForSeconds (time);
+		gameScript.monsterLeft(currentFloor);
+		gameScript.destroyMe (gameObject);
+	}
+
+	public void spawnCloudParticles(){
+		GameObject clouds = (GameObject)Resources.Load ("Particles/CloudParticles");
+		GameObject cloudParticles = Instantiate(clouds, transform.position, Quaternion.identity);
+		Destroy (cloudParticles, 1.5f);
 	}
 
     public float getPatience(){
@@ -142,4 +157,8 @@ public class Monster : MonoBehaviour
     {
         Destroy(monster.patience);
     }
+
+	public void increasePatience(float increment){
+		patienceScript.currentAmount += increment;
+	}
 }

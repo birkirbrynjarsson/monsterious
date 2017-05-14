@@ -44,7 +44,7 @@ public class ElevatorScript : MonoBehaviour {
 	}
 
 	void init(){
-		floorSpeed = 1.2f;
+		floorSpeed = 0.9f;
 		currFloor = 1;
 		destFloor = currFloor;
 		movingUp = false;
@@ -214,6 +214,7 @@ public class ElevatorScript : MonoBehaviour {
 				if (monster.gameObject.tag == "Monster") {
 					Monster monsterScript = monster.GetComponent<Monster> ();
 					if (monsterScript.desiredFloor == currFloor) {
+						spawnStarParticles (monster);
 						gameController.addScore (monsterScript.monsterName);
 						Destroy (monsterScript.patience);
 						Destroy (monster.gameObject);
@@ -221,6 +222,13 @@ public class ElevatorScript : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	public void spawnStarParticles(Transform monster){
+		GameObject stars = (GameObject)Resources.Load ("Particles/StarParticles");
+		Vector2 spawnPosition = new Vector2 (monster.position.x, monster.position.y);
+		GameObject starParticles = Instantiate(stars, spawnPosition, Quaternion.identity);
+		Destroy (starParticles, 1.0f);
 	}
 
 	public void triggerIndicators(){

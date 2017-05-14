@@ -310,13 +310,16 @@ public class GameControllerScript : MonoBehaviour {
     {
         foreach (Transform monster in floor.transform)
         {
-            if (monster.gameObject.tag == "Monster" && monster.gameObject != drKhil)
+			// If another monster, and that monster is not also a drKhil
+			if (monster.gameObject.tag == "Monster" && monster.gameObject != drKhil && monster.GetComponent<Monster>().monsterName != monsterNames[2])
             {
-                Debug.Log("Khill him to:" + monster.GetComponent<Monster>().monsterName);
-                monster.GetComponent<Monster>().destroyPatience(monster.GetComponent<Monster>());
-                destroyMe(monster.gameObject);
-                monsterLeft(floorNr);
-                return;
+				Debug.Log("Khill him to:" + monster.GetComponent<Monster>().monsterName);
+				monster.GetComponent<Monster> ().increasePatience (50f);
+				break;
+//                monster.GetComponent<Monster>().destroyPatience(monster.GetComponent<Monster>());
+//                destroyMe(monster.gameObject);
+//                monsterLeft(floorNr);
+//                return;
             }
         }
     }
