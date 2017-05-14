@@ -17,9 +17,13 @@ public class Monster : MonoBehaviour
     public GameObject patience;
     public Patience patienceScript;
 
-	// Game controller script
-	//  private GameControllerTest gameScript;
-	private GameControllerScript gameScript;
+    // Heart particle
+    public GameObject heartParticles;
+    public bool isInLove;
+
+    // Game controller script
+    //  private GameControllerTest gameScript;
+    private GameControllerScript gameScript;
     
 	private static System.Random rand;
     public Animator anim;
@@ -86,6 +90,7 @@ public class Monster : MonoBehaviour
             if (monsterName == monsterNames[2]) {
                 gameScript.destroySomeoneWithMe(floor, gameObject, currentFloor);
             }
+
             
 			StartCoroutine(destroyMonster());
             
@@ -121,10 +126,26 @@ public class Monster : MonoBehaviour
 	}
 
 	public void spawnCloudParticles(){
-		GameObject clouds = (GameObject)Resources.Load ("Particles/CloudParticles");
-		GameObject cloudParticles = Instantiate(clouds, transform.position, Quaternion.identity);
-		Destroy (cloudParticles, 1.5f);
+            GameObject clouds = (GameObject)Resources.Load("Particles/CloudParticles");
+            GameObject cloudParticles = Instantiate(clouds, transform.position, Quaternion.identity);
+            Destroy(cloudParticles, 1.5f);
 	}
+
+    public void spawnHeartParticles()
+    {
+        if (!isInLove)
+        {
+            GameObject hearts = (GameObject)Resources.Load("Particles/Hearts");
+            heartParticles = Instantiate(hearts, new Vector3(transform.position.x, transform.position.y + 10f, 0), Quaternion.identity);
+            isInLove = true;
+        }
+
+    }
+
+    public void stopHeartParticles()
+    {
+        Destroy(heartParticles, 0.5f);
+    }
 
     public float getPatience(){
         if (patienceScript != null){
@@ -137,6 +158,10 @@ public class Monster : MonoBehaviour
         Vector2 newPos = patience.transform.position;
         newPos.x = pos.x - 0.05f;
         patience.transform.position = newPos;
+        if (isInLove)
+        {
+            heartParticles.transform.position = newPos;
+        }     
     }
 
     public void monsterInsideElevator(Transform openElevator, Transform pos)
