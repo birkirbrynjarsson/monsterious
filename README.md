@@ -7,6 +7,7 @@
 
 ## About the game ##
 ![alt text](https://github.com/birkirbrynjarsson/monsterious/blob/fb51c14ca13bdf9dc2d3e9243ea49aa1835e0d7d/Assets/sprites/logo/MonsterCharacters.png "Monster Terminal")
+Monster terminal is a mobile game where you are the elevator master that controls the elevators in the Monsterverse. You have to move the monsters that arrive to their desired floor with the elevators or they get very impatient and 
 
 ## How to play ##
 
