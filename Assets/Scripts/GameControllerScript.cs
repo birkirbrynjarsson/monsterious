@@ -293,7 +293,7 @@ public class GameControllerScript : MonoBehaviour {
             {
                 Debug.Log("CONTINUE PATIENCE");
                 monster.GetComponent<Monster>().patienceScript.patienceStopper = false;
-                monster.GetComponent<Monster>().anim.SetInteger("State", 1);
+                monster.GetComponent<Monster>().anim.SetInteger("State", 0);
             }
 
         }
@@ -322,7 +322,8 @@ public class GameControllerScript : MonoBehaviour {
             if (monster.gameObject.tag == "Monster" && monster.GetComponent<Monster>().monsterName != monsterNames[3])
             {
                 //monster.GetComponent<Monster>().anim.SetInteger("State", 3); Snidugt ad hafa eitthvad animation her a ollum
-                monster.GetComponent<Monster>().patienceScript.currentAmount = monster.GetComponent<Monster>().patienceScript.currentAmount + 10f;
+                float currPatience = monster.GetComponent<Monster>().patienceScript.currentAmount;
+                monster.GetComponent<Monster>().patienceScript.currentAmount = currPatience + 10f;
             }
         }
 

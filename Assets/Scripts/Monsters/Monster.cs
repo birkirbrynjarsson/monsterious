@@ -96,8 +96,9 @@ public class Monster : MonoBehaviour
 		else if (monsterName == monsterNames[3] && patienceScript.currentAmount > 85f){
             if(!hasShakedFloor)
             {
-                anim.SetInteger("State", 1);
+                anim.SetTrigger("Jump");
                 gameScript.shakeFloor(floor);
+                hasShakedFloor = true;
             }
 		}
 		else if (patienceScript.currentAmount > 90f){
