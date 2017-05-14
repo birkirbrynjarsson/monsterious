@@ -44,10 +44,12 @@ public class ElevatorControllerScript : MonoBehaviour {
 
 	/* Takes care of closing other elevators at the floor,
 	 * when an elevator wants to open its door */
-	public void closeOtherElevatorsAtFloor(GameObject elToOpen, int floorNr){
-		Transform openElevator = getOpenElevatorAtFloor (floorNr);
-		if (openElevator != null) {
-			openElevator.gameObject.GetComponent<ElevatorScript> ().closeDoor ();
+	public void closeAllElevatorsAtFloor(GameObject elToOpen, int floorNr){
+		foreach(Transform elevator in elevators){
+			ElevatorScript elScript = elevator.GetComponent<ElevatorScript> ();
+			if (elScript.currFloor == floorNr && elScript.destFloor == floorNr && !elScript.movingUp && !elScript.movingDown){
+				elScript.closeDoor ();
+			}
 		}
 	}
 
