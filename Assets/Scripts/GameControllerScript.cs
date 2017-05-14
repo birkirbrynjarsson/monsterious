@@ -239,7 +239,7 @@ public class GameControllerScript : MonoBehaviour {
         {
             rand = new System.Random((int)System.DateTime.Now.Ticks & 0x0000FFFF);
             randomIndex = rand.Next(typesIntroduced);
-            randomIndex = 2;
+            //randomIndex = 2;
             Debug.Log("Random index: " + randomIndex);
             return monsterNames[randomIndex];
         }
