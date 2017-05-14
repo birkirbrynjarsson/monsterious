@@ -9,6 +9,12 @@
 ![alt text](https://github.com/birkirbrynjarsson/monsterious/blob/f108a49fab964f1ec6ec4ea33d2d528a3554f8ca/Assets/sprites/logo/MonsterCharacters.png "Monster Terminal")
 Monster terminal is a mobile game where you are the elevator master that controls the elevators in the Monsterverse. You have to move the monsters that arrive to their desired floor with the elevators or they get very impatient and disappear in the Monsterverse's stress fog. 
 
+There are four different kind of monsters in the game with different abilities.
+* Mr Monster
+* Dr Khil
+* Hulkiest Hulk
+* Monster Monroe
+
 ## How to play ##
 Install the apk file to your android device, press play, follow the tutorial and have fun!
 
