@@ -361,7 +361,7 @@ public class GameControllerScript : MonoBehaviour {
 			{
 				Time.timeScale = 0;
 				GameObject.Find("Menu").transform.GetComponent<Canvas>().enabled = true;
-				//GameObject.Find("MenuScore").GetComponent<Text>().text = "score " + score;
+				GameObject.Find("MenuScore").GetComponent<Text>().text = "" + score;
 				return;
 			}
 			else if (hit.collider != null && hit.transform.gameObject.tag == "Monster")
