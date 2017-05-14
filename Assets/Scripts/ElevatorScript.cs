@@ -78,7 +78,7 @@ public class ElevatorScript : MonoBehaviour {
 			Touch myTouch = Input.touches [0];
 			if (myTouch.phase == TouchPhase.Began) {
 				hit = Physics2D.Raycast (Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position), Vector2.zero);
-				if (hit.collider == doorCollider) {
+				if (hit.collider == doorCollider && !movingUp && !movingDown && !doorOpen) {
 					requestOpenDoor ();
 				}
 			}
