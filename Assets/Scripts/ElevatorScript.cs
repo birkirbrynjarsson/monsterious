@@ -272,4 +272,26 @@ public class ElevatorScript : MonoBehaviour {
 			child.GetComponent<SpriteRenderer> ().enabled = false;
 		}
 	}
+
+
+	// Animation notification funtions
+	void closingDoors(){
+		doorOpen = false;
+	}
+
+	void openingDoors(){
+		doorOpen = true;
+	}
+
+	void goingUp(){
+		movingUp = true;
+		movingDown = false;
+		doorOpen = false;
+	}
+
+	void goingDown(){
+		movingDown = true;
+		movingUp = false;
+		doorOpen = false;
+	}
 }
