@@ -222,8 +222,10 @@ public class Monster : MonoBehaviour
     {
         float x = pos.transform.position.x;
         float y = pos.transform.position.y;
-        patience.transform.position = new Vector2(x, y);
-        patienceScript.currentAmount = -1;
+		if (patience != null) {
+			patience.transform.position = new Vector2(x, y);
+			patienceScript.currentAmount = -1;
+		}
         insideElevator = true;
 		if (patienceParticles != null) {
 			Destroy (patienceParticles);
