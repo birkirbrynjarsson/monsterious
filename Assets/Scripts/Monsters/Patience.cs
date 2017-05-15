@@ -22,6 +22,7 @@ public class Patience : MonoBehaviour {
     void Start () {
 		speed = 3.0f;
         patienceStopper = false;
+		currentAmount = 0f;
     }
 
     // Update is called once per frame
