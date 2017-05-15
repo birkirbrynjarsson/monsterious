@@ -142,6 +142,7 @@ public class Monster : MonoBehaviour
 	}
 
 	IEnumerator destroyMonster(){
+		gameObject.GetComponent<BoxCollider2D> ().enabled = false;
 		float time = 1.0f;
 		spawnCloudParticles ();
 		gameObject.transform.SetParent(gameObject.transform.parent.transform.parent);
